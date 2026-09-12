@@ -51,7 +51,7 @@
   /* Art slots. A world.css or an inline style swaps these for
      url('art/whatever.jpg'). The gradients are what shows until
      you have real artwork, so empty pages still look finished. */
-  --hero: linear-gradient(160deg, #2b2358 0%, #0c0a17 55%, #3b1f52 100%);
+  --hero: url("art/backgrounds/Background 1.png");
   --art:  linear-gradient(145deg, #221c42 0%, #110e22 100%);
 }
 
