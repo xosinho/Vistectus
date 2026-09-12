@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=EB+Garamond:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap");
+
+/* ===================================================================
+   THE DEAD HAND — flavour for this world only.
+
+   The wireframe stays the shared one in ../../style.css. Only tokens
+   are overridden here, so every page in this world and in every
+   chronicle beneath it follows automatically.
+
+   The colours and faces are carried over from the original Dead Hand
+   site: bone-white text, dried blood, tarnished brass, Garamond.
+   =================================================================== */
+
+:root {
+  /* Dried blood, in place of the hub violet. */
+  --accent:      #9e2b25;
+  --accent-soft: #7c211c;
+  --accent-ink:  #f3ece0;
+
+  /* Bone rather than paper white. */
+  --ink:         #e9e3d6;
+  --ink-soft:    #b3ab99;
+  --ink-dim:     #776f60;
+
+  /* Indigo surfaces, pulled a few degrees towards cold blue. */
+  --bg:          #0b0c14;
+  --bg-raised:   #14161f;
+  --bg-sunken:   #07080d;
+  --line:        #262a37;
+
+  /* Faces from the original site. */
+  --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-body:    "EB Garamond", Georgia, "Times New Roman", serif;
+  --font-mono:    "JetBrains Mono", "Courier New", ui-monospace, monospace;
+
+  /* Garamond runs small and light; give it room. */
+  --prose: 42rem;
+
+  /* Artwork. Paths here are relative to THIS file, so a picture in
+     this world folder is just art/whatever.jpg. */
+  --hero: linear-gradient(160deg, #1d1c2c 0%, #0b0c14 58%, #2a1417 100%);
+  --art:  linear-gradient(145deg, #191b26 0%, #0e0f16 100%);
+
+  /* A picture behind every page of this world. Uncomment when you
+     have one — and keep --page-veil high so text stays readable. */
+  /* --page-art:  url(art/paper.jpg); */
+  /* --page-veil: .86; */
+}
+
+/* Garamond sets its capitals quite tight; loosen the display type a
+   little so the uppercase headings keep their shape. */
+.hero h1 { letter-spacing: .03em; font-weight: 600; }
+.brand   { letter-spacing: .16em; }

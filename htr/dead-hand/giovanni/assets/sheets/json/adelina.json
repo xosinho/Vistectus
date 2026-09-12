@@ -1,0 +1,126 @@
+{
+  "meta": {
+    "charName": "Adelina Morte",
+    "playerName": "Maria",
+    "cell": "",
+    "chronicle": "Dead Hand",
+    "concept": "Vengeful ex Spy",
+    "ambition": "Reveal the identity of the true Capo Famiglia of the Giovanni Crime Family, and a hurt him as much as they did to her.",
+    "desire": "Spill the blood of mobsters"
+  },
+  "attributes": {
+    "Strength": 1,
+    "Dexterity": 3,
+    "Stamina": 2,
+    "Charisma": 2,
+    "Manipulation": 3,
+    "Composure": 0,
+    "Intelligence": 4,
+    "Wits": 3,
+    "Resolve": 2
+  },
+  "attrPriorities": {},
+  "skills": {
+    "Athletics": 0,
+    "Brawl": 0,
+    "Craft": 0,
+    "Drive": 0,
+    "Firearms": 0,
+    "Larceny": 1,
+    "Melee": 2,
+    "Stealth": 2,
+    "Survival": 2,
+    "Animal Ken": 0,
+    "Etiquette": 0,
+    "Insight": 2,
+    "Intimidation": 0,
+    "Leadership": 0,
+    "Performance": 0,
+    "Persuasion": 3,
+    "Streetwise": 3,
+    "Subterfuge": 3,
+    "Academics": 0,
+    "Awareness": 0,
+    "Finance": 0,
+    "Investigation": 1,
+    "Medicine": 2,
+    "Occult": 0,
+    "Politics": 0,
+    "Science": 1,
+    "Technology": 0
+  },
+  "priorities": {
+    "Physical": "2",
+    "Social": "1",
+    "Mental": "3"
+  },
+  "specialties": [
+    {
+      "skill": "Subterfuge",
+      "text": "Lies"
+    },
+    {
+      "skill": "Streetwise",
+      "text": "Mafia Methods"
+    },
+    {
+      "skill": "Persuasion",
+      "text": "Seduction"
+    }
+  ],
+  "edgeMode": "2e1p",
+  "edges": [
+    "Medical Cache",
+    "Criminal Network"
+  ],
+  "perks": [
+    {
+      "forEdge": "0",
+      "text": "Controlled Pharmaceuticals "
+    }
+  ],
+  "merits": [
+    {
+      "name": "Retainer",
+      "custom": "",
+      "note": "",
+      "dots": 3
+    },
+    {
+      "name": "Iron Will",
+      "custom": "",
+      "note": "",
+      "dots": 2
+    },
+    {
+      "name": "Striking Looks",
+      "custom": "",
+      "note": "",
+      "dots": 2
+    }
+  ],
+  "flaws": [
+    {
+      "name": "Trauma",
+      "custom": "",
+      "note": "Sound of light drill",
+      "dots": 1
+    },
+    {
+      "name": "Nightmares",
+      "custom": "",
+      "note": "Recalling the torture",
+      "dots": 1
+    }
+  ],
+  "touchstones": [
+    {
+      "name": "Francesca Passerini",
+      "desc": "Adelina’s young sister, grew up together and Adelina would kill 1000 people for her."
+    }
+  ],
+  "anchor": "Rage against the machine ",
+  "background": "Grew up in an orphanage, recruited by the Italian secret service, trained as a spy, sent on a Mafia infiltration mission in NYC which went awry when she was captured and tortured by the goons of the Giovanni family.",
+  "creed": "Underground",
+  "drive": "Rage"
+}

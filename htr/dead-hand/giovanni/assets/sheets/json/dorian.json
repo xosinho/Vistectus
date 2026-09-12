@@ -1,0 +1,81 @@
+{
+  "meta": {
+    "charName": "Dorian DeLisle",
+    "playerName": "Andreas",
+    "cell": "",
+    "chronicle": "Dead Hand",
+    "concept": "Darkweb Dealer's Remorse",
+    "ambition": "Unwilling aide of a tragic event happening, reeking redemption - Finding out  the real culprit behind that event.",
+    "desire": "Helping to someone involved in the event or finding clues or evidence against the real culprit."
+  },
+  "attributes": {
+    "Strength": 2,
+    "Dexterity": 3,
+    "Stamina": 2,
+    "Charisma": 2,
+    "Manipulation": 2,
+    "Composure": 1,
+    "Intelligence": 3,
+    "Wits": 4,
+    "Resolve": 3
+  },
+  "attrPriorities": {},
+  "skills": {
+    "Athletics": 0,
+    "Brawl": 0,
+    "Craft": 0,
+    "Drive": 0,
+    "Firearms": 0,
+    "Larceny": 0,
+    "Melee": 0,
+    "Stealth": 0,
+    "Survival": 0,
+    "Animal Ken": 0,
+    "Etiquette": 0,
+    "Insight": 0,
+    "Intimidation": 0,
+    "Leadership": 0,
+    "Performance": 0,
+    "Persuasion": 0,
+    "Streetwise": 0,
+    "Subterfuge": 0,
+    "Academics": 0,
+    "Awareness": 0,
+    "Finance": 0,
+    "Investigation": 0,
+    "Medicine": 0,
+    "Occult": 0,
+    "Politics": 0,
+    "Science": 0,
+    "Technology": 0
+  },
+  "priorities": {
+    "Physical": "2",
+    "Social": "3",
+    "Mental": "1"
+  },
+  "specialties": [],
+  "edgeMode": "2e1p",
+  "edges": [
+    "Global Access",
+    "Artifact"
+  ],
+  "perks": [
+    {
+      "forEdge": "1",
+      "text": "Extend the obfuscation effect to the online persona."
+    }
+  ],
+  "merits": [],
+  "flaws": [],
+  "touchstones": [
+    {
+      "name": "",
+      "desc": ""
+    }
+  ],
+  "anchor": "",
+  "background": "",
+  "creed": "Underground",
+  "drive": "Guilt"
+}

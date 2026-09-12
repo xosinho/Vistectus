@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Open a name to read their background and download their character sheet. This is your cell &mdash; keep each other alive.">
+
+  <link rel="icon" href="../../../art/logo.svg" type="image/svg+xml">
+
+  <!-- Three folders up to the hub stylesheet, one up for the world flavour. -->
+  <link rel="stylesheet" href="../../../style.css">
+  <link rel="stylesheet" href="../world.css">
+</head>
+
+<body data-page="players" data-title="The cell">
+
+<section class="hero hero--compact">
+  <div class="hero-inner">
+    <p class="crumb">
+      <a href="../../../index.html">Vistectus</a> /
+      <a href="../../index.html">Hunter</a> /
+      <a href="../index.html">The Dead Hand</a> /
+      <a href="index.html">Giovanni Chronicle</a>
+    </p>
+    <p class="kicker">The cell</p>
+    <h1>The hunters of The Dead Hand</h1>
+    <p class="lede">Open a name to read their background and download their character sheet. This is your cell &mdash; keep each other alive.</p>
+  </div>
+</section>
+
+<main id="main">
+  <section class="row">
+    <div class="row-head"><h2>The cell</h2></div>
+
+    <!-- The roster renders here from assets/data/players.js.
+         To add or edit someone you edit that data file, never this page. -->
+    <div id="players-roster"></div>
+  </section>
+</main>
+
+<script src="assets/js/render.js"></script>
+<script src="assets/data/players.js"></script>
+<script>
+  DeadHand.renderRoster("players-roster", window.DEAD_HAND_PLAYERS, "player");
+</script>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

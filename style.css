@@ -93,7 +93,7 @@ img { max-width: 100%; display: block; }
   height: var(--bar-h);
   display: flex; align-items: center; gap: 2rem;
   padding: 0 1.5rem;
-  background: rgba(14, 17, 24, .92);
+  background: rgba(12, 10, 23, .92);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--line);
 }
@@ -171,7 +171,7 @@ img { max-width: 100%; display: block; }
   content: "";
   position: absolute; inset: 0;
   background:
-    linear-gradient(to top, var(--bg) 2%, rgba(14,17,24,.72) 38%, rgba(14,17,24,.15) 100%);
+    linear-gradient(to top, var(--bg) 2%, rgba(12,10,23,.72) 38%, rgba(12,10,23,.15) 100%);
 }
 
 @keyframes drift {
@@ -388,7 +388,7 @@ a:hover { color: var(--ink); }
 .band::after {
   content: "";
   position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(14,17,24,.55), rgba(14,17,24,.85));
+  background: linear-gradient(to bottom, rgba(12,10,23,.55), rgba(12,10,23,.85));
 }
 
 /* ---- Footer ------------------------------------------------------- */
@@ -428,4 +428,250 @@ footer {
   html { scroll-behavior: auto; }
   .hero::before { animation: none; }
   * { transition-duration: .01ms !important; }
+}
+
+/* ===================================================================
+   PAGE BACKGROUND ART
+   A picture behind the whole page, on every page that wants one.
+   It is fixed, so content scrolls over it, and it sits under a scrim
+   so text stays readable.
+
+   Turn it on for one page:      <body style="--page-art: url(art/x.jpg)">
+   ...or for a whole world, in that world's world.css:
+                                 :root { --page-art: url(art/x.jpg); }
+   Left unset, nothing renders and the flat background shows through.
+
+   --page-veil controls how heavily the picture is dimmed: 0 is the
+   raw image, 1 hides it completely. 0.82 keeps atmosphere without
+   fighting the text.
+   =================================================================== */
+
+:root {
+  --page-art:  none;
+  --page-veil: .82;
+}
+
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: -2;
+  background: var(--page-art) center / cover no-repeat;
+  background-attachment: fixed;
+}
+
+body::after {
+  content: "";
+  position: fixed; inset: 0; z-index: -1;
+  background: var(--bg);
+  opacity: var(--page-veil);
+}
+
+/* ---- Roster -------------------------------------------------------
+   Portrait tiles that open a dossier. Used by the players and NPC
+   pages; driven from the data files by assets/js/render.js. */
+
+.roster {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 1.1rem;
+}
+
+.roster-card {
+  position: relative;
+  display: block; width: 100%; text-align: left;
+  padding: 0; cursor: pointer;
+  font: inherit; color: inherit;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform .18s, border-color .18s;
+}
+.roster-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+
+.roster-card__portrait {
+  width: 100%; aspect-ratio: 3 / 4;
+  object-fit: cover;
+  background: var(--art);
+  filter: saturate(.85) contrast(1.05);
+  transition: filter .25s;
+}
+.roster-card:hover .roster-card__portrait { filter: none; }
+
+.roster-card__hint {
+  position: absolute; top: .6rem; right: .6rem; z-index: 1;
+  font-family: var(--font-mono);
+  font-size: .62rem; letter-spacing: .12em; text-transform: uppercase;
+  background: rgba(10, 8, 18, .82); color: var(--ink);
+  border: 1px solid var(--line);
+  padding: .2rem .5rem; border-radius: var(--radius);
+  opacity: 0; transition: opacity .18s;
+}
+.roster-card:hover .roster-card__hint,
+.roster-card:focus-visible .roster-card__hint { opacity: 1; }
+
+.roster-card__body { display: block; padding: .85rem .9rem 1rem; }
+
+.roster-card__name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .04em;
+  color: var(--ink);
+}
+
+.roster-card__tagline {
+  display: block; margin-top: .2rem;
+  font-size: .85rem; color: var(--ink-soft);
+}
+
+/* ---- Dossier ------------------------------------------------------
+   The panel that opens when a roster card is clicked. */
+
+.detail-backdrop {
+  position: fixed; inset: 0; z-index: 80;
+  display: none; place-items: center;
+  padding: 1.5rem;
+  background: rgba(6, 5, 12, .78);
+  backdrop-filter: blur(3px);
+}
+.detail-backdrop.open { display: grid; }
+
+.detail {
+  position: relative;
+  width: min(52rem, 100%);
+  max-height: 86vh; overflow-y: auto;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+}
+
+.detail__close {
+  position: absolute; top: .6rem; right: .75rem;
+  background: none; border: 0; cursor: pointer;
+  color: var(--ink-soft); font-size: 1.7rem; line-height: 1;
+}
+.detail__close:hover { color: var(--accent); }
+
+.detail__head {
+  display: flex; gap: 1.25rem; align-items: flex-start;
+  padding-bottom: 1.1rem; margin-bottom: 1.1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.detail__portrait {
+  width: 8.5rem; aspect-ratio: 3 / 4; flex: none;
+  object-fit: cover;
+  border-radius: var(--radius);
+  background: var(--art);
+}
+
+.detail__name {
+  font-family: var(--font-display);
+  font-size: 1.5rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .02em;
+  margin: 0 0 .2rem;
+}
+
+.detail__role { color: var(--ink-soft); margin: 0 0 .7rem; }
+
+.detail__meta { display: flex; flex-wrap: wrap; gap: .4rem; }
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: .2rem .5rem;
+}
+
+.detail__section-label {
+  font-family: var(--font-mono);
+  font-size: .68rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--accent);
+  margin: 1.5rem 0 .6rem;
+}
+.detail__section-label:first-child { margin-top: 0; }
+
+.detail__prose { color: #c9c4dd; }
+.detail__prose p { margin: 0 0 .9rem; }
+
+.detail__downloads { display: flex; flex-wrap: wrap; gap: .6rem; }
+
+/* ---- Stat block ---------------------------------------------------- */
+
+.statblock {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+.statline {
+  display: flex; gap: 1rem; justify-content: space-between;
+  padding: .5rem .8rem;
+  border-bottom: 1px solid var(--line);
+  font-size: .9rem;
+}
+.statline:last-child { border-bottom: 0; }
+.statline .k {
+  font-family: var(--font-mono);
+  font-size: .7rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.stat-note {
+  padding: .6rem .8rem;
+  border-top: 1px solid var(--line);
+  font-size: .85rem; color: var(--ink-soft);
+}
+
+/* ---- Embedded document --------------------------------------------
+   For the compendium: someone else's HTML, kept in its own frame so
+   its styling cannot leak into the site. */
+
+.frame-shell {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-raised);
+}
+
+.frame-bar {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .55rem .8rem;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: .7rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.frame-bar .spacer { margin-left: auto; }
+.frame-bar .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent); flex: none;
+}
+
+.frame-shell iframe {
+  display: block; width: 100%; height: 72vh; border: 0;
+  background: var(--bg);
+}
+
+/* ---- Empty state --------------------------------------------------- */
+
+.empty {
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 2rem; text-align: center;
+  color: var(--ink-soft);
+}
+.empty code {
+  font-family: var(--font-mono); font-size: .85em;
+  color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .detail { padding: 1.25rem; }
+  .detail__head { flex-direction: column; }
+  .detail__portrait { width: 7rem; }
+  .frame-shell iframe { height: 60vh; }
 }

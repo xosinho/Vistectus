@@ -9,11 +9,10 @@
 
   <link rel="icon" href="../../art/logo.svg" type="image/svg+xml">
 
-  <!-- ../../ climbs two folders up to the shared stylesheet. -->
+  <!-- ../../ climbs to the hub, where the shared stylesheet lives. -->
   <link rel="stylesheet" href="../../style.css">
 
-  <!-- This world only. Loaded second, so it wins where the two
-       disagree. Everything the hub shares stays shared. -->
+  <!-- This world only. Loaded second, so it wins where the two disagree. -->
   <link rel="stylesheet" href="world.css">
 </head>
 
@@ -24,15 +23,14 @@
 <header class="topbar">
   <a class="brand" href="../../index.html"><span class="brand-mark" aria-hidden="true"></span> Vistectus</a>
   <nav class="topnav">
+    <a href="#chronicles">Chronicles</a>
     <a href="#overview">Overview</a>
     <a href="#setting">Setting</a>
     <a href="#factions">Factions</a>
-    <a href="#characters">Characters</a>
-    <a href="#play">At the table</a>
   </nav>
 </header>
 
-<!-- Add key art with style="--hero: url(art/hero.jpg)" -->
+<!-- Key art goes here: style="--hero: url(art/hero.jpg)" -->
 <section class="hero">
   <div class="hero-inner">
     <p class="crumb">
@@ -42,37 +40,55 @@
     <p class="kicker">Vampire: the Dark Ages</p>
     <h1>World name</h1>
     <p class="lede"><!-- One line that sells the world. --></p>
-    <a class="btn" href="#overview">Read on</a>
+    <a class="btn" href="#chronicles">The chronicles</a>
   </div>
 </section>
 
 <main id="main">
 
+  <!-- ---- Chronicles --------------------------------------------
+       A world holds as many chronicles as you run in it. To add one:
+       copy the chronicle-one folder, rename it, then copy a card
+       below and point both links at the new folder. -->
+  <section class="row" id="chronicles">
+    <div class="row-head"><h2>Chronicles</h2></div>
+
+    <div class="cards">
+
+      <article class="card">
+        <a class="card-art" href="chronicle-one/index.html">
+          <span class="card-badge"><!-- status --></span>
+        </a>
+        <div class="card-body">
+          <h3><a href="chronicle-one/index.html">Chronicle name</a></h3>
+          <p class="meta"><!-- where / when --></p>
+          <p><!-- Two lines. --></p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
   <section class="row" id="overview">
     <div class="row-head"><h2>Overview</h2></div>
     <div class="prose">
-      <p><!-- The pitch: premise, tone, what play feels like. --></p>
+      <p><!-- The pitch for the WORLD, not one chronicle. --></p>
     </div>
   </section>
 
   <section class="row" id="setting">
     <div class="row-head"><h2>Setting</h2></div>
-
-    <!-- One .entry per region, era or location. Copy to add more. -->
     <div class="entries">
-
       <article class="entry">
         <h3>Region or era</h3>
         <p class="meta"><!-- where / when --></p>
         <p><!-- description --></p>
       </article>
-
       <article class="entry">
         <h3>Region or era</h3>
         <p class="meta"><!-- where / when --></p>
         <p><!-- description --></p>
       </article>
-
     </div>
   </section>
 
@@ -87,34 +103,6 @@
         <p class="meta"><!-- what they want --></p>
         <p><!-- description --></p>
       </article>
-    </div>
-  </section>
-
-  <section class="row" id="characters">
-    <div class="row-head"><h2>Characters</h2></div>
-
-    <!-- Cards here instead of entries, so portraits have somewhere
-         to live: style="--art: url(art/portrait.jpg)" -->
-    <div class="cards">
-      <article class="card">
-        <span class="card-art"></span>
-        <div class="card-body">
-          <h3>Character name</h3>
-          <p class="meta"><!-- role / allegiance --></p>
-          <p><!-- description --></p>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <section class="row" id="play">
-    <div class="row-head"><h2>At the table</h2></div>
-    <div class="prose">
-      <p><!-- House rules, character creation, session notes, downloads. --></p>
-      <p class="links">
-        <a href="#">Session log</a>
-        <a href="#">Downloads</a>
-      </p>
     </div>
   </section>
 
