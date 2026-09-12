@@ -451,6 +451,11 @@ footer {
   --page-veil: .82;
 }
 
+.home-page {
+  --page-art: url("art/backgrounds/Background 1.png");
+  --page-veil: .42;
+}
+
 body::before {
   content: "";
   position: fixed; inset: 0; z-index: -2;
