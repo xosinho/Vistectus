@@ -38,13 +38,13 @@
 
   /* Artwork. Paths here are relative to THIS file, so a picture in
      this world folder is just art/whatever.jpg. */
-  --hero: linear-gradient(160deg, #1d1c2c 0%, #0b0c14 58%, #2a1417 100%);
+   --hero: url("htr/dead-hand/art/Background HtR.png");
   --art:  linear-gradient(145deg, #191b26 0%, #0e0f16 100%);
 
   /* A picture behind every page of this world. Uncomment when you
      have one — and keep --page-veil high so text stays readable. */
-  /* --page-art:  url(art/paper.jpg); */
-  /* --page-veil: .86; */
+   --page-art:  url("htr/dead-hand/art/Background HtR.png");
+   --page-veil: .52;
 }
 
 /* Garamond sets its capitals quite tight; loosen the display type a
