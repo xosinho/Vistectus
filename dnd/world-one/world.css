@@ -1,0 +1,49 @@
+/* ===================================================================
+   world.css — flavour for THIS world only.
+
+   The shared wireframe lives in ../../style.css and is not touched.
+   Here you only override tokens. Everything that uses them — buttons,
+   headings, card borders, the kicker, focus rings — follows along.
+
+   Keep the surfaces in the same indigo family as the hub and swing
+   the accent instead: the world feels its own without feeling like a
+   different website.
+
+   A font, if you want one. An @import must be the first line of the
+   file, above everything else:
+   @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&display=swap");
+   =================================================================== */
+
+:root {
+  /* The one colour that defines the world. */
+  --accent:     #e0b552;
+  --accent-ink: #17120a;
+
+  /* Indigo, nudged towards warm. */
+  --bg:         #0f0c18;
+  --bg-raised:  #1a1526;
+  --bg-sunken:  #0a0810;
+  --line:       #2e2740;
+
+  /* This world can carry its own logo too. The path is relative to
+     THIS file, so a picture sitting beside it needs no folders: */
+  /* --logo: url(logo.svg); */
+
+  /* Display face for headings, once you have imported one above. */
+  /* --font-display: "Cinzel", Georgia, serif; */
+
+  /* Key art. Swap the gradient for a picture when you have one:
+     --hero: url(art/hero.jpg); */
+  --hero: linear-gradient(160deg, #34283f 0%, #0f0c18 58%, #2a2116 100%);
+  --art:  linear-gradient(145deg, #241d33 0%, #140f1f 100%);
+}
+
+/* Flavour beyond colour is fine too, as long as it stays inside this
+   file. A slow ember glow behind the hero title, for instance. */
+.hero h1 {
+  text-shadow: 0 2px 30px rgba(0, 0, 0, .5), 0 0 60px rgba(224, 181, 82, .18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero h1 { text-shadow: 0 2px 30px rgba(0, 0, 0, .5); }
+}

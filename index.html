@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Vistectus</title>
+  <meta name="description" content="">
+
+  <link rel="icon" href="art/logo.svg" type="image/svg+xml">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ---- Top bar: identical on every page ------------------------ -->
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span> Vistectus</a>
+  <nav class="topnav">
+    <a href="dnd/index.html">D&amp;D</a>
+    <a href="htr/index.html">Hunter</a>
+    <a href="vtda/index.html">Vampire</a>
+    <a href="#about">About</a>
+    <a href="#contribute">Contribute</a>
+  </nav>
+</header>
+
+<!-- ---- Hero ---------------------------------------------------
+     Drop your key art in with --hero. Until you do, the gradient
+     from style.css shows instead:
+     <section class="hero" style="--hero: url(art/hero.jpg)">   -->
+<section class="hero">
+  <div class="hero-inner">
+    <p class="kicker">Worldbuilding hub</p>
+    <h1>Vistectus</h1>
+    <p class="lede"><!-- One or two lines. What Vistectus is and who it is for. --></p>
+    <a class="btn" href="#systems">Browse the worlds</a>
+  </div>
+</section>
+
+<main id="main">
+
+  <!-- ---- Systems ---------------------------------------------- -->
+  <section class="row" id="systems">
+    <div class="row-head">
+      <h2>Systems</h2>
+      <a class="row-link" href="#contribute">Host a world</a>
+    </div>
+
+    <!-- One .card per system. Copy a block to add another.
+         Give it artwork with style="--art: url(art/name.jpg)". -->
+    <div class="cards">
+
+      <article class="card">
+        <a class="card-art" href="dnd/index.html">
+          <span class="card-badge"><!-- how many worlds --></span>
+        </a>
+        <div class="card-body">
+          <h3><a href="dnd/index.html">Dungeons &amp; Dragons</a></h3>
+          <p class="meta"><!-- genre --></p>
+          <p><!-- Two lines. The hook, not the history. --></p>
+        </div>
+      </article>
+
+      <article class="card">
+        <a class="card-art" href="htr/index.html">
+          <span class="card-badge"><!-- how many worlds --></span>
+        </a>
+        <div class="card-body">
+          <h3><a href="htr/index.html">Hunter: the Reckoning</a></h3>
+          <p class="meta"><!-- genre --></p>
+          <p><!-- Two lines. --></p>
+        </div>
+      </article>
+
+      <article class="card">
+        <a class="card-art" href="vtda/index.html">
+          <span class="card-badge"><!-- how many worlds --></span>
+        </a>
+        <div class="card-body">
+          <h3><a href="vtda/index.html">Vampire: the Dark Ages</a></h3>
+          <p class="meta"><!-- genre --></p>
+          <p><!-- Two lines. --></p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- A strip of artwork for atmosphere. Delete it if you would
+       rather not have one, or point --art at a picture. -->
+  <div class="band"></div>
+
+  <section class="row" id="about">
+    <div class="row-head"><h2>About</h2></div>
+    <div class="prose">
+      <p><!-- What the hub is for, and the name: vis + tekton. --></p>
+    </div>
+  </section>
+
+  <section class="row" id="contribute">
+    <div class="row-head"><h2>Contribute</h2></div>
+    <div class="prose">
+      <p><!-- For later: how other creators can host a world here. --></p>
+      <p><a class="btn btn--ghost" href="mailto:">Get in touch</a></p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>&copy; 2026 Vistectus</p>
+    <p class="links">
+      <a href="mailto:">Email</a>
+      <a href="#">Discord</a>
+      <a href="#">GitHub</a>
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>

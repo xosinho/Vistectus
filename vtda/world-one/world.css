@@ -1,0 +1,18 @@
+/* Flavour for THIS world only. See dnd/world-one/world.css for the
+   fully commented version of this file. */
+
+:root {
+  --accent:     #b03a55;
+  --accent-ink: #f7ecef;
+
+  --bg:         #0e0a15;
+  --bg-raised:  #191222;
+  --bg-sunken:  #09060e;
+  --line:       #2f2140;
+
+  /* --logo: url(logo.svg); */
+  /* --font-display: "Cormorant Garamond", Georgia, serif; */
+
+  --hero: linear-gradient(160deg, #2f1b3d 0%, #0e0a15 60%, #34142a 100%);
+  --art:  linear-gradient(145deg, #241634 0%, #130d1d 100%);
+}
