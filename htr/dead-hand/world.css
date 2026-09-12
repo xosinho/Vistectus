@@ -43,8 +43,7 @@
 
   /* A picture behind every page of this world. Uncomment when you
      have one — and keep --page-veil high so text stays readable. */
-   --page-art:  url("htr/dead-hand/art/Background HtR.png");
-   --page-veil: .52;
+   /* Page-wide art stays disabled; the image is used by the hero only. */
 }
 
 /* Garamond sets its capitals quite tight; loosen the display type a
