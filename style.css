@@ -33,7 +33,7 @@
   /* Logo. Replace art/logo.svg with your own file and every page
      follows. Different filename? Change this one line. Wide wordmark?
      Give --logo-w a bigger value. */
-  --logo:        url(art/logo.svg);
+  --logo:        url("art/VisTectus Logo 1.jpg");
   --logo-w:      26px;
   --logo-h:      26px;
 
