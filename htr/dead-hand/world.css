@@ -38,11 +38,9 @@
 
   /* Artwork. Paths here are relative to THIS file, so a picture in
      this world folder is just art/whatever.jpg. */
-   --hero: url("htr/dead-hand/art/Background HtR.png");
+   --hero: url("htr/dead-hand/art/Background HtR.jpg");
   --art:  linear-gradient(145deg, #191b26 0%, #0e0f16 100%);
 
-  /* A picture behind every page of this world. Uncomment when you
-     have one — and keep --page-veil high so text stays readable. */
    /* Page-wide art stays disabled; the image is used by the hero only. */
 }
 

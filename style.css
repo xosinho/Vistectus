@@ -51,7 +51,7 @@
   /* Art slots. A world.css or an inline style swaps these for
      url('art/whatever.jpg'). The gradients are what shows until
      you have real artwork, so empty pages still look finished. */
-  --hero: url("art/backgrounds/Background 1.png");
+  --hero: url("art/backgrounds/Background 1.jpg");
   --art:  linear-gradient(145deg, #221c42 0%, #110e22 100%);
 }
 
@@ -288,10 +288,24 @@ h2 {
 }
 .card:hover { transform: translateY(-3px); border-color: var(--accent); }
 
+/* The tile is always 16:9. How the picture sits inside it is up to the
+   card, because artwork and logos want different things:
+
+     --art-fit  cover (default) fills the tile and crops the overflow;
+                contain shows the whole picture and leaves bars
+     --art-pos  which part survives the crop: center (default), top...
+     --art-bg   what shows in the bars when the fit is contain
+
+   A 16:9 photograph needs none of these. A logo usually wants
+   --art-fit: contain so nothing is clipped. */
 .card-art {
   position: relative; display: block;
   aspect-ratio: 16 / 9;
-  background: var(--art) center / cover no-repeat;
+  background:
+    var(--art-bg, transparent)
+    var(--art)
+    var(--art-pos, center) / var(--art-fit, cover)
+    no-repeat;
   transition: transform .35s ease;
 }
 .card:hover .card-art { transform: scale(1.03); }
