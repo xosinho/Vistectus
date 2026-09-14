@@ -38,7 +38,7 @@
 
   /* Artwork. Paths here are relative to THIS file, so a picture in
      this world folder is just art/whatever.jpg. */
-  --hero: url("art/Background HtR.jpg");
+   --hero: url("htr/brooklyn/art/Background HtR.jpg");
   --art:  linear-gradient(145deg, #191b26 0%, #0e0f16 100%);
 
    /* Page-wide art stays disabled; the image is used by the hero only. */
