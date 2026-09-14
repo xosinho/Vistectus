@@ -1,6 +1,6 @@
-# Giovanni Chronicle — how to add content
+# Dead Hand Chronicle — how to add content
 
-Part of **Vistectus → Hunter → The Dead Hand → Giovanni Chronicle**.
+Part of **Vistectus → Hunter → Brooklyn Chronicles → Dead Hand Chronicle**.
 
 ## The one rule
 
@@ -34,7 +34,7 @@ There is none in this folder, on purpose. The pages use:
 
 ```
 ../../../style.css   the shared Vistectus wireframe
-../world.css         The Dead Hand flavour: blood accent, Garamond, bone text
+../world.css         Brooklyn Chronicles flavour: blood accent, Garamond, bone text
 ```
 
 To restyle the whole world — every chronicle in it — edit `../world.css`.

@@ -52,8 +52,8 @@ text, so start high and come down until it reads.
 PATHS
 
 A path in a page is relative to THAT page. A path in a stylesheet is
-relative to THAT stylesheet. So art/hero.jpg inside dead-hand/world.css
-means dead-hand/art/hero.jpg, and the same text inside a chronicle page
+relative to THAT stylesheet. So art/hero.jpg inside brooklyn/world.css
+means brooklyn/art/hero.jpg, and the same text inside a chronicle page
 means that chronicle's own art folder. This is why each level has its
 own art folder: the short path always means "mine".
 

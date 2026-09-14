@@ -1,5 +1,5 @@
 /* =====================================================================
-   GIOVANNI CHRONICLE — shared top bar and footer
+   DEAD HAND CHRONICLE — shared top bar and footer
    ---------------------------------------------------------------------
    The chronicle has several pages that all carry the same bar. It is
    defined ONCE here and injected into each page, so adding a page means
@@ -17,10 +17,10 @@
 
   /* ---- where this chronicle sits, and what it is called ---- */
   var SITE = {
-    chronicle: "Giovanni Chronicle",
-    world:     "The Dead Hand",
+    chronicle: "Dead Hand Chronicle",
+    world:     "Brooklyn Chronicles",
     hub:       "../../../index.html",   /* Vistectus            */
-    worldHref: "../index.html",         /* The Dead Hand        */
+    worldHref: "../index.html",         /* Brooklyn Chronicles  */
     logoAlt:   "Vistectus"
   };
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Open a name to read their background and download their character sheet. This is your cell &mdash; keep each other alive.">
+  <meta name="description" content="The people you have crossed paths with so far. Open a name for what you know about them &mdash; no more, no less.">
 
   <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
 
@@ -12,36 +12,36 @@
   <link rel="stylesheet" href="../world.css">
 </head>
 
-<body data-page="players" data-title="The cell">
+<body data-page="npcs" data-title="People of Red Hook">
 
 <section class="hero hero--compact">
   <div class="hero-inner">
     <p class="crumb">
       <a href="../../../index.html">Vistectus</a> /
       <a href="../../index.html">Hunter</a> /
-      <a href="../index.html">The Dead Hand</a> /
-      <a href="index.html">Giovanni Chronicle</a>
+      <a href="../index.html">Brooklyn Chronicles</a> /
+      <a href="index.html">Dead Hand Chronicle</a>
     </p>
-    <p class="kicker">The cell</p>
-    <h1>The hunters of The Dead Hand</h1>
-    <p class="lede">Open a name to read their background and download their character sheet. This is your cell &mdash; keep each other alive.</p>
+    <p class="kicker">People of Red Hook</p>
+    <h1>Faces the cell has met</h1>
+    <p class="lede">The people you have crossed paths with so far. Open a name for what you know about them &mdash; no more, no less.</p>
   </div>
 </section>
 
 <main id="main">
   <section class="row">
-    <div class="row-head"><h2>The cell</h2></div>
+    <div class="row-head"><h2>People of Red Hook</h2></div>
 
-    <!-- The roster renders here from assets/data/players.js.
+    <!-- The roster renders here from assets/data/npcs.js.
          To add or edit someone you edit that data file, never this page. -->
-    <div id="players-roster"></div>
+    <div id="npcs-roster"></div>
   </section>
 </main>
 
 <script src="assets/js/render.js"></script>
-<script src="assets/data/players.js"></script>
+<script src="assets/data/npcs.js"></script>
 <script>
-  DeadHand.renderRoster("players-roster", window.DEAD_HAND_PLAYERS, "player");
+  DeadHand.renderRoster("npcs-roster", window.DEAD_HAND_NPCS, "npc");
 </script>
 <script src="assets/js/site.js"></script>
 </body>
