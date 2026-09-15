@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cinzel — Vistectus specimen</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&display=swap');
+
+  :root{
+    --ink:#0c0a09;
+    --ink-2:#131010;
+    --line:#2a231b;
+    --gold:#c9a96a;
+    --gold-bright:#e6d2a3;
+    --gold-dim:#8a7548;
+    --dim:#7a6c53;
+    --parch:#d9cbab;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(120% 80% at 50% -10%, #1a1512 0%, var(--ink) 55%, #060504 100%);
+    color:var(--parch);
+    font-family:'Cinzel',serif;
+    -webkit-font-smoothing:antialiased;
+    padding:clamp(2rem,6vw,6rem) clamp(1.25rem,5vw,4rem) 5rem;
+    min-height:100vh;
+  }
+  .wrap{max-width:1000px;margin:0 auto}
+
+  /* Metallic text fill for the display pieces */
+  .metal{
+    background:linear-gradient(180deg,#f3e6c6 0%,#c9a96a 42%,#7c6438 66%,#e6d2a3 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  /* ---- HERO ---- */
+  .hero{
+    text-align:center;
+    padding:clamp(1.5rem,4vw,3rem) 0 clamp(2.5rem,6vw,4rem);
+    border-bottom:1px solid var(--line);
+  }
+  .wordmark{
+    font-weight:700;
+    font-size:clamp(2.8rem,11vw,8rem);
+    letter-spacing:.06em;
+    line-height:.95;
+    text-shadow:0 2px 30px rgba(201,169,106,.15);
+  }
+  .tagline{
+    margin-top:clamp(1rem,2.5vw,1.6rem);
+    font-weight:400;
+    font-size:clamp(.62rem,2vw,1rem);
+    letter-spacing:.42em;
+    color:var(--dim);
+    padding-left:.42em; /* balance the tracking */
+  }
+  .rule{
+    width:64px;height:1px;margin:1.6rem auto 0;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  }
+
+  /* ---- SECTION SCAFFOLD ---- */
+  section{padding:clamp(2.5rem,6vw,4rem) 0;border-bottom:1px solid var(--line)}
+  .kicker{
+    font-size:.68rem;letter-spacing:.34em;color:var(--dim);
+    font-weight:500;margin-bottom:1.4rem;
+  }
+  .lede{
+    font-family:Georgia,'Times New Roman',serif;
+    font-weight:400;color:var(--parch);
+    font-size:clamp(.95rem,1.6vw,1.08rem);
+    line-height:1.7;max-width:62ch;opacity:.82;
+  }
+  .lede + .lede{margin-top:1rem}
+
+  /* ---- COVERAGE GRID ---- */
+  .glyphs{
+    margin-top:1.8rem;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(48px,1fr));
+    gap:.4rem;
+  }
+  .glyphs span{
+    aspect-ratio:1;
+    display:flex;align-items:center;justify-content:center;
+    font-size:clamp(1.3rem,3vw,1.9rem);
+    font-weight:600;
+    color:var(--gold);
+    background:var(--ink-2);
+    border:1px solid var(--line);
+    border-radius:2px;
+  }
+  .glyphs .num{color:var(--dim);font-weight:500}
+
+  /* ---- WEIGHT LADDER ---- */
+  .ladder{margin-top:1.6rem;display:flex;flex-direction:column;gap:.85rem}
+  .ladder div{
+    display:flex;align-items:baseline;gap:1.2rem;
+    padding-bottom:.85rem;border-bottom:1px solid var(--line);
+    letter-spacing:.05em;
+  }
+  .ladder div:last-child{border-bottom:none}
+  .ladder .w{
+    font-family:Georgia,serif;font-size:.72rem;letter-spacing:.1em;
+    color:var(--dim);min-width:8.5ch;flex-shrink:0;
+  }
+  .ladder .sample{font-size:clamp(1.1rem,3vw,1.7rem);color:var(--parch)}
+  .w400{font-weight:400}.w500{font-weight:500}.w600{font-weight:600}
+  .w700{font-weight:700}.w800{font-weight:800}.w900{font-weight:900}
+
+  /* ---- SECTION-HEADING PREVIEWS ---- */
+  .heads{margin-top:1.8rem;display:flex;flex-direction:column;gap:1.5rem}
+  .heads h3{
+    font-weight:700;letter-spacing:.08em;
+    font-size:clamp(1.3rem,4.5vw,2.4rem);
+    line-height:1.05;
+  }
+  .heads small{
+    display:block;margin-top:.4rem;
+    font-family:Georgia,serif;font-weight:400;
+    font-size:.8rem;letter-spacing:.16em;color:var(--dim);
+    text-transform:uppercase;
+  }
+
+  /* ---- CODE ---- */
+  pre{
+    margin-top:1.6rem;
+    background:#080706;
+    border:1px solid var(--line);
+    border-left:2px solid var(--gold);
+    border-radius:2px;
+    padding:1.3rem 1.4rem;
+    overflow-x:auto;
+    font-family:'SF Mono',Menlo,Consolas,monospace;
+    font-size:.8rem;line-height:1.7;
+    color:#b9ad93;
+    letter-spacing:0;
+  }
+  pre .c{color:#5f5642;font-style:italic}
+  pre .p{color:var(--gold)}
+  pre .v{color:#d9cbab}
+
+  .note{
+    font-family:Georgia,serif;font-size:.82rem;line-height:1.6;
+    color:var(--dim);margin-top:1.1rem;max-width:60ch;
+  }
+  a{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="wordmark metal">VISTECTUS</div>
+    <div class="tagline">LORE, WORLDS AND BEYOND</div>
+    <div class="rule"></div>
+  </header>
+
+  <section>
+    <p class="kicker">THE MATCH</p>
+    <p class="lede">Your wordmark is inscriptional Roman — the Trajan tradition of carved capitals: tall proportions, a heavy stroke contrast between thick stems and thin serifs, and serifs that flare to a point rather than sitting square.</p>
+    <p class="lede">Cinzel reproduces those letterforms exactly. What it cannot carry is the stone weathering and metallic lighting — those live in your logo image or in CSS effects like the gradient fill above, not in the font itself. Set flat, the shapes are the same lineage.</p>
+  </section>
+
+  <section>
+    <p class="kicker">FULL COVERAGE — 26 CAPITALS, 10 FIGURES</p>
+    <p class="lede">The reason to take a complete typeface rather than the seven letters in the logo: every glyph you will ever need to set, already drawn in the same hand.</p>
+    <div class="glyphs">
+      <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span>
+      <span>G</span><span>H</span><span>I</span><span>J</span><span>K</span><span>L</span>
+      <span>M</span><span>N</span><span>O</span><span>P</span><span>Q</span><span>R</span>
+      <span>S</span><span>T</span><span>U</span><span>V</span><span>W</span><span>X</span>
+      <span>Y</span><span>Z</span>
+      <span class="num">0</span><span class="num">1</span><span class="num">2</span>
+      <span class="num">3</span><span class="num">4</span><span class="num">5</span>
+      <span class="num">6</span><span class="num">7</span><span class="num">8</span><span class="num">9</span>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">WEIGHTS</p>
+    <p class="lede">Cinzel ships six weights. Your wordmark reads at roughly SemiBold–Bold; the tagline is the same face dropped to Regular and tracked out wide.</p>
+    <div class="ladder">
+      <div><span class="w">Regular 400</span><span class="sample w400">Vistectus</span></div>
+      <div><span class="w">Medium 500</span><span class="sample w500">Vistectus</span></div>
+      <div><span class="w">SemiBold 600</span><span class="sample w600">Vistectus</span></div>
+      <div><span class="w">Bold 700</span><span class="sample w700">Vistectus</span></div>
+      <div><span class="w">ExtraBold 800</span><span class="sample w800">Vistectus</span></div>
+      <div><span class="w">Black 900</span><span class="sample w900">Vistectus</span></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">YOUR SECTIONS, SET IN CINZEL</p>
+    <div class="heads">
+      <h3 class="metal">DUNGEONS &amp; DRAGONS<small>Campaigns, worlds and characters</small></h3>
+      <h3 class="metal">HUNTER: THE RECKONING<small>The hunt against the dark</small></h3>
+      <h3 class="metal">VAMPIRE: THE DARK AGES<small>Buda-Pest, 1242</small></h3>
+    </div>
+  </section>
+
+  <section style="border-bottom:none">
+    <p class="kicker">DROP IT INTO STYLE.CSS</p>
+    <p class="lede">The simplest route for your GitHub Pages site — one import line, then apply the family to your headings.</p>
+<pre><span class="c">/* top of style.css */</span>
+<span class="p">@import</span> <span class="v">url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&amp;display=swap')</span>;
+
+<span class="c">/* wordmark / page title */</span>
+<span class="v">.wordmark</span> {
+  <span class="p">font-family</span>: <span class="v">'Cinzel', serif</span>;
+  <span class="p">font-weight</span>: <span class="v">700</span>;
+  <span class="p">letter-spacing</span>: <span class="v">0.06em</span>;
+}
+
+<span class="c">/* section headings */</span>
+<span class="v">h1, h2, h3</span> {
+  <span class="p">font-family</span>: <span class="v">'Cinzel', serif</span>;
+  <span class="p">font-weight</span>: <span class="v">600</span>;
+  <span class="p">letter-spacing</span>: <span class="v">0.04em</span>;
+}
+
+<span class="c">/* tagline — same face, light and wide */</span>
+<span class="v">.tagline</span> {
+  <span class="p">font-family</span>: <span class="v">'Cinzel', serif</span>;
+  <span class="p">font-weight</span>: <span class="v">400</span>;
+  <span class="p">letter-spacing</span>: <span class="v">0.4em</span>;
+}</pre>
+    <p class="note">For offline builds, faster loads, or if you'd rather not call Google, self-host instead: download the family from the Cinzel page on Google Fonts (OFL — free to bundle), drop the <em>.woff2</em> files in the repo, and swap the <em>@import</em> for local <em>@font-face</em> rules. Either way it publishes on your next <em>git push</em>.</p>
+  </section>
+
+</div>
+</body>
+</html>

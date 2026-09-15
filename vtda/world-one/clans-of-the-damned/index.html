@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clans of the Damned — The Clans of Caine, Layer IIIa</title>
+<meta name="description" content="The ten playable clans of Crown of Ice and Bone: a Vampire: The Masquerade Dark Ages chronicle set in Buda-Pest, 1242, in the ash of the Mongol invasion.">
+<meta property="og:title" content="Clans of the Damned — The Clans of Caine, Layer IIIa">
+<meta property="og:description" content="Ten bloodlines. Each a dynasty of the night, shaped by centuries of hunger, ambition, and ruin.">
+<meta property="og:type" content="article">
+<meta property="og:image" content="images/Ventrue.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --ink: #0e0a15;
+  --ink-2: #191222;
+  --panel: #191222;
+  --line: #2f2140;
+  --blood: #b03a55;
+  --blood-soft: #d06a82;
+  --bone: #f1eef5;
+  --bone-dim: #b7adbf;
+  --serif: "Cinzel", Georgia, "Times New Roman", serif;
+  --body: "EB Garamond", Georgia, "Times New Roman", serif;
+  --maxw: 1240px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--body);
+  font-size: 18px;
+  line-height: 1.66;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative;
+  min-height: 78vh;
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+.hero__art {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #2f2140 0%, #0e0a15 62%, #3b1d2d 100%);
+}
+.hero__art img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+.hero__art::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(100deg, rgba(10,6,7,.96) 0%, rgba(10,6,7,.86) 38%, rgba(10,6,7,.35) 70%, rgba(10,6,7,.6) 100%),
+    linear-gradient(to top, rgba(10,6,7,.95), rgba(10,6,7,0) 45%);
+}
+.hero__inner {
+  position: relative;
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 6rem 2rem;
+}
+.hero h1, .hero__lede { max-width: 22ch; }
+.hero__lede { max-width: 46ch; }
+.eyebrow {
+  font-family: var(--serif);
+  font-size: .8rem;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  margin: 0 0 1.6rem;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2.8rem, 8vw, 5.2rem);
+  line-height: 1.02;
+  letter-spacing: .005em;
+  margin: 0 0 1.4rem;
+  text-shadow: 0 2px 40px rgba(0,0,0,.8);
+}
+.hero__lede { font-size: 1.15rem; color: var(--bone); margin: 0 0 2.2rem; }
+
+.chip, .playable {
+  display: inline-block;
+  font-family: var(--serif);
+  font-size: .72rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  padding: .42em 1.05em;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  margin: 0;
+  white-space: nowrap;
+}
+.chip--solid {
+  background: var(--blood);
+  border-color: var(--blood);
+  color: #fff;
+}
+
+/* ---------- clan sections ---------- */
+main { display: block; }
+
+.clan {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 8vw, 7rem) 2rem;
+  border-bottom: 1px solid var(--line);
+}
+.clan__art { grid-column: 1; grid-row: 1; }
+.clan__body { grid-column: 2; grid-row: 1; }
+.clan--right { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+.clan--right .clan__art { grid-column: 2; }
+.clan--right .clan__body { grid-column: 1; }
+
+.clan__art { margin: 0; }
+.clan__art img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  filter: saturate(.92) contrast(1.04);
+}
+
+.clan__body .chip { color: var(--bone-dim); }
+.clan h2 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2.4rem, 5.5vw, 3.6rem);
+  line-height: 1;
+  margin: 1rem 0 .5rem;
+}
+.epithet {
+  color: var(--blood-soft);
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  font-style: italic;
+  margin: 0 0 2rem;
+}
+
+.clan__cols {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+.stat {
+  border-left: 2px solid var(--blood);
+  background: rgba(201, 19, 19, .055);
+  padding: .85rem 1rem .95rem 1.1rem;
+  margin-bottom: 1rem;
+}
+.stat:last-child { margin-bottom: 0; }
+.stat h3 {
+  font-family: var(--serif);
+  font-size: .78rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  font-weight: 600;
+  margin: 0 0 .5rem;
+}
+.stat p { margin: 0; font-size: .96rem; }
+.stat ul { margin: 0; padding: 0; list-style: none; font-size: .96rem; }
+.stat ul li { margin: 0 0 .3rem; }
+.stat ul li:last-child { margin-bottom: 0; }
+.disciplines .disc { font-family: var(--serif); font-size: 1.06rem; font-weight: 600; }
+.disciplines .sep { color: var(--blood); padding: 0 .45em; }
+.backgrounds li { font-weight: 600; }
+
+.playable {
+  color: var(--blood-soft);
+  border-color: rgba(201,19,19,.5);
+  margin-bottom: 1.2rem;
+}
+.clan__prose p:last-child { margin: 0; }
+.clan__prose em { color: var(--bone); }
+
+/* ---------- footer ---------- */
+footer {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+  color: var(--bone-dim);
+  font-size: .9rem;
+}
+footer p { margin: 0 0 .5rem; }
+.rule {
+  width: 60px; height: 1px; background: var(--blood);
+  margin: 0 0 1.5rem;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .clan, .clan--right, .clan__cols { grid-template-columns: minmax(0, 1fr); }
+  .clan__art, .clan__body,
+  .clan--right .clan__art, .clan--right .clan__body { grid-column: 1; grid-row: auto; }
+  .clan__art img { aspect-ratio: 4 / 5; }
+  .clan { gap: 2rem; }
+}
+
+@media (max-width: 560px) {
+  body { font-size: 17px; }
+  .hero { min-height: 70vh; }
+  .hero__inner { padding: 4.5rem 1.25rem; }
+  .clan { padding: 3rem 1.25rem; }
+  footer { padding: 3rem 1.25rem 4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero__art">
+  </div>
+  <div class="hero__inner">
+    <p class="eyebrow">The Clans of Caine · Layer IIIa</p>
+    <h1>Clans of the Damned</h1>
+    <p class="hero__lede">Ten bloodlines. Each a dynasty of the night, shaped by centuries of hunger, ambition, and ruin. Choose wisely — for the blood chooses you in return.</p>
+    <p class="chip chip--solid">Vampire: The Masquerade</p>
+  </div>
+</header>
+
+<main>
+
+    <section class="clan clan--left" id="ventrue">
+      <figure class="clan__art">
+        <img src="images/Ventrue.jpg" alt="A Ventrue patrician in dark robes, imperious and still, lit by candlelight." loading="lazy" width="936" height="1248">
+      </figure>
+      <div class="clan__body">
+        <p class="chip">The Patricians</p>
+        <h2>Ventrue</h2>
+        <p class="epithet">The Patricians — the self-appointed lords of the Damned</p>
+        <div class="clan__cols">
+          <div class="clan__stats">
+            <div class="stat">
+              <h3>Disciplines</h3>
+              <ul class="disciplines">
+          <li><span class="disc">Dominate</span><span class="sep">·</span>command minds</li>
+          <li><span class="disc">Fortitude</span><span class="sep">·</span>endure all wounds</li>
+          <li><span class="disc">Presence</span><span class="sep">·</span>inspire love or terror</li>
+              </ul>
+            </div>
+            <div class="stat">
+              <h3>Bane</h3>
+              <p>May feed only from one narrow mortal type — all other blood is ash.</p>
+            </div>
+            <div class="stat">
+              <h3>Potential backgrounds</h3>
+              <ul class="backgrounds">
+          <li>The Imperial Envoy (HRE)</li>
+          <li>The Byzantine Noble</li>
+          <li>The Teutonic Knight</li>
+              </ul>
+            </div>
+          </div>
+          <div class="clan__prose">
+            <p class="playable">[ Playable ]</p>
+            <p>When the Mongols turned and rode east they left the Patricians a gift only they knew how to unwrap: a kingdom of dead heirs, burned records, and masterless land — a ledger wiped clean for a hand cold enough to claim it. Rome taught them that empires are held not by the sword but by the record, the oath, and the coin, and here all three lie in ruins waiting to be seized; so a Prince of their blood holds the domain and means to make himself the man on whom the rebuilding of Hungary rests. To be Ventrue in this chronicle is to carry that certainty like a second curse — you were chosen, as a city chooses a magistrate, to rule — while the crown you would inherit is made of ice and bone, and every other power reaching into the ash means to take it first.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="clan clan--right" id="tremere">
+      <figure class="clan__art">
+        <img src="images/Tremere.jpg" alt="A Tremere sorcerer over a blood-marked working, robes dark, eyes intent." loading="lazy" width="936" height="1248">
+      </figure>
+      <div class="clan__body">
+        <p class="chip">The Usurpers</p>
+        <h2>Tremere</h2>
+        <p class="epithet">The Usurpers — the trembling ones</p>
+        <div class="clan__cols">
+          <div class="clan__stats">
+            <div class="stat">
+              <h3>Disciplines</h3>
+              <ul class="disciplines">
+          <li><span class="disc">Auspex</span><span class="sep">·</span>preternatural senses</li>
+          <li><span class="disc">Dominate</span><span class="sep">·</span>bend another&#x27;s will</li>
+          <li><span class="disc">Thaumaturgy</span><span class="sep">·</span>blood bent into sorcery</li>
+              </ul>
+            </div>
+            <div class="stat">
+              <h3>Bane</h3>
+              <p>The first draught of another Cainite&#x27;s blood counts double toward a blood bond — the second drink completes it.</p>
+            </div>
+            <div class="stat">
+              <h3>Potential backgrounds</h3>
+              <ul class="backgrounds">
+          <li>The Chantry Refugee</li>
+          <li>The Hermetic Apostate</li>
+          <li>The Council&#x27;s Pledge</li>
+              </ul>
+            </div>
+          </div>
+          <div class="clan__prose">
+            <p class="playable">[ Playable ]</p>
+            <p>Mortal Hermetic mages who drank vampiric blood in 1022. The youngest blood in the city and the least trusted — mortal wizards who, two centuries ago, drank a stolen immortality no one had offered them, and have been paying for the theft ever since. In the Carpathians their war with the Tzimisce has gone badly: chantries burned, the fiends baying for the erasure of the whole clan, and the great houses of the old Order of Hermes still cursing the apprentices who made themselves monsters. So the Usurpers have come down into Buda-Pest with their hands open, trading the one thing the Prince cannot buy elsewhere — blood bent into learnable sorcery — for a roof and a border to hide behind. To be Tremere here is to be useful and unfree: welcomed for your magic, watched for your ambition, bound by the vial of your own vitae the clan holds over you, and hunted through the streets by an enemy who remembers exactly whose land your tower stands on. You bought immortality once; in this city you will spend it discharging the debt.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="clan clan--right" id="nosferatu">
+      <figure class="clan__art">
+        <img src="images/Nosferatu.jpg" alt="A grotesque, monstrous vampire lurking in ancient sewer tunnels beneath a medieval city, shadows and lantern light." loading="lazy" width="936" height="1248">
+      </figure>
+      <div class="clan__body">
+        <p class="chip">The Priors — The Hidden Ones</p>
+        <h2>Nosferatu</h2>
+        <p class="epithet">The Priors — the hidden ones</p>
+        <div class="clan__cols">
+          <div class="clan__stats">
+            <div class="stat">
+              <h3>Disciplines</h3>
+              <ul class="disciplines">
+          <li><span class="disc">Animalism</span><span class="sep">·</span>command rats and worse</li>
+          <li><span class="disc">Obfuscate</span><span class="sep">·</span>go unseen or wear another face</li>
+          <li><span class="disc">Potence</span><span class="sep">·</span>lock-breaking strength</li>
+              </ul>
+            </div>
+            <div class="stat">
+              <h3>Bane</h3>
+              <p>Appearance nil and unraisable — they fail every first impression save one: terror.</p>
+            </div>
+            <div class="stat">
+              <h3>Potential backgrounds</h3>
+              <ul class="backgrounds">
+          <li>The Cartographer Below</li>
+          <li>The Plague-Pit Warden</li>
+          <li>The Tzimisce&#x27;s Old Debt</li>
+              </ul>
+            </div>
+          </div>
+          <div class="clan__prose">
+            <p class="playable">[ Playable ]</p>
+            <p>The Embrace that made them ground their beauty into nightmare over long nights and drove them down — into the Roman drains beneath old Aquincum, the plague-pits the Mongols filled and left, the cellars and crypts of two half-burned towns. Above them the city is a wound in the process of being dressed: masterless land, dead heirs, records gone to ash, and every power in the region reaching into the dark to grope for what the fire left. The Hidden Ones are already there, in that dark, and have been all along. What they surrendered in appearance they have taken back a hundredfold in knowledge — who is truly buried where and who is not buried at all, which tunnels the horde overlooked, whose claim to a burned estate is a lie. To be Nosferatu in this chronicle is to be the thing every faction needs and none will seat at the table: the Prince cannot rebuild without your maps of the world below, his rivals cannot move without your silence, and both would rather you stayed a rumour than a witness.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="clan clan--right" id="lasombra">
+      <figure class="clan__art">
+        <img src="images/Lasombra.jpg" alt="An imperious vampire lord commanding living shadows in a dark cathedral, tendrils of darkness as weapons." loading="lazy" width="936" height="1248">
+      </figure>
+      <div class="clan__body">
+        <p class="chip">The Magisters</p>
+        <h2>Lasombra</h2>
+        <p class="epithet">The Magisters — lords of shadow and ambition</p>
+        <div class="clan__cols">
+          <div class="clan__stats">
+            <div class="stat">
+              <h3>Disciplines</h3>
+              <ul class="disciplines">
+          <li><span class="disc">Dominate</span><span class="sep">·</span>command a mind with a word</li>
+          <li><span class="disc">Obtenebration</span><span class="sep">·</span>shadow given the substance of a wound</li>
+          <li><span class="disc">Potence</span><span class="sep">·</span>strength that breaks stone</li>
+              </ul>
+            </div>
+            <div class="stat">
+              <h3>Bane</h3>
+              <p>They cast no reflection, and the sun wounds them worse than most of the Damned.</p>
+            </div>
+            <div class="stat">
+              <h3>Potential backgrounds</h3>
+              <ul class="backgrounds">
+          <li>The Sicilian Envoy</li>
+          <li>The Heresiarch</li>
+          <li>The Iberian Exile</li>
+              </ul>
+            </div>
+          </div>
+          <div class="clan__prose">
+            <p class="playable">[ Playable ]</p>
+            <p>The Magisters withdrew their hand from Hungary long ago, and the reborn domain the Ventrue are raising from the ash holds no elder of their blood, no chantry, no claim — which is exactly why the one who comes, comes as an envoy and not a native. The clan rules from the Mediterranean and from within the shadow of the Church, and it holds a single article of faith above all others: that excellence is the only pedigree that matters, and that darkness is a tool, a sacrament, or both. To such a clan a shattered frontier kingdom is a question, not a home — is this Prince&#x27;s cause worth an alliance, a conversion, or a conquest? So a Lasombra in this chronicle arrives from somewhere else, from Montano&#x27;s Castle of Shadows in Sicily or from the burning intramural wars of Iberia, carrying loyalties a thousand miles deep and a courtesy that can be withdrawn. He gives the Prince what no local blood can — dominion over living darkness, the weight of a clan that treats the Church as its instrument — and takes, in return, a foothold on ground where none of his own kind can reach him. But he casts no reflection and the sun bites him worse than most, and he knows the oldest truth of his line better than any: the only thing that has ever truly threatened a Lasombra is another Lasombra.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="clan clan--right" id="toreador">
+      <figure class="clan__art">
+        <img src="images/Toreador.jpg" alt="A Toreador aesthete in courtly finery, arrested mid-gesture by something beautiful." loading="lazy" width="936" height="1248">
+      </figure>
+      <div class="clan__body">
+        <p class="chip">The Aesthetes — Artisans, Vanitas</p>
+        <h2>Toreador</h2>
+        <p class="epithet">The Aesthetes — Artisans, Vanitas</p>
+        <div class="clan__cols">
+          <div class="clan__stats">
+            <div class="stat">
+              <h3>Disciplines</h3>
+              <ul class="disciplines">
+          <li><span class="disc">Auspex</span><span class="sep">·</span>find the flaw and the masterpiece</li>
+          <li><span class="disc">Celerity</span><span class="sep">·</span>move faster than sight</li>
+          <li><span class="disc">Presence</span><span class="sep">·</span>turn a room into an audience</li>
+              </ul>
+            </div>
+            <div class="stat">
+              <h3>Bane</h3>
+              <p>Caught by a thing of true beauty, they freeze entranced — until the scene ends or the object departs.</p>
+            </div>
+            <div class="stat">
+              <h3>Potential backgrounds</h3>
+              <ul class="backgrounds">
+          <li>The Court Artificer</li>
+          <li>The Minnesinger</li>
+          <li>The Mourning Beauty</li>
+              </ul>
+            </div>
+          </div>
+          <div class="clan__prose">
+            <p class="playable">[ Playable ]</p>
+            <p>They are the clan that cannot stop looking at a thing of beauty even as it burns — and Buda-Pest, in the ash of the invasion, is a broken thing waiting to be made beautiful again. Where the Ventrue see a ledger wiped clean and the Nosferatu a warren of secrets, the Aesthetes see a canvas: a royal town and a merchant town to be raised from rubble into something a kingdom can believe in, cathedrals to rebuild, a court to fill with music and rite and the pageantry that makes frightened mortals feel their king is still a king. This is the clan&#x27;s particular use to the Prince — he holds the domain, but a domain that looks like ruin invites challenge, and the Toreador make ruin look like a reign. To be Toreador here is to be the author of the crown&#x27;s image: you stage the processions, patronise the masons and the minnesingers, dress a shaky legitimacy in gold leaf so that when men look upon Buda-Pest they see order rather than a grave.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="clan clan--right" id="gangrel">
+      <figure class="clan__art">
+        <img src="images/Gangrel.jpg" alt="A feral vampire wanderer in a dark forest at night, cloaked and clawed, wild and animalistic." loading="lazy" width="936" height="1248">
+      </figure>
+      <div class="clan__body">
+        <p class="chip">The Wolf&#x27;s-Heads — Outlaws</p>
+        <h2>Gangrel</h2>
+        <p class="epithet">The Wolf&#x27;s-Heads — Outlaws</p>
+        <div class="clan__cols">
+          <div class="clan__stats">
+            <div class="stat">
+              <h3>Disciplines</h3>
+              <ul class="disciplines">
+          <li><span class="disc">Animalism</span><span class="sep">·</span>speak to and ride beasts</li>
+          <li><span class="disc">Fortitude</span><span class="sep">·</span>survive what would end another</li>
+          <li><span class="disc">Protean</span><span class="sep">·</span>claws, earth-melding, beast or mist</li>
+              </ul>
+            </div>
+            <div class="stat">
+              <h3>Bane</h3>
+              <p>Each frenzy leaves a mark of the Beast on the body — fur, a feral eye — that carries a penalty until accepted.</p>
+            </div>
+            <div class="stat">
+              <h3>Potential backgrounds</h3>
+              <ul class="backgrounds">
+          <li>The Marchwarden</li>
+          <li>The Wolf&#x27;s-Head Exile</li>
+          <li>The Anda&#x27;s Shadow</li>
+              </ul>
+            </div>
+          </div>
+          <div class="clan__prose">
+            <p class="playable">[ Playable ]</p>
+            <p>They are the clan the walls were never built to hold — outlanders who found the Beast an easy fit and civilised nights a poor one, at home on the roads and in the wild marches where the other clans&#x27; politics thin out to nothing. The invasion was their kind of catastrophe: it emptied the countryside, opened the passes, and turned the ordered kingdom the Ventrue prize into exactly the lawless frontier a Gangrel understands. They drift into Buda-Pest the way weather does — following the reopened roads, the refugee trails, the war-fattened wolf packs down out of the Carpathians — and they owe the Prince&#x27;s crown of ice and bone nothing at all. That is precisely their value and their problem. A Gangrel goes where the walls end and comes back knowing what moves in the dark beyond the city: which passes the Mongols really left by, whether the horde is truly gone and what rides the steppe by night behind them.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="clan clan--left" id="malkavian">
+      <figure class="clan__art">
+        <img src="images/Malkavian.jpg" alt="A haunted visionary vampire oracle with wide eyes, fractured visions swirling around them." loading="lazy" width="936" height="1248">
+      </figure>
+      <div class="clan__body">
+        <p class="chip">The Cassandras — Children of Malkav, Seers</p>
+        <h2>Malkavian</h2>
+        <p class="epithet">The Cassandras — Children of Malkav, Seers</p>
+        <div class="clan__cols">
+          <div class="clan__stats">
+            <div class="stat">
+              <h3>Disciplines</h3>
+              <ul class="disciplines">
+          <li><span class="disc">Auspex</span><span class="sep">·</span>see what others cannot</li>
+          <li><span class="disc">Dementation</span><span class="sep">·</span>sow madness as weapon or revelation</li>
+          <li><span class="disc">Obfuscate</span><span class="sep">·</span>vanish from sight and memory</li>
+              </ul>
+            </div>
+            <div class="stat">
+              <h3>Bane</h3>
+              <p>One derangement, chosen at creation, that can never be cured — held off by Willpower only a turn at a time.</p>
+            </div>
+            <div class="stat">
+              <h3>Potential backgrounds</h3>
+              <ul class="backgrounds">
+          <li>The Prince&#x27;s Oracle</li>
+          <li>The Cassandra of the Invasion</li>
+          <li>The Cult Hierophant</li>
+              </ul>
+            </div>
+          </div>
+          <div class="clan__prose">
+            <p class="playable">[ Playable ]</p>
+            <p>In a city groping through the dark for the shape of a burned kingdom's future, the clan that already sees it should be beyond price — and instead they are feared, because the Cassandras are mad, and every one of them is mad in a way that turns out, too often and too late, to be right. Malkav's blood grants sight beyond the veil at the cost of a wound in the mind that no power under heaven will heal, and it leaves its bearers unable to simply <em>report</em> what they know: they speak it sideways, in riddle and compulsion and ruin, so that a warning arrives as a scandal and a prophecy as a fire already lit. They do not fight the wars of this domain — they start them. And they feel a colder wind coming than the one off the Danube: in 1242 the Church has begun to name madness a stain upon the soul, so the persecution that will one night fall on the whole clan is only just gathering.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="clan clan--right" id="brujah">
+      <figure class="clan__art">
+        <img src="images/Brujah.jpg" alt="A furious vampire rebel warrior in a ruined Carthaginian hall, fire and fallen pillars." loading="lazy" width="936" height="1248">
+      </figure>
+      <div class="clan__body">
+        <p class="chip">The Zealots — Philosopher-Kings, Rabble</p>
+        <h2>Brujah</h2>
+        <p class="epithet">The Zealots — Philosopher-Kings, Rabble</p>
+        <div class="clan__cols">
+          <div class="clan__stats">
+            <div class="stat">
+              <h3>Disciplines</h3>
+              <ul class="disciplines">
+          <li><span class="disc">Celerity</span><span class="sep">·</span>strike first and often</li>
+          <li><span class="disc">Potence</span><span class="sep">·</span>make every blow crush</li>
+          <li><span class="disc">Presence</span><span class="sep">·</span>turn a crowd before the fighting starts</li>
+              </ul>
+            </div>
+            <div class="stat">
+              <h3>Bane</h3>
+              <p>Passion runs to rage — they may never spend Willpower to avoid a frenzy, only to end one already begun.</p>
+            </div>
+            <div class="stat">
+              <h3>Potential backgrounds</h3>
+              <ul class="backgrounds">
+          <li>The Carthage Avenger</li>
+          <li>The Broken Retainer</li>
+          <li>The Firebrand Scholar</li>
+              </ul>
+            </div>
+          </div>
+          <div class="clan__prose">
+            <p class="playable">[ Playable ]</p>
+            <p>They arrive at every ruin carrying the memory of the first one. Fifteen centuries ago Troile raised at Carthage a city where the Damned and the living were meant to share an ideal, and Rome&#x27;s Ventrue and Malkavians burned it down across a fifty-year war whose grudge has never, in all the nights since, cooled — so when a Brujah looks at Buda-Pest, at the masterless land and the cold Ventrue Prince raising a new order over the graves, she does not see a kingdom being rebuilt. She sees the old lie being told again: the powerful few dressing their dominion in the language of order, the many buried under it. What remains of the philosopher-kings is the argument walking — idealists who treat revolt as a moral duty, scholars who remember exactly who burned what, generals and firebrands whose passion is at once their genius and their ruin.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="clan clan--right" id="ravnos">
+      <figure class="clan__art">
+        <img src="images/Ravnos.jpg" alt="A mysterious travelling vampire illusionist surrounded by shimmering mirages on a dark medieval road." loading="lazy" width="936" height="1248">
+      </figure>
+      <div class="clan__body">
+        <p class="chip">The Charlatans — Shapers, the Unwelcome</p>
+        <h2>Ravnos</h2>
+        <p class="epithet">The Charlatans — Shapers, the Unwelcome</p>
+        <div class="clan__cols">
+          <div class="clan__stats">
+            <div class="stat">
+              <h3>Disciplines</h3>
+              <ul class="disciplines">
+          <li><span class="disc">Animalism</span><span class="sep">·</span>commune with and command beasts</li>
+          <li><span class="disc">Chimerstry</span><span class="sep">·</span>waking illusion, theirs alone</li>
+          <li><span class="disc">Fortitude</span><span class="sep">·</span>endure what others cannot</li>
+              </ul>
+            </div>
+            <div class="stat">
+              <h3>Bane</h3>
+              <p>Bound to a single virtue or vice they cannot refuse when the moment to express it comes.</p>
+            </div>
+            <div class="stat">
+              <h3>Potential backgrounds</h3>
+              <ul class="backgrounds">
+          <li>The Road-Ghost</li>
+          <li>The Marked Debtor</li>
+          <li>The False Legate</li>
+              </ul>
+            </div>
+          </div>
+          <div class="clan__prose">
+            <p class="playable">[ Playable ]</p>
+            <p>They came in the way they always come — not summoned and not welcome, on the same reopened roads that carried the refugees and the wolf-packs down out of the ruined east. The invasion that broke the kingdom was, for the Charlatans, merely the latest turn of a wheel they have watched forever: to a clan that holds all of settled reality to be <em>maya</em>, a passing illusion, a Prince's crown of ice and bone is one more mirage men have agreed to believe in, and one more thing that can be shown to be less solid than it looks. To be Ravnos in this chronicle is to be the outsider the roads dragged in and no one can quite drag back out: you have no native claim to either town, no seat in the Prince's court, no debt anyone recognises — only your wits, your jati of kin who may arrive to settle any account done to you, and the dangerous freedom of a creature everyone underestimates because they have already decided what you are.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="clan clan--left" id="giovanni">
+      <figure class="clan__art">
+        <img src="images/Giovanni.jpg" alt="A pale Venetian vampire merchant surrounded by gold coins and ethereal ghosts in a dark candlelit counting house." loading="lazy" width="936" height="1248">
+      </figure>
+      <div class="clan__body">
+        <p class="chip">The Merchant-Necromancers — the Young Ones</p>
+        <h2>Giovanni</h2>
+        <p class="epithet">The Merchant-Necromancers — the Young Ones</p>
+        <div class="clan__cols">
+          <div class="clan__stats">
+            <div class="stat">
+              <h3>Disciplines</h3>
+              <ul class="disciplines">
+          <li><span class="disc">Auspex</span><span class="sep">·</span>preternatural perception</li>
+          <li><span class="disc">Fortitude</span><span class="sep">·</span>resilience beyond mortal reckoning</li>
+          <li><span class="disc">Necromancy</span><span class="sep">·</span>the command of ghost and grave</li>
+              </ul>
+            </div>
+            <div class="stat">
+              <h3>Bane</h3>
+              <p>Their cold, corpse-pale blood sets mortal flesh instinctively on edge — the Kiss is agony rather than ecstasy.</p>
+            </div>
+            <div class="stat">
+              <h3>Potential backgrounds</h3>
+              <ul class="backgrounds">
+          <li>The Widow&#x27;s Ledger</li>
+          <li>The Gravebinder</li>
+          <li>The Family&#x27;s Envoy</li>
+              </ul>
+            </div>
+          </div>
+          <div class="clan__prose">
+            <p class="playable">[ Playable ]</p>
+            <p>They followed the money north, the way they always do — a young Venetian bloodline of merchant-necromancers rising quietly inside the ancient Cappadocian clan of death, and a shattered kingdom is exactly the kind of opportunity their ledgers are built to exploit. Where the invasion left masterless estates and dead creditors, it also left desperation, and desperation borrows: half the surviving nobles of Pest need silver to rebuild, and the Giovani have it, at terms that turn a loan into a leash. But coin is only the half of what they trade. Alone among the Damned they know precisely where they came from — Augustus, Embraced by Cappadocius himself — and their blood commands not gold alone but ghost and grave, the arts of necromancy that a city carpeted with the unquiet, unburied dead of an apocalypse makes newly, terribly valuable.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+</main>
+
+<footer>
+  <div class="rule"></div>
+  <p><strong>Crown of Ice and Bone</strong> — a Dark Ages chronicle, Buda-Pest, 1242.</p>
+  <p>The Clans of Caine, Layer IIIa: the ten player-selectable clans. Two further options — Assamite and Anda — are playable on a defined frame and are documented separately.</p>
+</footer>
+
+</body>
+</html>

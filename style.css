@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&display=swap");
+
 /* ===================================================================
    VISTECTUS — site stylesheet
    One file, used by every page. The wireframe it defines is the same
@@ -39,7 +41,7 @@
 
   /* Type */
   --font-body:    "Source Sans 3", "Segoe UI", system-ui, sans-serif;
-  --font-display: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Cinzel", Georgia, "Times New Roman", serif;
   --font-mono:    ui-monospace, Consolas, monospace;
 
   /* Layout */
