@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Factions — The Powers at the Border, 1242</title>
+<meta name="description" content="The seven powers pressing on Buda-Pest in 1242: the Carpathian Tzimisce, the Bohemian court, the shadow horde and the Cumans, the Papal States, the Holy Roman Empire, the Eastern Empire, and the Rus Nosferatu.">
+<meta property="og:title" content="Factions — The Powers at the Border, 1242">
+<meta property="og:description" content="Seven powers lean on a broken kingdom. None of them needs to besiege it.">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --ink: #0e0a15;
+  --ink-2: #191222;
+  --panel: #191222;
+  --line: #2f2140;
+  --blood: #b03a55;
+  --blood-soft: #d06a82;
+  --bone: #f1eef5;
+  --bone-dim: #b7adbf;
+  --serif: "Cinzel", Georgia, "Times New Roman", serif;
+  --body: "EB Garamond", Georgia, "Times New Roman", serif;
+  --maxw: 1240px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--body);
+  font-size: 18px;
+  line-height: 1.66;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative;
+  min-height: 62vh;
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+.hero__art {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #2f2140 0%, #0e0a15 62%, #3b1d2d 100%);
+}
+.hero__art::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(100deg, rgba(10,6,7,.96) 0%, rgba(10,6,7,.86) 38%, rgba(10,6,7,.35) 70%, rgba(10,6,7,.6) 100%),
+    linear-gradient(to top, rgba(10,6,7,.95), rgba(10,6,7,0) 45%);
+}
+.hero__inner {
+  position: relative;
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 6rem 2rem;
+}
+.hero h1 { max-width: 22ch; }
+.hero__lede { max-width: 52ch; }
+.eyebrow {
+  font-family: var(--serif);
+  font-size: .8rem;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  margin: 0 0 1.6rem;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2.8rem, 8vw, 5.2rem);
+  line-height: 1.02;
+  letter-spacing: .005em;
+  margin: 0 0 1.4rem;
+  text-shadow: 0 2px 40px rgba(0,0,0,.8);
+}
+.hero__lede { font-size: 1.15rem; color: var(--bone); margin: 0 0 2.2rem; }
+
+.chip {
+  display: inline-block;
+  font-family: var(--serif);
+  font-size: .72rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  padding: .42em 1.05em;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  margin: 0;
+  white-space: nowrap;
+}
+.chip--solid {
+  background: var(--blood);
+  border-color: var(--blood);
+  color: #fff;
+}
+
+/* ---------- contents ----------
+   Seven long entries: a reader arriving for one faction should not
+   have to scroll through the other six to find it. */
+.contents {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) 2rem;
+  border-bottom: 1px solid var(--line);
+}
+.contents h2 {
+  font-family: var(--serif);
+  font-size: .8rem;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  font-weight: 600;
+  margin: 0 0 1.6rem;
+}
+.contents ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: .9rem clamp(1.5rem, 3vw, 3rem);
+  counter-reset: faction;
+}
+.contents li { counter-increment: faction; border-top: 1px solid var(--line); padding-top: .7rem; }
+.contents li::before {
+  content: counter(faction, upper-roman);
+  font-family: var(--serif);
+  font-size: .7rem;
+  letter-spacing: .2em;
+  color: var(--blood);
+  display: block;
+  margin-bottom: .2rem;
+}
+.contents a {
+  font-family: var(--serif);
+  font-size: 1.04rem;
+  color: var(--bone);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.contents a:hover { color: var(--blood-soft); border-bottom-color: var(--blood); }
+.contents .sub { display: block; font-family: var(--body); font-size: .92rem; color: var(--bone-dim); }
+
+/* ---------- faction sections ----------
+   Same two-column figure/body grid as the clans page, alternating side
+   to side. The art is a placeholder: the frame, its 3:4 ratio and its
+   border are drawn in CSS, so a section with no file yet still reads as
+   a deliberate empty frame rather than a broken asset. */
+main { display: block; }
+
+.faction {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) 2rem;
+  border-bottom: 1px solid var(--line);
+}
+.faction__art  { grid-column: 1; grid-row: 1; margin: 0; }
+.faction__body { grid-column: 2; grid-row: 1; }
+.faction--right { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+.faction--right .faction__art  { grid-column: 2; }
+.faction--right .faction__body { grid-column: 1; }
+
+.faction__art img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  filter: saturate(.92) contrast(1.04);
+  /* Shows through until a file exists, so the frame is never blank
+     white and never a broken-image box. */
+  background:
+    linear-gradient(135deg, #2f2140 0%, #0e0a15 62%, #3b1d2d 100%);
+  color: var(--bone-dim);
+  font-family: var(--serif);
+  font-size: .78rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.faction__head { max-width: 62ch; margin-bottom: clamp(2rem, 4vw, 3rem); }
+
+.faction h2 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  line-height: 1.02;
+  margin: 1rem 0 .5rem;
+}
+.epithet {
+  color: var(--blood-soft);
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  font-style: italic;
+  margin: 0;
+}
+
+.faction__cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: start;
+}
+
+.stat {
+  border-left: 2px solid var(--blood);
+  background: rgba(201, 19, 19, .055);
+  padding: .85rem 1rem .95rem 1.1rem;
+  margin-bottom: 1rem;
+}
+.stat:last-child { margin-bottom: 0; }
+.stat h3 {
+  font-family: var(--serif);
+  font-size: .78rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  font-weight: 600;
+  margin: 0 0 .5rem;
+}
+.stat p { margin: 0; font-size: .96rem; }
+.stat ul { margin: 0; padding: 0; list-style: none; font-size: .96rem; }
+.stat ul li { margin: 0 0 .55rem; }
+.stat ul li:last-child { margin-bottom: 0; }
+.stat .who { font-family: var(--serif); font-weight: 600; color: var(--bone); }
+.stat .sep { color: var(--blood); padding: 0 .45em; }
+
+.faction__prose p:last-child { margin: 0; }
+.faction__prose em { color: var(--bone); }
+
+/* ---------- footer ---------- */
+footer {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+  color: var(--bone-dim);
+  font-size: .9rem;
+}
+footer p { margin: 0 0 .5rem; }
+.rule {
+  width: 60px; height: 1px; background: var(--blood);
+  margin: 0 0 1.5rem;
+}
+
+/* ---------- the way back into Vistectus ---------- */
+.crumb {
+  font-family: var(--serif);
+  font-size: .72rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  margin: 0 0 1.5rem;
+}
+.crumb a {
+  color: var(--bone-dim);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+}
+.crumb a:hover { color: var(--blood-soft); border-bottom-color: var(--blood); }
+.crumb span { opacity: .45; margin: 0 .3rem; }
+
+.footer-nav { margin-top: 1.8rem; }
+.footer-nav a {
+  font-family: var(--serif);
+  font-size: .75rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  text-decoration: none;
+  margin-right: 1.8rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 3px;
+}
+.footer-nav a:hover { color: var(--blood-soft); border-bottom-color: var(--blood); }
+
+/* ---------- responsive ---------- */
+@media (min-width: 1500px) {
+  .faction__cols { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 2rem; }
+}
+
+@media (max-width: 900px) {
+  .faction, .faction--right { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .faction__art, .faction__body,
+  .faction--right .faction__art, .faction--right .faction__body { grid-column: 1; grid-row: auto; }
+  .faction__art img { aspect-ratio: 4 / 5; }
+  .hero__inner { padding: 4.5rem 1.5rem; }
+  .faction, .contents { padding-left: 1.5rem; padding-right: 1.5rem; }
+}
+
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero__art"></div>
+  <div class="hero__inner">
+    <p class="crumb">
+      <a href="../../../index.html">Vistectus</a><span>/</span>
+      <a href="../../index.html">Vampire</a><span>/</span>
+      <a href="../index.html">Hungary 1242</a>
+    </p>
+    <p class="eyebrow">Crown of Ice and Bone · The Powers at the Border</p>
+    <h1>Factions</h1>
+    <p class="hero__lede">Seven powers lean on a broken kingdom. Not one of them needs to besiege it — the horde already did that, and left. What remains is pressure: the ancient claim from the mountains, the patient cousin in Prague, the eyes that stayed behind, and the faith the Prince can only ever borrow.</p>
+    <p class="chip chip--solid">Vampire: The Dark Ages</p>
+  </div>
+</header>
+
+<nav class="contents" aria-label="The factions">
+  <h2>The powers</h2>
+  <ol>
+    <li><a href="#tzimisce">The Carpathian Tzimisce<span class="sub">The ancient claim</span></a></li>
+    <li><a href="#bohemia">The Bohemian Court<span class="sub">The patient rival</span></a></li>
+    <li><a href="#horde">The Shadow Horde &amp; the Cumans<span class="sub">The eyes left behind</span></a></li>
+    <li><a href="#papacy">The Papal States<span class="sub">The faith of the kingdom</span></a></li>
+    <li><a href="#empire">The Holy Roman Empire<span class="sub">The pressure from every side</span></a></li>
+    <li><a href="#byzantium">The Eastern Empire<span class="sub">The undefended flank</span></a></li>
+    <li><a href="#nosferatu">The Rus Nosferatu<span class="sub">The price of knowing</span></a></li>
+  </ol>
+</nav>
+
+<main>
+
+  <!-- ============================================================ -->
+  <section class="faction" id="tzimisce">
+    <figure class="faction__art">
+      <!-- Drop images/The Fiends.jpg in and this fills. Until then the frame
+           shows the CSS gradient and this alt text. 3:4, about 900x1200. -->
+      <img src="images/The%20Fiends.jpg" alt="A Carpathian voivode on a mountain road above the lowlands, his retinue waiting behind him." loading="lazy" width="936" height="1248">
+    </figure>
+    <div class="faction__body">
+    <div class="faction__head">
+      <p class="chip">The ancient claim</p>
+      <h2>The Carpathian Tzimisce</h2>
+      <p class="epithet">The oldest rulers of the East consider Buda-Pest theirs by ancient right, the Ventrue an eight-century usurpation, and 1242 the year the correction begins.</p>
+    </div>
+    <div class="faction__cols">
+      <div class="faction__stats">
+        <div class="stat">
+          <h3>Goals</h3>
+          <ul>
+            <li>Reclaim the lowlands — the vassals, revenant families and river-valley strongholds ceded during the Ventrue ascendancy.</li>
+            <li>Finish the War of Omens: break the Council of Ashes, see Ceoris fall.</li>
+            <li>Restore the old mandate — not merely to rule the city, but to have it acknowledged the Ventrue never had the right to.</li>
+            <li>Contain the young, whose appetite for remaking things the elders find intolerable.</li>
+          </ul>
+        </div>
+        <div class="stat">
+          <h3>Key figures</h3>
+          <ul>
+            <li><span class="who">Vladimir Rustovitch</span><span class="sep">·</span>the Voivode of voivodes. Rarely seen, always felt.</li>
+            <li><span class="who">The claimant</span><span class="sep">·</span>a lowland voivode walking back into domains he held before the Ventrue pushed his clan uphill.</li>
+            <li><span class="who">A younger metamorphosist</span><span class="sep">·</span>bored by restoration, hungry for something new. A wedge.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="faction__prose">
+        <p>The Carpathian voivodes let the Mongols through their passes to gut the Prince's clan, and now descend from their mountain eyries to reclaim the lowlands while the Ventrue are on their knees. They are not opportunists arriving late to a disaster; they are the previous owners, and they have been waiting eight centuries with the patience of men who measure time in bloodlines.</p>
+        <p>What makes the claimant dangerous is not his cruelty but the fact that he is <em>correct</em> about the injustice done to him, which makes him very hard to hate cleanly. The faction's one fracture is generational: the elders want the old order back exactly as it was, while the younger Fiends would rather remake Buda-Pest into something their sires would not recognise. Hospitality is all that forestalls open revolution inside the clan, and it is fraying.</p>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="faction faction--right" id="bohemia">
+    <figure class="faction__art">
+      <!-- Drop images/The Bohemian Court.jpg in and this fills. Until then the frame
+           shows the CSS gradient and this alt text. 3:4, about 900x1200. -->
+      <img src="images/The%20Bohemian%20Court.jpg" alt="A Ventrue regent in a candlelit Prague hall, unhurried, a ledger of boons open before him." loading="lazy" width="936" height="1248">
+    </figure>
+    <div class="faction__body">
+    <div class="faction__head">
+      <p class="chip">The patient rival</p>
+      <h2>The Bohemian Court</h2>
+      <p class="epithet">The most dangerous rival to a Ventrue Prince is not the Fiend at the gate — it is the Ventrue in Prague who does not raise his voice, keeps every boon, and is deciding whether a cousin who let his kingdom burn deserves to keep it.</p>
+    </div>
+    <div class="faction__cols">
+      <div class="faction__stats">
+        <div class="stat">
+          <h3>Goals</h3>
+          <ul>
+            <li>Absorb what Hungary can no longer hold — as opportunity, inheritance or client, whichever costs least.</li>
+            <li>Never make a misstep. They do not gamble on Buda-Pest; they wait and let the Prince's weakness make their case.</li>
+            <li>Win the Holy Roman Empire. The eastern moves serve a western game.</li>
+            <li>Keep the debt running the right way. Every boon is credit they intend to call.</li>
+          </ul>
+        </div>
+        <div class="stat">
+          <h3>Key figures</h3>
+          <ul>
+            <li><span class="who">King Wenceslaus I</span><span class="sep">·</span>the mortal author of the Premyslid ascent.</li>
+            <li><span class="who">The Regent of Prague</span><span class="sep">·</span>has never lost a hand. Not cruel, not hasty — worse: correct, almost every time.</li>
+            <li><span class="who">A refugee Tremere client</span><span class="sep">·</span>magic on loan, and a reminder that the Prince's former allies now answer to Prague.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="faction__prose">
+        <p>The one Cainite faction in the setting that is simply <em>winning</em>: the uncontested Ventrue of Bohemia, backing a brilliant mortal dynasty, who have not made a misstep and now look east at a broken neighbour. Their whole record is unbroken caution.</p>
+        <p>Their move on the Prince is patience wearing the mask of friendship. They offer coin, colonists and even magic to help him rebuild, and each gift shifts the balance a degree toward Prague. If he fails, they inherit; if he succeeds, they hold his markers. They do not want a war with Buda-Pest — they want Buda-Pest to become a Bohemian client so gradually that no single night can be pointed to as the night it was lost. Against the Fiends' naked claim, the Bohemians are the danger the Prince is most likely to <em>thank</em>, right up until it closes.</p>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="faction" id="horde">
+    <figure class="faction__art">
+      <!-- Drop images/The Shadow Horde.jpg in and this fills. Until then the frame
+           shows the CSS gradient and this alt text. 3:4, about 900x1200. -->
+      <img src="images/The%20Shadow%20Horde.jpg" alt="A Mongol rider on a ridge at dusk, watching a Cuman camp on the plain below." loading="lazy" width="936" height="1248">
+    </figure>
+    <div class="faction__body">
+    <div class="faction__head">
+      <p class="chip">The eyes left behind</p>
+      <h2>The Shadow Horde &amp; the Cumans</h2>
+      <p class="epithet">The Golden Horde treats a defeated enemy as an intelligence problem, not a closed account — and Hungary invited the horde's eyes inside its own walls when it sheltered the Cumans.</p>
+    </div>
+    <div class="faction__cols">
+      <div class="faction__stats">
+        <div class="stat">
+          <h3>Goals</h3>
+          <ul>
+            <li>Keep the eyes open. The horde has left the field, not the ledger.</li>
+            <li>Preserve the option — a dependent Hungary carrying a debt it does not know about is worth more than a burned one.</li>
+            <li>Protect the Anda's own: the living Mongol and steppe families settled inside Hungary.</li>
+            <li>Deny the enemy a clean recovery. Anything delaying the Prince serves Sarai at no cost.</li>
+          </ul>
+        </div>
+        <div class="stat">
+          <h3>Key figures</h3>
+          <ul>
+            <li><span class="who">Khan Koten</span><span class="sep">·</span>murdered by a fearful Pest mob. His death is a lever anyone can pull to turn Cuman against Magyar.</li>
+            <li><span class="who">A Noyan of the rearguard</span><span class="sep">·</span>an Anda on standing orders, which makes him harder to bargain with than any courtier.</li>
+            <li><span class="who">A Cuman elder</span><span class="sep">·</span>torn between gratitude to the hosts who took his people in and grief at the hosts who butchered them.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="faction__prose">
+        <p>The horde withdrew, but it did not blind itself. Mongol eyes remain in Hungary, riding in the blood of the Cuman refugees the kingdom took in and shadowed by Anda who fight by night the war their mortal kin fight by day.</p>
+        <p>The pressure on the Prince is the pressure of an unhealed wound. He must rebuild Hungary's strength, and the strongest fighting men available are precisely the Cumans his own nobles are massacring. He cannot afford to trust them and cannot afford to lose them. Every choice he makes about the refugees is a choice the horde is content to let him get wrong — and a few of those refugees are genuinely carrying Sarai's eyes.</p>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="faction faction--right" id="papacy">
+    <figure class="faction__art">
+      <!-- Drop images/The Empty Seat.jpg in and this fills. Until then the frame
+           shows the CSS gradient and this alt text. 3:4, about 900x1200. -->
+      <img src="images/The%20Empty%20Seat.jpg" alt="A papal legate preaching by candlelight in a burned Hungarian church." loading="lazy" width="936" height="1248">
+    </figure>
+    <div class="faction__body">
+    <div class="faction__head">
+      <p class="chip">The faith of the kingdom</p>
+      <h2>The Papal States</h2>
+      <p class="epithet">A vampire can fight an army; he cannot fight the faith of the kingdom he means to rule — and in Hungary the king, the nobles and the terrified survivors all look to Rome for the meaning of what just happened to them.</p>
+    </div>
+    <div class="faction__cols">
+      <div class="faction__stats">
+        <div class="stat">
+          <h3>Goals</h3>
+          <ul>
+            <li>Hold Hungary in the Latin fold, against the Orthodox East, surviving paganism and heresy alike.</li>
+            <li>Fill the vacuum — with the throne empty, every cardinal, legate and order pursues its own reading of what the Church should do.</li>
+            <li>Prosecute the faith: heretics, pagans, and — where the friars begin to suspect it — the Damned themselves.</li>
+            <li>Reward the loyal, ruin the excommunicate.</li>
+          </ul>
+        </div>
+        <div class="stat">
+          <h3>Key figures</h3>
+          <ul>
+            <li><span class="who">The empty throne</span><span class="sep">·</span>Gregory IX dead, Celestine IV dead, the conclave deadlocked into 1243.</li>
+            <li><span class="who">A papal legate</span><span class="sep">·</span>sent to shepherd a devastated Catholic realm and report on the strange things a shattered land throws up.</li>
+            <li><span class="who">A mendicant friar</span><span class="sep">·</span>the kernel of the Inquisition. The most dangerous mortal in the chronicle if he ever turns his attention on the Prince.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="faction__prose">
+        <p>The throne of Peter sits empty and the cardinals are locked in a conclave that will not end until 1243 — and still the Church's reach into devout Catholic Hungary is not a thing any Cainite Prince can simply route around.</p>
+        <p>Rome applies no siege engines and sends no war-ghouls. Its pressure is that the Prince's entire mortal instrument — the pious king, the Catholic nobility, the traumatised survivors seeking meaning — belongs at the root to the Church. He cannot consolidate power over Hungary without governing its faith, and he cannot govern its faith, only borrow it. A legate who doubts the king, a friar who starts asking why the reconstruction has such a strange smell, a rival who whispers <em>heretic</em> into the right clerical ear: any of these turns the kingdom against him without a blade drawn. The vacancy makes it worse — with no Pope to appeal to there is no final authority, only factions to be played.</p>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="faction" id="empire">
+    <figure class="faction__art">
+      <!-- Drop images/The Holy Roma Empire.jpg in and this fills. Until then the frame
+           shows the CSS gradient and this alt text. 3:4, about 900x1200. -->
+      <img src="images/The%20Holy%20Roma%20Empire.jpg" alt="A fortified Saxon town of the Siebenbuergen under an imperial banner, seen across winter fields." loading="lazy" width="936" height="1248">
+    </figure>
+    <div class="faction__body">
+    <div class="faction__head">
+      <p class="chip">The pressure from every side</p>
+      <h2>The Holy Roman Empire</h2>
+      <p class="epithet">The Empire does not want Buda-Pest — it wants Italy, Germany and the Pope on their knees — but its westward wars, its eastward colonists and its crusading orders all press on Hungary from directions the Prince cannot fortify at once.</p>
+    </div>
+    <div class="faction__cols">
+      <div class="faction__stats">
+        <div class="stat">
+          <h3>Goals</h3>
+          <ul>
+            <li>Break the Pope. Everything else is subordinate — which is why Hungary is safe from conquest and never safe from pressure.</li>
+            <li>Extend German settlement east: colonists, merchant networks, the Saxon towns of the Siebenbürgen.</li>
+            <li>Win the War of Princes. A broken Hungary is a flank and a recruiting ground, not a prize.</li>
+            <li>Manage the frontier through the crusading orders.</li>
+          </ul>
+        </div>
+        <div class="stat">
+          <h3>Key figures</h3>
+          <ul>
+            <li><span class="who">Emperor Frederick II</span><span class="sep">·</span>the polymath excommunicate. Off-stage, and the reason every imperial pressure exists.</li>
+            <li><span class="who">A Ghibelline agent</span><span class="sep">·</span>sent to fish in troubled waters and fund whoever weakens the Church's hold.</li>
+            <li><span class="who">A Saxon patriarch of the Siebenbürgen</span><span class="sep">·</span>loyal to colonial interests before Hungarian ones.</li>
+            <li><span class="who">A crusading commander</span><span class="sep">·</span>whose memory of the Burzenland expulsion still rankles.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="faction__prose">
+        <p>The Empire in 1242 is the instrument of one extraordinary man. Frederick II holds the papacy hostage, bankrolls rebellious communes on the single condition that they submit to him, and has given the imperial party a name: <em>Ghibelline</em>, against the papal <em>Guelfs</em>. But the Empire's weight on Hungary is felt less through his Italian wars than through the colonial tide, the military orders on the frontier, and the fact that the Empire is the arena of the War of Princes itself.</p>
+        <p>That pressure is diffuse, and that is what makes it hard. It never masses at one gate. It seeps: an agent funds a rebellious noble here, a Saxon town quietly serves western masters there, an order on the northern frontier forces the Prince to take sides in a war he wanted no part of. Over all of it, the Guelf–Ghibelline split means every mortal ally he courts already leans toward Pope or Emperor — so consolidating Hungary means picking a side in the Empire's quarrel whether he wants to or not. The Empire will never march on Buda-Pest. It will simply make sure Buda-Pest can never stop bracing.</p>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="faction faction--right" id="byzantium">
+    <figure class="faction__art">
+      <!-- Drop images/Byzantium.jpg in and this fills. Until then the frame
+           shows the CSS gradient and this alt text. 3:4, about 900x1200. -->
+      <img src="images/Byzantium.jpg" alt="A landless Byzantine elder in worn imperial finery on a Black Sea quay." loading="lazy" width="936" height="1248">
+    </figure>
+    <div class="faction__body">
+    <div class="faction__head">
+      <p class="chip">The undefended flank</p>
+      <h2>The Eastern Empire</h2>
+      <p class="epithet">Everyone north of the Danube treats Byzantium as a ruin and a rumour — which is exactly how a wounded, ancient, patient power likes to be underestimated while it works the frontier through faith, trade and the long memory of empire.</p>
+    </div>
+    <div class="faction__cols">
+      <div class="faction__stats">
+        <div class="stat">
+          <h3>Goals</h3>
+          <ul>
+            <li>Reclaim the centre. Nicaea means to retake Constantinople; a divided north keeps the Latin West too busy to defend its prize.</li>
+            <li>Win the frontier's faith. Souls taken for the Orthodox rite are legitimacy taken from Rome.</li>
+            <li>Restore a broken order — or find a new seat of power to replace the one the crusaders stole.</li>
+            <li>Command the road. Whoever touches Trebizond and the Silk Road can fund friends and starve enemies.</li>
+          </ul>
+        </div>
+        <div class="stat">
+          <h3>Key figures</h3>
+          <ul>
+            <li><span class="who">The Emperor of Nicaea</span><span class="sep">·</span>John III Vatatzes, rebuilding and biding his time.</li>
+            <li><span class="who">A landless Byzantine elder</span><span class="sep">·</span>dispossessed by the sack, arriving not to conquer but to <em>matter</em> again.</li>
+            <li><span class="who">The Black Sea koldun</span><span class="sep">·</span>a land-sorcerer even the Bulgarian factions fear. A wild card cutting across everyone.</li>
+            <li><span class="who">An Orthodox churchman</span><span class="sep">·</span>working the Bulgarian and Serbian frontier.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="faction__prose">
+        <p>The Roman Empire of the East did not die in 1204 — it shattered, and the pieces still call themselves Rome. Out of Nicaea's legitimate court, Trebizond's Silk-Road gold and a scattered Byzantine Cainite order comes a power that reaches the Danube by other means than armies.</p>
+        <p>This is the threat the Prince is least positioned to see, because his court faces west — toward the Empire, the Papacy and the War of Princes — while the East works his undefended southern flank. It arrives as missionaries pulling frontier souls out of the Latin fold; as Silk-Road gold financing his rivals through Bulgarian intermediaries; as an elder with impeccable manners and a scheme three generations deep. None of it looks like an invasion. All of it erodes the two things he most needs: the Catholic loyalty of his southern subjects, and the assumption that his enemies come from directions he is watching.</p>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="faction" id="nosferatu">
+    <figure class="faction__art">
+      <!-- Drop images/The Priors.jpg in and this fills. Until then the frame
+           shows the CSS gradient and this alt text. 3:4, about 900x1200. -->
+      <img src="images/The%20Priors.jpg" alt="A Rus Prior in a cellar warren, trading a secret by lamplight." loading="lazy" width="936" height="1248">
+    </figure>
+    <div class="faction__body">
+    <div class="faction__head">
+      <p class="chip">The price of knowing</p>
+      <h2>The Rus Nosferatu</h2>
+      <p class="epithet">The most valuable thing in a ruined kingdom is knowing what happened — and the Rus Priors already know, which means the Prince cannot govern without them and can never be sure whose ends he serves when he does.</p>
+    </div>
+    <div class="faction__cols">
+      <div class="faction__stats">
+        <div class="stat">
+          <h3>Goals</h3>
+          <ul>
+            <li>Trade the catastrophe. Rus is the richest vein of fresh, terrible knowledge in the world, and they mean to sell it piece by piece.</li>
+            <li>Buy safety with secrets — the clan's whole survival doctrine.</li>
+            <li>Extend the web. A city under reconstruction is fertile ground for warrens and listening posts.</li>
+            <li>Serve the sleeping mother's ends. Not all of them, and not always knowingly.</li>
+          </ul>
+        </div>
+        <div class="stat">
+          <h3>Key figures</h3>
+          <ul>
+            <li><span class="who">Baba Yaga</span><span class="sep">·</span>mother of the clan. She does not appear; she <em>weighs</em>.</li>
+            <li><span class="who">A daughter of the eastern woods</span><span class="sep">·</span>holds a warren near the city. Whether she serves herself, her sisters or the sleeper is the mystery.</li>
+            <li><span class="who">The Novgorod question, personified</span><span class="sep">·</span>a Prior who was there when the city was, too conveniently, passed over.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="faction__prose">
+        <p>Out of the Rus that the horde turned into a charnel house come the Priors: Nosferatu who survived what the old princes did not, who answer to something far older than any Prince, and who arrive in Buda-Pest carrying the one commodity a shattered court cannot do without.</p>
+        <p>They do not besiege and they do not claim. They <em>arrive</em>, and make themselves indispensable. A Prince consolidating a ruined kingdom needs to know which nobles are Tzimisce revenants, which Cumans carry the horde's eyes, what Prague really offered, and what happened in the dark during the invasion. The Priors have all of it, for a price, and the price is always a thread of leverage. Every transaction leaves him better informed and more entangled — and underneath the market runs a current flowing east, so that the more he relies on them, the more of Buda-Pest's own secrets drain, unseen, into a barrow in the Rus.</p>
+      </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="rule"></div>
+  <p><strong>Crown of Ice and Bone</strong> — a Dark Ages chronicle, Buda-Pest, 1242.</p>
+  <p>The seven powers pressing on a kingdom the horde has already broken. Each entry gives what the court can be expected to know: what the faction wants, who speaks for it, and how its weight is actually felt in Buda-Pest. What the Storyteller does with them is not written here.</p>
+  <p class="footer-nav">
+    <a href="../clans-of-the-damned/index.html">Clans of the Damned</a>
+    <a href="../index.html">Hungary 1242</a>
+    <a href="../../index.html">Vampire: the Dark Ages</a>
+    <a href="../../../index.html">Vistectus</a>
+  </p>
+</footer>
+
+</body>
+</html>
