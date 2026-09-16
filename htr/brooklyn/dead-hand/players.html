@@ -14,6 +14,21 @@
 
 <body data-page="players" data-title="The cell">
 
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- The bar and the footer are plain HTML on every page of this chronicle,
+     so navigation survives with JavaScript switched off or still loading.
+     Adding a page means adding one link here and on the three siblings. -->
+<header class="topbar">
+  <a class="brand" href="../../../index.html"><span class="brand-mark" aria-hidden="true"></span> Vistectus</a>
+  <nav class="topnav">
+    <a href="index.html">Chronicle</a>
+    <a href="players.html" aria-current="page">The cell</a>
+    <a href="npcs.html">People</a>
+    <a href="compendium.html">Compendium</a>
+  </nav>
+</header>
+
 <section class="hero hero--compact">
   <div class="hero-inner">
     <p class="crumb">
@@ -38,6 +53,15 @@
   </section>
 </main>
 
+<footer>
+  <div class="footer-inner">
+    <p>&copy; 2026 Vistectus</p>
+    <p class="links">
+      <a href="../index.html">Brooklyn Chronicles</a>
+      <a href="../../../index.html">Back to the hub</a>
+    </p>
+  </div>
+</footer>
 <script src="assets/js/render.js"></script>
 <script src="assets/data/players.js"></script>
 <script>

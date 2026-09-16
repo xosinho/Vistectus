@@ -9,11 +9,10 @@
 
    Edit an object below and the Players page updates itself.
    Fields: name / tagline / role / portrait / meta / background /
-           sheetJson / sheetPdf   (full reference at the end of the file).
+           sheetPdf   (full reference at the end of the file).
 
    WHERE TO PUT FILES (filenames must match the paths below):
      Portraits ...... assets/img/players/       (jpg / png / webp)
-     JSON sheets .... assets/sheets/json/        (.json)
      PDF sheets ..... assets/sheets/pdf/         (.pdf)
    ===================================================================== */
 
@@ -39,8 +38,7 @@ window.DEAD_HAND_PLAYERS = [
       "sister Yasmin is a grief he’s never made peace with. Of everyone in the " +
       "cell, Payne is the one who already knew the dark was real. He has his own " +
       "word for what’s out there, and it isn’t “vampire.”",
-    sheetJson: "assets/sheets/json/payne.json",
-    sheetPdf:  "assets/sheets/pdf/payne.pdf"
+    sheetPdf: "assets/sheets/pdf/payne.pdf"
   },
 
   {
@@ -60,8 +58,7 @@ window.DEAD_HAND_PLAYERS = [
       "records that vanish, leads that die, paperwork that was never filed. " +
       "Someone is very good at keeping the ghost behind that breach a ghost. " +
       "Dorian intends to find out who.",
-    sheetJson: "assets/sheets/json/dorian.json",
-    sheetPdf:  "assets/sheets/pdf/dorian.pdf"
+    sheetPdf: "assets/sheets/pdf/dorian.pdf"
   },
 
   {
@@ -81,8 +78,7 @@ window.DEAD_HAND_PLAYERS = [
       "loud and hard-drinking and unconvincingly “sober,” is someone Jack keeps " +
       "at arm’s length, unsure the old man belongs in the same category as the " +
       "people he’d protect.",
-    sheetJson: "assets/sheets/json/jack.json",
-    sheetPdf:  "assets/sheets/pdf/jack.pdf"
+    sheetPdf: "assets/sheets/pdf/jack.pdf"
   },
 
   {
@@ -102,8 +98,7 @@ window.DEAD_HAND_PLAYERS = [
       "sister he couldn’t save; Bishop, a dog that notices what people miss; " +
       "and Priya Chen, the friend he calls when a trail goes digital. An oath he " +
       "made keeps him moving when sense says stop.",
-    sheetJson: "assets/sheets/json/ezekiel.json",
-    sheetPdf:  "assets/sheets/pdf/ezekiel.pdf"
+    sheetPdf: "assets/sheets/pdf/ezekiel.pdf"
   },
 
   {
@@ -122,8 +117,7 @@ window.DEAD_HAND_PLAYERS = [
       "the organization that broke her. The one bright thread she still holds is " +
       "her sister Francesca — the reason she’s careful, and the reason she " +
       "hasn’t burned all the way down. Yet.",
-    sheetJson: "assets/sheets/json/adelina.json",
-    sheetPdf:  "assets/sheets/pdf/adelina.pdf"
+    sheetPdf: "assets/sheets/pdf/adelina.pdf"
   },
 
   {
@@ -145,8 +139,7 @@ window.DEAD_HAND_PLAYERS = [
       "but against the rot itself. Her mentor Harold Voss and her old " +
       "evidence-law professor Rosalind Kane keep her honest; her father’s " +
       "fountain pen keeps her steady.",
-    sheetJson: "assets/sheets/json/vivienne.json",
-    sheetPdf:  "assets/sheets/pdf/vivienne.pdf"
+    sheetPdf: "assets/sheets/pdf/vivienne.pdf"
   },
 
   {
@@ -169,8 +162,7 @@ window.DEAD_HAND_PLAYERS = [
       "saving. She keeps a quiet private list of things she’s seen on shift that " +
       "medicine can’t explain. Her creed is simple: every life is worth saving, " +
       "and no one is beyond redemption.",
-    sheetJson: "assets/sheets/json/raven.json",
-    sheetPdf:  "assets/sheets/pdf/raven.pdf"
+    sheetPdf: "assets/sheets/pdf/raven.pdf"
   },
 
 
@@ -185,7 +177,6 @@ window.DEAD_HAND_PLAYERS = [
      meta        Array of little tags (creed, drive, touchstone, ...)
      background  String (blank lines = paragraphs), array of paragraphs,
                  or a path to an .html/.txt file to link out to
-     sheetJson   Path to the character-sheet JSON -> assets/sheets/json/<file>
      sheetPdf    Path to the character-sheet PDF  -> assets/sheets/pdf/<file>
    Any field except name can be omitted; missing portrait/sheets degrade
    gracefully (placeholder art / hidden download button).

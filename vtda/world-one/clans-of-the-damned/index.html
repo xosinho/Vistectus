@@ -210,6 +210,42 @@ footer p { margin: 0 0 .5rem; }
   margin: 0 0 1.5rem;
 }
 
+/* ---------- the way back into Vistectus ----------
+   This page carries its own styling, so the crumb and the footer links
+   are written in its vocabulary rather than the site stylesheet. They
+   exist so that a visitor who arrives here directly, from a search
+   result or a shared link, can reach the rest of the site. */
+.crumb {
+  font-family: var(--serif);
+  font-size: .72rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  margin: 0 0 1.5rem;
+}
+.crumb a {
+  color: var(--bone-dim);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+}
+.crumb a:hover { color: var(--blood-soft); border-bottom-color: var(--blood); }
+.crumb span { opacity: .45; margin: 0 .3rem; }
+
+.footer-nav { margin-top: 1.8rem; }
+.footer-nav a {
+  font-family: var(--serif);
+  font-size: .75rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  text-decoration: none;
+  margin-right: 1.8rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 3px;
+}
+.footer-nav a:hover { color: var(--blood-soft); border-bottom-color: var(--blood); }
+
 /* ---------- responsive ---------- */
 @media (max-width: 900px) {
   .clan, .clan--right, .clan__cols { grid-template-columns: minmax(0, 1fr); }
@@ -239,6 +275,11 @@ footer p { margin: 0 0 .5rem; }
   <div class="hero__art">
   </div>
   <div class="hero__inner">
+    <p class="crumb">
+      <a href="../../../index.html">Vistectus</a><span>/</span>
+      <a href="../../index.html">Vampire</a><span>/</span>
+      <a href="../index.html">Hungary 1242</a>
+    </p>
     <p class="eyebrow">The Clans of Caine · Layer IIIa</p>
     <h1>Clans of the Damned</h1>
     <p class="hero__lede">Ten bloodlines. Each a dynasty of the night, shaped by centuries of hunger, ambition, and ruin. Choose wisely — for the blood chooses you in return.</p>
@@ -643,6 +684,11 @@ footer p { margin: 0 0 .5rem; }
   <div class="rule"></div>
   <p><strong>Crown of Ice and Bone</strong> — a Dark Ages chronicle, Buda-Pest, 1242.</p>
   <p>The Clans of Caine, Layer IIIa: the ten player-selectable clans. Two further options — Assamite and Anda — are playable on a defined frame and are documented separately.</p>
+  <p class="footer-nav">
+    <a href="../index.html">Hungary 1242</a>
+    <a href="../../index.html">Vampire: the Dark Ages</a>
+    <a href="../../../index.html">Vistectus</a>
+  </p>
 </footer>
 
 </body>

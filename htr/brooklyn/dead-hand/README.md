@@ -16,12 +16,11 @@ Copy an existing block, fill it in, drop the files where its paths point:
 
 ```
 portrait  -> assets/img/players/   or   assets/img/npcs/    (lowercase filenames)
-JSON sheet-> assets/sheets/json/
-PDF sheet -> assets/sheets/pdf/
+sheet     -> assets/sheets/pdf/        (PDF)
 ```
 
 Any field but `name` may be left out. No portrait falls back to
-`assets/img/placeholder.svg`; no sheet paths hides the download row;
+`assets/img/placeholder.svg`; no sheetPdf hides the download row;
 NPCs without `stats` simply show no stat block.
 
 **Use lowercase filenames.** Windows does not care, but a web host does,

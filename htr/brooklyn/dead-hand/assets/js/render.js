@@ -95,18 +95,13 @@
       html += '<p class="detail__section-label">Stat block</p>' + statblockHtml(entry.stats, entry.statNote);
     }
 
-    /* player character-sheet links */
-    if (opts.type === "player" && (entry.sheetJson || entry.sheetPdf)) {
-      html += '<p class="detail__section-label">Character sheet</p><div class="detail__downloads">';
-      if (entry.sheetJson) {
-        html += '<a class="btn btn--ghost" href="' + esc(entry.sheetJson) +
-                '" download target="_blank" rel="noopener">&#8681; JSON</a>';
-      }
-      if (entry.sheetPdf) {
-        html += '<a class="btn" href="' + esc(entry.sheetPdf) +
-                '" download target="_blank" rel="noopener">&#8681; PDF sheet</a>';
-      }
-      html += '</div>';
+    /* player character sheet. No sheetPdf on the entry, no section. */
+    if (opts.type === "player" && entry.sheetPdf) {
+      html += '<p class="detail__section-label">Character sheet</p>' +
+              '<div class="detail__downloads">' +
+                '<a class="btn" href="' + esc(entry.sheetPdf) +
+                '" download target="_blank" rel="noopener">&#8681; PDF sheet</a>' +
+              '</div>';
     }
 
     html += '</div>';
