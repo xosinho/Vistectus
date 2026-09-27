@@ -69,9 +69,6 @@
     font-family:var(--disp);letter-spacing:1px;font-size:28px;line-height:1;
     color:var(--brass-light);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw;
   }
-  #boardSub{
-    font-family:var(--mono);font-size:11px;color:#9c8f7c;letter-spacing:0.4px;margin-top:3px;
-  }
   .topbar-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
 
   .btn{
@@ -94,7 +91,6 @@
   .btn-block{width:100%;justify-content:center;margin-top:8px;}
   .btn-small{padding:5px 10px;font-size:11px;}
   .dirty-dot{width:7px;height:7px;border-radius:50%;background:#ffd76b;box-shadow:0 0 5px #ffd76b;display:inline-block;}
-  .conn-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-left:7px;vertical-align:middle;background:#b5222a;}
   .zone-active{background:rgba(184,147,90,0.25) !important;}
 
   /* ---------- Main layout ---------- */
@@ -323,7 +319,7 @@
     display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #d8caa4;flex-wrap:wrap;
   }
   .load-row-name{flex:1;font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .load-version{font-family:var(--mono);font-size:12px;padding:4px;border-radius:2px;border:1px solid var(--paper-edge);}
+  .load-version{font-family:var(--mono);font-size:12px;padding:4px;border-radius:2px;border:1px solid var(--paper-edge);max-width:100%;}
   .modal .btn-primary, .modal .btn-ghost{color:inherit;}
   .modal .btn-ghost{border-color:#a2916c;color:#4a3b28;}
   .modal .btn-primary{color:#f4e9e9;}
@@ -366,11 +362,11 @@
       <div class="brand-mark">✦</div>
       <div class="brand-text">
         <h1 id="boardTitle">No Case File Loaded</h1>
-        <div id="boardSub"><span id="boardSubText">Checking storage…</span><span id="connDot" class="conn-dot" style="display:none"></span></div>
       </div>
     </div>
     <div class="topbar-actions">
       <a class="btn btn-ghost" href="../players.html" title="Back to the cell">&larr; The cell</a>
+      <button id="btnAccount" class="btn btn-ghost" style="display:none">Sign in</button>
       <button id="btnZone" class="btn btn-ghost">＋ Zone</button>
       <button id="btnLockerToggle" class="btn btn-ghost">Locker</button>
       <button id="btnLoad" class="btn btn-ghost">Open…</button>
@@ -420,7 +416,6 @@
   </div>
 </div>
 <div id="modalRoot"></div>
-<input type="file" id="fileInput" accept="application/json" style="display:none">
 <input type="file" id="photoUploadInput" accept="image/*" style="display:none">
 <div id="toast" class="toast" role="status" aria-live="polite" style="display:none"></div>
 <div id="loadingOverlay" class="loading-overlay" style="display:none">
@@ -428,63 +423,26 @@
   <div id="loadingText">Working…</div>
 </div>
 
-<!--
-  ============================================================
-  OPTIONAL: Live shared backend (Firebase Realtime Database)
-  ============================================================
-  This app works standalone with no setup (local file mode).
-  To enable REAL live shared editing across everyone with this
-  file, fill in FIREBASE_CONFIG below with your own Firebase
-  project's config. See the setup notes near FIREBASE_CONFIG
-  in the script for step-by-step instructions.
--->
+<!-- Case files are saved online in the site's Supabase project, the
+     same one the Builders area uses: its address and public key are read
+     from builders/config.js. Setup: see the chronicle README. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../../../builders/config.js"></script>
 <script>
 (function(){
   "use strict";
 
-  /* ============================================================
-     FIREBASE SETUP (optional — for real live shared editing)
-     ============================================================
-     1. Go to https://console.firebase.google.com → Add project
-        (free tier is plenty for this).
-     2. In the project, go to Build → Realtime Database → Create
-        Database. Start in "test mode" (or use the rules below).
-     3. Go to Project settings (gear icon) → General → scroll to
-        "Your apps" → click the </> (Web) icon → register an app
-        (nickname doesn't matter, no Hosting needed) → copy the
-        firebaseConfig object it gives you.
-     4. Paste those values into FIREBASE_CONFIG below, replacing
-        the placeholders.
-     5. In Realtime Database → Rules, set who may read and write.
-        WARNING: this page is public, and so is this config. The open
-        rules below let ANYONE on the internet read, rewrite or delete
-        every board. Only use them for a quick private test; for the
-        live site, require sign-in (Firebase Authentication) and allow
-        writes only to authenticated users:
-          {
-            "rules": {
-              ".read": true,
-              ".write": true
-            }
-          }
-     6. Save this HTML file and host it anywhere (Netlify Drop,
-        GitHub Pages, or just open it locally) — the app will
-        detect your config automatically and switch to live mode.
-     If you leave the placeholders as-is, the app just skips this
-     and uses local file mode instead — nothing breaks.
-  ============================================================ */
-  var FIREBASE_CONFIG = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-    projectId: "YOUR_PROJECT",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
-  var sessionId = 'sess-' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
-  var fbApp = null, fbDb = null, liveRef = null, liveUnsub = null;
-  var pushLiveTimer = null;
+  /* ================= online storage =================
+     CHRONICLE groups this chronicle's case files; DEFAULT_BOARD is the
+     file this page opens with. Both are stored with every save, so do
+     not rename them once boards have been saved. */
+  var CHRONICLE = 'dead-hand';
+  var DEFAULT_BOARD = 'rico-case', DEFAULT_NAME = 'RICO Case';
+  var CASE_TABLE = 'case_files', PHOTO_BUCKET = 'case-photos';
+  var cfg = window.BUILDERS_CONFIG || {};
+  var db = (cfg.supabaseUrl && cfg.supabaseAnonKey && window.supabase)
+    ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
+  var session = null;
 
   /* ================= constants ================= */
   var ICONS = {
@@ -513,7 +471,6 @@
   var dirty = false;
   var selectedType = 'person';
   var zoneMode = false;
-  var storageMode = null; // 'cloud' | 'local'
   var zoom = 1;
   var ZOOM_MIN = 0.35, ZOOM_MAX = 2.0, ZOOM_STEP = 0.1;
   var BOARD_W = 7800, BOARD_H = 5100;
@@ -555,7 +512,7 @@
       return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
     });
   }
-  function markDirty(){ dirty = true; document.getElementById('dirtyDot').style.display = 'inline-block'; scheduleLivePush(); }
+  function markDirty(){ dirty = true; document.getElementById('dirtyDot').style.display = 'inline-block'; }
   function clearDirty(){ dirty = false; document.getElementById('dirtyDot').style.display = 'none'; }
   function toast(msg){
     var t = document.getElementById('toast');
@@ -589,16 +546,39 @@
     boardScaler.style.height = (BOARD_H * zoom) + 'px';
     document.getElementById('zoomLabel').textContent = Math.round(zoom * 100) + '%';
   }
-  function zoomIn(){ zoom = Math.min(ZOOM_MAX, Math.round((zoom + ZOOM_STEP) * 100) / 100); applyZoom(); }
-  function zoomOut(){ zoom = Math.max(ZOOM_MIN, Math.round((zoom - ZOOM_STEP) * 100) / 100); applyZoom(); }
-  function zoomReset(){ zoom = 1; applyZoom(); }
+  /* Zoom so the board point under (clientX, clientY) stays put: the
+     pointer for the wheel, the middle of the view for the buttons. */
+  function zoomTo(z, clientX, clientY){
+    z = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, z));
+    if(z === zoom) return;
+    var r = boardWrap.getBoundingClientRect();
+    var ox = (clientX == null) ? boardWrap.clientWidth / 2 : clientX - r.left;
+    var oy = (clientY == null) ? boardWrap.clientHeight / 2 : clientY - r.top;
+    var bx = (boardWrap.scrollLeft + ox) / zoom, by = (boardWrap.scrollTop + oy) / zoom;
+    zoom = z;
+    applyZoom();
+    boardWrap.scrollLeft = bx * zoom - ox;
+    boardWrap.scrollTop = by * zoom - oy;
+  }
+  function zoomIn(){ zoomTo(Math.round((zoom + ZOOM_STEP) * 100) / 100); }
+  function zoomOut(){ zoomTo(Math.round((zoom - ZOOM_STEP) * 100) / 100); }
+  function zoomReset(){ zoomTo(1); }
 
-  /* ================= storage layer ================= */
+  /* ================= online case files =================
+     Every Save is kept online as a new numbered version, in the
+     case_files table of the site's Supabase project (the same project
+     as the Builders area; setup is in the chronicle README). Nothing is
+     ever overwritten: Open lists every saved version.
+
+     Anyone can open a saved version. Saving and deleting need an
+     invited account; the database enforces that, not this page.
+     Photos are uploaded to the case-photos bucket when a board is
+     saved, so each version holds links to them, not copies. */
   function withTimeout(promise, ms){
     return new Promise(function(resolve, reject){
       var settled = false;
       var timer = setTimeout(function(){
-        if(!settled){ settled = true; reject(new Error('Storage timed out')); }
+        if(!settled){ settled = true; reject(new Error('The server took too long to answer.')); }
       }, ms);
       promise.then(function(v){
         if(!settled){ settled = true; clearTimeout(timer); resolve(v); }
@@ -607,60 +587,7 @@
       });
     });
   }
-  async function listBoardKeys(retries){
-    retries = (retries == null) ? 1 : retries;
-    for(var attempt = 0; attempt <= retries; attempt++){
-      try{
-        var res = await withTimeout(window.storage.list('boardindex:', true), 6000);
-        return { ok: true, keys: (res && res.keys) ? res.keys : [] };
-      }catch(e){
-        console.error('storage.list attempt', attempt, e);
-        if(attempt < retries){ await new Promise(function(r){ setTimeout(r, 400 * (attempt + 1)); }); }
-      }
-    }
-    return { ok: false, keys: [] };
-  }
-  async function withRetry(fn, retries){
-    retries = (retries == null) ? 1 : retries;
-    var lastErr;
-    for(var attempt = 0; attempt <= retries; attempt++){
-      try{ return await fn(); }
-      catch(e){
-        lastErr = e;
-        console.error('storage op attempt', attempt, e);
-        if(attempt < retries){ await new Promise(function(r){ setTimeout(r, 400 * (attempt + 1)); }); }
-      }
-    }
-    throw lastErr;
-  }
-  async function getIndex(slug){
-    try{
-      return await withRetry(async function(){
-        var r = await withTimeout(window.storage.get('boardindex:' + slug, true), 6000);
-        return r ? JSON.parse(r.value) : null;
-      });
-    }catch(e){ return null; }
-  }
-  async function setIndex(slug, data){
-    return withRetry(function(){ return withTimeout(window.storage.set('boardindex:' + slug, JSON.stringify(data), true), 6000); });
-  }
-  async function getBoardData(slug, v){
-    try{
-      return await withRetry(async function(){
-        var r = await withTimeout(window.storage.get('boarddata:' + slug + ':v' + v, true), 6000);
-        return r ? JSON.parse(r.value) : null;
-      });
-    }catch(e){ return null; }
-  }
-  async function setBoardData(slug, v, data){
-    return withRetry(function(){ return withTimeout(window.storage.set('boarddata:' + slug + ':v' + v, JSON.stringify(data), true), 6000); });
-  }
-  async function deleteIndex(slug){
-    return withRetry(function(){ return withTimeout(window.storage.delete('boardindex:' + slug, true), 6000); });
-  }
-  async function deleteBoardData(slug, v){
-    return withRetry(function(){ return withTimeout(window.storage.delete('boarddata:' + slug + ':v' + v, true), 6000); });
-  }
+  function errText(e){ return (e && e.message) ? e.message : String(e); }
 
   function exportState(){
     return {
@@ -670,557 +597,327 @@
       photos: state.photos || []
     };
   }
-
-  function downloadJSON(obj, filename){
-    var blob = new Blob([JSON.stringify(obj, null, 2)], {type: 'application/json'});
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url; a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  function blankCase(board, name){
+    return {slug: board, boardName: name, version: 0, elements: [], offboard: [], sections: [], links: [], photos: []};
+  }
+  function confirmDiscard(){
+    return !dirty || window.confirm('The open board has unsaved changes. Discard them?');
+  }
+  function fmtDate(iso){
+    var d = new Date(iso);
+    return isNaN(d) ? '' : d.toLocaleString(undefined, {day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'});
   }
 
-  /* ================= storage mode detection ================= */
-  function isFirebaseConfigured(){
-    return !!(FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey.indexOf('YOUR_') !== 0 &&
-      FIREBASE_CONFIG.databaseURL && FIREBASE_CONFIG.databaseURL.indexOf('YOUR_') === -1);
+  function notConnected(){
+    showModal(
+      '<h3>Not connected</h3>' +
+      '<p class="hint">Online saving has not been set up for this board yet, so nothing can be saved or opened. You can still work on the board, but it is lost when this tab closes.</p>' +
+      '<div class="modal-actions"><button class="btn btn-ghost" id="modalClose">Close</button></div>'
+    );
+    document.getElementById('modalClose').addEventListener('click', closeModal);
   }
 
-  /* Firebase's libraries are only fetched when a real config is present,
-     rather than on every visit. */
-  function loadScript(src){
-    return new Promise(function(resolve, reject){
-      var el = document.createElement('script');
-      el.src = src;
-      el.onload = resolve;
-      el.onerror = function(){ reject(new Error('Could not load ' + src)); };
-      document.head.appendChild(el);
-    });
+  /* ---------------- accounts ---------------- */
+  async function currentSession(){
+    if(!db) return null;
+    try{ return (await db.auth.getSession()).data.session; }
+    catch(e){ console.error(e); return null; }
   }
 
-  async function detectStorageMode(){
-    if(isFirebaseConfigured()){
+  /* Magic-link sign-in, as in the Builders area. shouldCreateUser:false
+     means only invited addresses get a link. */
+  function openSignIn(){
+    showModal(
+      '<h3>Sign in to save</h3>' +
+      '<p class="hint">Saving needs an invited account. Enter your email and a sign-in link will be sent to it. Keep this tab open: after using the link, come back here and press Save again.</p>' +
+      '<form id="signInForm">' +
+        '<input id="signInEmail" type="email" autocomplete="email" placeholder="you@example.com" required/>' +
+        '<p class="hint" id="signInMsg" role="status"></p>' +
+        '<div class="modal-actions">' +
+          '<button type="button" class="btn btn-ghost" id="modalClose">Cancel</button>' +
+          '<button type="submit" class="btn btn-primary" id="signInSend">Send link</button>' +
+        '</div>' +
+      '</form>'
+    );
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('signInEmail').focus();
+    document.getElementById('signInForm').addEventListener('submit', async function(e){
+      e.preventDefault();
+      var email = document.getElementById('signInEmail').value.trim();
+      var msg = document.getElementById('signInMsg');
+      var send = document.getElementById('signInSend');
+      send.disabled = true;
+      msg.textContent = 'Sending…';
       try{
-        await loadScript('https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js');
-        await loadScript('https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js');
-        fbApp = firebase.initializeApp(FIREBASE_CONFIG);
-        fbDb = firebase.database();
-        await withTimeout(fbDb.ref('.info/connected').once('value'), 5000);
-        watchConnection();
-        return 'firebase';
-      }catch(e){
-        console.error('Firebase unavailable, falling back:', e);
+        var r = await withTimeout(db.auth.signInWithOtp({
+          email: email,
+          options: { shouldCreateUser: false, emailRedirectTo: window.location.href.split('#')[0] }
+        }), 15000);
+        if(r.error) throw r.error;
+        msg.textContent = 'Link sent. Check your email, use the link, then come back to this tab and save.';
+      }catch(err){
+        console.error(err);
+        msg.textContent = /sign ?ups? not allowed|not found|invalid login/i.test(errText(err))
+          ? 'That address has no account. Ask the Storyteller for an invitation.'
+          : 'Could not send the link: ' + errText(err);
+        send.disabled = false;
       }
-    }
-    if(!window.storage || typeof window.storage.get !== 'function') return 'local';
-    try{
-      await withTimeout(window.storage.list('boardindex:', true), 4000);
-      return 'cloud';
-    }catch(e){
-      console.error('Cloud storage unavailable, falling back to local file mode:', e);
-      return 'local';
-    }
-  }
-
-  function watchConnection(){
-    var dot = document.getElementById('connDot');
-    dot.style.display = 'inline-block';
-    fbDb.ref('.info/connected').on('value', function(snap){
-      dot.style.background = snap.val() ? '#4caf50' : '#b5222a';
-      dot.title = snap.val() ? 'Connected to live backend' : 'Disconnected — reconnecting…';
     });
   }
 
-  /* ================= live sync (firebase mode) ================= */
-  function subscribeLive(slug){
-    unsubscribeLive();
-    liveRef = fbDb.ref('boards/' + slug + '/live');
-    liveUnsub = function(snap){
-      var data = snap.val();
-      if(!data || data._writer === sessionId || !state || state.slug !== slug) return;
-      state.elements = data.elements || [];
-      state.offboard = data.offboard || [];
-      state.sections = data.sections || [];
-      state.links = data.links || [];
-      state.photos = data.photos || [];
-      renderCards(); renderStrings(); renderSections(); renderOffboardList(); renderPhotoList();
+  async function toggleAccount(){
+    if(!db) return notConnected();
+    if(!session) return openSignIn();
+    if(!window.confirm('Sign out' + (session.user && session.user.email ? ' ' + session.user.email : '') + '? You will need to sign in again to save.')) return;
+    await db.auth.signOut();
+    toast('Signed out.');
+  }
+
+  /* ---------------- reading ---------------- */
+  // Every saved version in this chronicle, grouped by case file, newest first.
+  async function fetchCaseList(){
+    var r = await withTimeout(
+      db.from(CASE_TABLE).select('board,name,version,created_at')
+        .eq('chronicle', CHRONICLE).order('created_at', {ascending: false}).limit(2000),
+      10000);
+    if(r.error) throw r.error;
+    var files = {}, order = [];
+    (r.data || []).forEach(function(row){
+      if(!files[row.board]){ files[row.board] = {board: row.board, name: row.name, versions: []}; order.push(row.board); }
+      files[row.board].versions.push(row);
+    });
+    return order.map(function(b){ return files[b]; });
+  }
+
+  async function latestVersion(board){
+    var r = await withTimeout(
+      db.from(CASE_TABLE).select('version').eq('chronicle', CHRONICLE).eq('board', board)
+        .order('version', {ascending: false}).limit(1),
+      10000);
+    if(r.error) throw r.error;
+    return (r.data && r.data[0]) ? r.data[0].version : 0;
+  }
+
+  // Opens one version, or the latest when none is given. False if there is none.
+  async function loadCase(board, version){
+    var q = db.from(CASE_TABLE).select('name,version,data').eq('chronicle', CHRONICLE).eq('board', board);
+    q = version ? q.eq('version', version) : q.order('version', {ascending: false}).limit(1);
+    var r = await withTimeout(q, 15000);
+    if(r.error) throw r.error;
+    var row = r.data && r.data[0];
+    if(!row) return false;
+    var data = row.data;
+    if(!data || typeof data !== 'object' || !Array.isArray(data.elements)){
+      throw new Error('That version is damaged and cannot be opened.');
+    }
+    state = {
+      slug: board, boardName: row.name, version: row.version,
+      elements: data.elements || [], offboard: data.offboard || [],
+      sections: data.sections || [], links: data.links || [], photos: data.photos || []
     };
-    liveRef.on('value', liveUnsub);
-  }
-  function unsubscribeLive(){
-    if(liveRef && liveUnsub){ liveRef.off('value', liveUnsub); }
-    liveRef = null; liveUnsub = null;
-  }
-  function scheduleLivePush(){
-    if(storageMode !== 'firebase' || !state || !state.slug || !fbDb) return;
-    clearTimeout(pushLiveTimer);
-    pushLiveTimer = setTimeout(function(){
-      fbDb.ref('boards/' + state.slug + '/live').set(Object.assign({}, exportState(), {_writer: sessionId}))
-        .catch(function(e){ console.error('Live push failed', e); });
-    }, 350);
-  }
-
-  /* ================= board actions (dispatchers) ================= */
-  function newBoard(){
-    if(storageMode === 'firebase') return newBoardFirebase();
-    return storageMode === 'cloud' ? newBoardCloud() : newBoardLocal();
-  }
-  function saveBoard(){
-    if(storageMode === 'firebase') return saveBoardFirebase();
-    return storageMode === 'cloud' ? saveBoardCloud() : saveBoardLocal();
-  }
-  function openLoadModal(){
-    if(storageMode === 'firebase') return openLoadModalFirebase();
-    return storageMode === 'cloud' ? openLoadModalCloud() : openLoadModalLocal();
-  }
-
-  function ensureStorageAvailable(){
-    if(!window.storage || typeof window.storage.get !== 'function'){
-      throw new Error('Persistent storage is not available in this window.');
-    }
-  }
-
-  /* ---------------- firebase mode (real live shared backend) ---------------- */
-  async function newBoardFirebase(){
-    var name = window.prompt('Name this new case file:');
-    if(!name || !name.trim()) return;
-    name = name.trim().slice(0,60);
-    var slug = slugify(name);
-    showLoading(true, 'Opening a fresh case file…');
-    try{
-      var existingSnap = await withTimeout(fbDb.ref('boardIndex/' + slug).once('value'), 6000);
-      var tries = 0;
-      while(existingSnap.exists() && tries < 20){
-        slug = slugify(name) + '-' + uid().slice(-4);
-        existingSnap = await withTimeout(fbDb.ref('boardIndex/' + slug).once('value'), 6000);
-        tries++;
-      }
-      state = {slug: slug, boardName: name, version: 1, elements: [], offboard: [], sections: [], links: [], photos: []};
-      await fbDb.ref('boards/' + slug + '/versions/1').set(exportState());
-      await fbDb.ref('boardIndex/' + slug).set({name: name, latestVersion: 1, updatedAt: Date.now()});
-      await fbDb.ref('boards/' + slug + '/live').set(Object.assign({}, exportState(), {_writer: sessionId}));
-      subscribeLive(slug);
-      clearDirty();
-      renderAll();
-      toast('Started "' + name + '" — V1 (live for everyone)');
-    }catch(e){
-      console.error(e);
-      alert('Could not create the case file:\n' + (e && e.message ? e.message : e));
-    }finally{
-      showLoading(false);
-    }
-  }
-
-  async function saveBoardFirebase(){
-    if(!state || !state.slug){ return newBoardFirebase(); }
-    showLoading(true, 'Filing the paperwork…');
-    try{
-      var idxSnap = await withTimeout(fbDb.ref('boardIndex/' + state.slug).once('value'), 6000);
-      var idx = idxSnap.val();
-      var nextV = ((idx && idx.latestVersion) || state.version || 0) + 1;
-      await fbDb.ref('boards/' + state.slug + '/versions/' + nextV).set(exportState());
-      await fbDb.ref('boardIndex/' + state.slug).update({name: state.boardName, latestVersion: nextV, updatedAt: Date.now()});
-      state.version = nextV;
-      clearDirty();
-      renderTopbar();
-      toast('Saved "' + state.boardName + '" as V' + nextV);
-    }catch(e){
-      console.error(e);
-      alert('Save failed:\n' + (e && e.message ? e.message : e));
-    }finally{
-      showLoading(false);
-    }
-  }
-
-  async function loadBoardFirebase(slug, v){
-    showLoading(true, 'Pulling the file…');
-    try{
-      var idxSnap = await withTimeout(fbDb.ref('boardIndex/' + slug).once('value'), 6000);
-      var dataSnap = await withTimeout(fbDb.ref('boards/' + slug + '/versions/' + v).once('value'), 6000);
-      var idx = idxSnap.val(), data = dataSnap.val();
-      if(!idx || !data){ alert('That version could not be found.'); return; }
-      state = Object.assign({slug: slug, boardName: idx.name, version: v}, {
-        elements: data.elements || [], offboard: data.offboard || [],
-        sections: data.sections || [], links: data.links || [], photos: data.photos || []
-      });
-      await fbDb.ref('boards/' + slug + '/live').set(Object.assign({}, exportState(), {_writer: sessionId}));
-      subscribeLive(slug);
-      clearDirty();
-      renderAll();
-      toast('Opened "' + idx.name + '" — V' + v + ' (now live for everyone)');
-    }catch(e){
-      console.error(e);
-      alert('Could not open that case file:\n' + (e && e.message ? e.message : e));
-    }finally{
-      showLoading(false);
-    }
-  }
-
-  async function openLoadModalFirebase(){
-    showLoading(true, 'Gathering case files…');
-    var all = null;
-    try{
-      var snap = await withTimeout(fbDb.ref('boardIndex').once('value'), 6000);
-      all = snap.val() || {};
-    }catch(e){ console.error(e); all = null; }
-    showLoading(false);
-    var rows = '';
-    var ok = all !== null;
-    var slugs = all ? Object.keys(all) : [];
-    slugs.forEach(function(slug){
-      var info = all[slug];
-      var opts = '';
-      for(var v = info.latestVersion; v >= 1; v--){
-        opts += '<option value="' + v + '"' + (v === info.latestVersion ? ' selected' : '') + '>V' + v + '</option>';
-      }
-      rows += '<div class="load-row" data-slug="' + escapeHtml(slug) + '">' +
-        '<div class="load-row-name">' + escapeHtml(info.name) + '</div>' +
-        '<select class="load-version">' + opts + '</select>' +
-        '<button class="btn btn-small btn-primary load-open">Open</button>' +
-        '<button class="btn btn-small btn-danger load-delete" title="Delete this case file">Delete</button>' +
-      '</div>';
-    });
-    var statusLine = '';
-    if(!ok){
-      statusLine = '<p class="hint">Couldn\'t reach the live backend just now — you can still start a new case file, or <span id="modalRetry" style="text-decoration:underline;cursor:pointer;">try again</span>.</p>';
-    }else if(!rows){
-      rows = '<p class="hint">No case files saved yet. Start one below.</p>';
-    }
-    showModal(
-      '<h3>Case Files</h3>' +
-      '<p class="hint">Live shared mode — everyone with this page open sees changes in real time. Open a file, or start a new one.</p>' +
-      statusLine +
-      '<button class="btn btn-primary btn-block" id="modalNew">＋ New Case File</button>' +
-      '<hr class="modal-divider"/>' +
-      '<div class="load-list">' + rows + '</div>' +
-      '<div class="modal-actions"><button class="btn btn-ghost" id="modalClose">Close</button></div>'
-    );
-    document.getElementById('modalNew').addEventListener('click', function(){ closeModal(); newBoardFirebase(); });
-    document.getElementById('modalClose').addEventListener('click', closeModal);
-    var retryEl = document.getElementById('modalRetry');
-    if(retryEl){ retryEl.addEventListener('click', function(){ closeModal(); openLoadModalFirebase(); }); }
-    document.querySelectorAll('.load-open').forEach(function(btn){
-      btn.addEventListener('click', function(e){
-        var row = e.target.closest('.load-row');
-        var slug = row.dataset.slug;
-        var v = parseInt(row.querySelector('.load-version').value, 10);
-        closeModal();
-        loadBoardFirebase(slug, v);
-      });
-    });
-    document.querySelectorAll('.load-delete').forEach(function(btn){
-      btn.addEventListener('click', function(e){
-        var row = e.target.closest('.load-row');
-        var slug = row.dataset.slug;
-        var name = row.querySelector('.load-row-name').textContent;
-        if(window.confirm('Permanently delete "' + name + '" and all its saved versions? This cannot be undone.')){
-          closeModal();
-          deleteBoardFirebase(slug, name);
-        }
-      });
-    });
-  }
-
-  async function deleteBoardFirebase(slug, name){
-    showLoading(true, 'Deleting case file…');
-    try{
-      await withTimeout(fbDb.ref('boards/' + slug).remove(), 6000);
-      await withTimeout(fbDb.ref('boardIndex/' + slug).remove(), 6000);
-      if(state && state.slug === slug){
-        unsubscribeLive();
-        state = null;
-        renderAll();
-      }
-      toast('Deleted "' + name + '".');
-    }catch(e){
-      console.error(e);
-      alert('Could not delete that case file:\n' + (e && e.message ? e.message : e));
-    }finally{
-      showLoading(false);
-      openLoadModalFirebase();
-    }
-  }
-
-  /* ---------------- cloud mode ---------------- */
-  async function newBoardCloud(){
-    var name = window.prompt('Name this new case file:');
-    if(!name || !name.trim()) return;
-    name = name.trim().slice(0,60);
-    var slug = slugify(name);
-    showLoading(true, 'Opening a fresh case file…');
-    try{
-      ensureStorageAvailable();
-      var existing = await getIndex(slug);
-      var tries = 0;
-      while(existing && tries < 20){
-        slug = slugify(name) + '-' + uid().slice(-4);
-        existing = await getIndex(slug);
-        tries++;
-      }
-      state = {slug: slug, boardName: name, version: 1, elements: [], offboard: [], sections: [], links: [], photos: []};
-      await setBoardData(slug, 1, exportState());
-      await setIndex(slug, {name: name, latestVersion: 1, updatedAt: Date.now()});
-      clearDirty();
-      renderAll();
-      toast('Started "' + name + '" — V1');
-    }catch(e){
-      console.error(e);
-      alert('Could not create the case file:\n' + (e && e.message ? e.message : e) + '\n\nOpen the browser console for more detail.');
-    }finally{
-      showLoading(false);
-    }
-  }
-
-  async function saveBoardCloud(){
-    if(!state || !state.slug){ return newBoardCloud(); }
-    showLoading(true, 'Filing the paperwork…');
-    try{
-      ensureStorageAvailable();
-      var idx = await getIndex(state.slug);
-      var nextV = ((idx && idx.latestVersion) || state.version || 0) + 1;
-      await setBoardData(state.slug, nextV, exportState());
-      await setIndex(state.slug, {name: state.boardName, latestVersion: nextV, updatedAt: Date.now()});
-      state.version = nextV;
-      clearDirty();
-      renderTopbar();
-      toast('Saved "' + state.boardName + '" as V' + nextV);
-    }catch(e){
-      console.error(e);
-      alert('Save failed:\n' + (e && e.message ? e.message : e) + '\n\nYour work is still open in this window.');
-    }finally{
-      showLoading(false);
-    }
-  }
-
-  async function loadBoardCloud(slug, v){
-    showLoading(true, 'Pulling the file…');
-    try{
-      ensureStorageAvailable();
-      var idx = await getIndex(slug);
-      var data = await getBoardData(slug, v);
-      if(!idx || !data){ alert('That version could not be found.'); return; }
-      state = Object.assign({slug: slug, boardName: idx.name, version: v}, {
-        elements: data.elements || [], offboard: data.offboard || [],
-        sections: data.sections || [], links: data.links || [], photos: data.photos || []
-      });
-      clearDirty();
-      renderAll();
-      toast('Opened "' + idx.name + '" — V' + v);
-    }catch(e){
-      console.error(e);
-      alert('Could not open that case file:\n' + (e && e.message ? e.message : e));
-    }finally{
-      showLoading(false);
-    }
-  }
-
-  async function openLoadModalCloud(){
-    showLoading(true, 'Gathering case files…');
-    var listResult = await listBoardKeys();
-    var slugs = listResult.keys.map(function(k){ return k.replace('boardindex:', ''); });
-    var infos = await Promise.all(slugs.map(getIndex));
-    showLoading(false);
-    var rows = '';
-    infos.forEach(function(info, i){
-      if(!info) return;
-      var slug = slugs[i];
-      var opts = '';
-      for(var v = info.latestVersion; v >= 1; v--){
-        opts += '<option value="' + v + '"' + (v === info.latestVersion ? ' selected' : '') + '>V' + v + '</option>';
-      }
-      rows += '<div class="load-row" data-slug="' + escapeHtml(slug) + '">' +
-        '<div class="load-row-name">' + escapeHtml(info.name) + '</div>' +
-        '<select class="load-version">' + opts + '</select>' +
-        '<button class="btn btn-small btn-primary load-open">Open</button>' +
-        '<button class="btn btn-small btn-danger load-delete" title="Delete this case file">Delete</button>' +
-      '</div>';
-    });
-    var statusLine = '';
-    if(!listResult.ok){
-      statusLine = '<p class="hint">Couldn\'t reach shared storage just now — you can still start a new case file, or <span id="modalRetry" style="text-decoration:underline;cursor:pointer;">try again</span>.</p>';
-    }else if(!rows){
-      rows = '<p class="hint">No case files saved yet. Start one below.</p>';
-    }
-    showModal(
-      '<h3>Case Files</h3>' +
-      '<p class="hint">Open an existing file, or start a new one.</p>' +
-      statusLine +
-      '<button class="btn btn-primary btn-block" id="modalNew">＋ New Case File</button>' +
-      '<hr class="modal-divider"/>' +
-      '<div class="load-list">' + rows + '</div>' +
-      '<div class="modal-actions"><button class="btn btn-ghost" id="modalClose">Close</button></div>'
-    );
-    document.getElementById('modalNew').addEventListener('click', function(){ closeModal(); newBoardCloud(); });
-    document.getElementById('modalClose').addEventListener('click', closeModal);
-    var retryEl = document.getElementById('modalRetry');
-    if(retryEl){ retryEl.addEventListener('click', function(){ closeModal(); openLoadModalCloud(); }); }
-    document.querySelectorAll('.load-open').forEach(function(btn){
-      btn.addEventListener('click', function(e){
-        var row = e.target.closest('.load-row');
-        var slug = row.dataset.slug;
-        var v = parseInt(row.querySelector('.load-version').value, 10);
-        closeModal();
-        loadBoardCloud(slug, v);
-      });
-    });
-    document.querySelectorAll('.load-delete').forEach(function(btn){
-      btn.addEventListener('click', function(e){
-        var row = e.target.closest('.load-row');
-        var slug = row.dataset.slug;
-        var name = row.querySelector('.load-row-name').textContent;
-        if(window.confirm('Permanently delete "' + name + '" and all its saved versions? This cannot be undone.')){
-          closeModal();
-          deleteBoardCloud(slug, name);
-        }
-      });
-    });
-  }
-
-  async function deleteBoardCloud(slug, name){
-    showLoading(true, 'Deleting case file…');
-    try{
-      var idx = await getIndex(slug);
-      if(idx && idx.latestVersion){
-        for(var v = 1; v <= idx.latestVersion; v++){
-          try{ await deleteBoardData(slug, v); }
-          catch(e){ console.error('Failed deleting version', v, e); }
-        }
-      }
-      await deleteIndex(slug);
-      if(state && state.slug === slug){
-        state = null;
-        renderAll();
-      }
-      toast('Deleted "' + name + '".');
-    }catch(e){
-      console.error(e);
-      alert('Could not delete that case file:\n' + (e && e.message ? e.message : e));
-    }finally{
-      showLoading(false);
-      openLoadModalCloud();
-    }
-  }
-
-  /* ---------------- local file mode ---------------- */
-  function newBoardLocal(){
-    var name = window.prompt('Name this new case file:');
-    if(!name || !name.trim()) return;
-    name = name.trim().slice(0,60);
-    state = {slug: slugify(name), boardName: name, version: 0, elements: [], offboard: [], sections: [], links: [], photos: []};
-    markDirty();
+    clearDirty();
     renderAll();
-    toast('Started "' + name + '" — click Save to download V1');
+    return true;
   }
 
-  function saveBoardLocal(){
-    if(!state || !state.slug){ return newBoardLocal(); }
-    state.version = (state.version || 0) + 1;
-    var filename = state.slug + '-v' + state.version + '.json';
+  async function openCase(board, version){
+    if(!confirmDiscard()) return;
+    showLoading(true, 'Pulling the file…');
     try{
-      downloadJSON(exportState(), filename);
-      clearDirty();
-      renderTopbar();
-      toast('Downloaded ' + filename);
+      if(await loadCase(board, version)) toast('Opened "' + state.boardName + '" — V' + state.version);
+      else alert('That version could not be found.');
     }catch(e){
       console.error(e);
-      state.version -= 1;
-      alert('Could not create the download:\n' + (e && e.message ? e.message : e));
+      alert('Could not open that case file:\n' + errText(e));
+    }finally{
+      showLoading(false);
     }
   }
 
-  function loadFromFile(file){
-    var reader = new FileReader();
-    reader.onload = function(){
+  /* ---------------- the Open dialog ---------------- */
+  async function openLoadModal(){
+    if(!db) return notConnected();
+    showLoading(true, 'Gathering case files…');
+    var files = null;
+    try{ files = await fetchCaseList(); }
+    catch(e){ console.error(e); }
+    showLoading(false);
+
+    var rows = '';
+    (files || []).forEach(function(f){
+      var opts = f.versions.map(function(v, i){
+        return '<option value="' + v.version + '"' + (i === 0 ? ' selected' : '') + '>V' + v.version +
+               ' · ' + escapeHtml(fmtDate(v.created_at)) + '</option>';
+      }).join('');
+      rows += '<div class="load-row" data-board="' + escapeHtml(f.board) + '">' +
+        '<div class="load-row-name">' + escapeHtml(f.name) + '</div>' +
+        '<select class="load-version" aria-label="Version of ' + escapeHtml(f.name) + '">' + opts + '</select>' +
+        '<button class="btn btn-small btn-primary load-open">Open</button>' +
+        (session ? '<button class="btn btn-small btn-danger load-delete" title="Delete this case file and every saved version">Delete</button>' : '') +
+      '</div>';
+    });
+    var statusLine = '';
+    if(files === null){
+      statusLine = '<p class="hint">Could not reach the saved case files just now. <span id="modalRetry" style="text-decoration:underline;cursor:pointer;">Try again</span>.</p>';
+    }else if(!rows){
+      rows = '<p class="hint">No case files saved yet. Save the open board to keep it here.</p>';
+    }
+    showModal(
+      '<h3>Case Files</h3>' +
+      '<p class="hint">Every save is kept. Pick a case file and a version to open.</p>' +
+      statusLine +
+      '<div class="load-list">' + rows + '</div>' +
+      '<hr class="modal-divider"/>' +
+      '<button class="btn btn-ghost btn-block" id="modalNew">＋ New Case File</button>' +
+      '<div class="modal-actions"><button class="btn btn-ghost" id="modalClose">Close</button></div>'
+    );
+    document.getElementById('modalNew').addEventListener('click', function(){ closeModal(); newBoard(); });
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    var retryEl = document.getElementById('modalRetry');
+    if(retryEl){ retryEl.addEventListener('click', function(){ closeModal(); openLoadModal(); }); }
+    document.querySelectorAll('.load-open').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        var row = e.target.closest('.load-row');
+        var v = parseInt(row.querySelector('.load-version').value, 10);
+        closeModal();
+        openCase(row.dataset.board, v);
+      });
+    });
+    document.querySelectorAll('.load-delete').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        var row = e.target.closest('.load-row');
+        var name = row.querySelector('.load-row-name').textContent;
+        if(window.confirm('Permanently delete "' + name + '" and every saved version of it? This cannot be undone.')){
+          closeModal();
+          deleteCase(row.dataset.board, name);
+        }
+      });
+    });
+  }
+
+  /* ---------------- writing ---------------- */
+  async function newBoard(){
+    if(!confirmDiscard()) return;
+    var name = window.prompt('Name this new case file:');
+    if(!name || !name.trim()) return;
+    name = name.trim().slice(0,60);
+    var board = slugify(name);
+    if(db){
+      // Two files with one name would be impossible to tell apart in Open.
       try{
-        var data = JSON.parse(reader.result);
-        if(!data || typeof data !== 'object' || !Array.isArray(data.elements)){
-          alert('That file doesn\'t look like a case file export.');
+        var clash = (await fetchCaseList()).filter(function(f){ return f.board === board; })[0];
+        if(clash){
+          alert('There is already a case file called "' + clash.name + '". Open it from Open…, or choose another name.');
           return;
         }
-        var name = data.name || file.name.replace(/-v\d+\.json$/i,'').replace(/\.json$/i,'') || 'Untitled Case';
-        state = {
-          slug: slugify(name), boardName: name, version: data.version || 1,
-          elements: data.elements || [], offboard: data.offboard || [],
-          sections: data.sections || [], links: data.links || [], photos: data.photos || []
-        };
-        clearDirty();
-        renderAll();
-        toast('Opened "' + name + '" — V' + state.version);
       }catch(e){
         console.error(e);
-        alert('Could not read that file:\n' + (e && e.message ? e.message : e));
+        board = board + '-' + uid().slice(-4);   // cannot check: at least never add to another file
       }
-    };
-    reader.onerror = function(){ alert('Could not read that file.'); };
-    reader.readAsText(file);
+    }
+    state = blankCase(board, name);
+    clearDirty();
+    renderAll();
+    toast('Started "' + name + '" — Save keeps it online');
   }
 
-  /* ---------------- the case this page opens with ----------------
-     A case file published next to this page. To update what everyone
-     sees: open the board, make changes, Save (it downloads a file), then
-     replace case.json with the downloaded file and commit it. */
-  var DEFAULT_CASE = 'case.json';
-  async function openDefaultCase(){
+  async function uploadPhoto(dataUrl){
+    var blob = await (await fetch(dataUrl)).blob();
+    var digest = await crypto.subtle.digest('SHA-256', await blob.arrayBuffer());
+    var hash = Array.prototype.map.call(new Uint8Array(digest), function(b){ return ('0' + b.toString(16)).slice(-2); }).join('');
+    var ext = {'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif'}[blob.type] || 'jpg';
+    // Named after its contents: the same photo is only ever stored once.
+    var path = CHRONICLE + '/' + hash + '.' + ext;
+    var r = await withTimeout(db.storage.from(PHOTO_BUCKET).upload(path, blob, {
+      contentType: blob.type || 'image/jpeg', upsert: false, cacheControl: '31536000'
+    }), 30000);
+    if(r.error && String(r.error.statusCode) !== '409' && !/exists|duplicate/i.test(errText(r.error))) throw r.error;
+    return db.storage.from(PHOTO_BUCKET).getPublicUrl(path).data.publicUrl;
+  }
+
+  // Swap every photo still held in the page for its uploaded copy.
+  async function uploadPhotos(){
+    var holders = [].concat(state.elements, state.offboard, state.photos || []).filter(function(o){
+      return o && typeof o.src === 'string' && o.src.indexOf('data:image/') === 0;
+    });
+    var done = {};
+    for(var i = 0; i < holders.length; i++){
+      var src = holders[i].src;
+      if(!done[src]){
+        showLoading(true, 'Uploading photos… ' + (Object.keys(done).length + 1));
+        done[src] = await uploadPhoto(src);
+      }
+      holders[i].src = done[src];
+    }
+  }
+
+  async function saveBoard(){
+    if(!state) return;
+    if(!db) return notConnected();
+    session = await currentSession();
+    renderTopbar();
+    if(!session) return openSignIn();
+
+    showLoading(true, 'Filing the paperwork…');
     try{
-      var res = await fetch(DEFAULT_CASE, {cache: 'no-cache'});
-      if(!res.ok) return false;
-      var data = await res.json();
-      if(!data || typeof data !== 'object' || !Array.isArray(data.elements)) return false;
-      var name = data.name || 'RICO Case';
-      state = {
-        slug: slugify(name), boardName: name, version: data.version || 1,
-        elements: data.elements || [], offboard: data.offboard || [],
-        sections: data.sections || [], links: data.links || [], photos: data.photos || []
-      };
+      await uploadPhotos();
+      showLoading(true, 'Filing the paperwork…');
+      var latest = await latestVersion(state.slug);
+      if(latest > state.version){
+        showLoading(false);
+        var ok = window.confirm('V' + latest + ' of "' + state.boardName + '" was saved after ' +
+          (state.version ? 'you opened V' + state.version : 'you started this board') +
+          '. Save yours as V' + (latest + 1) + '? V' + latest + ' stays in the list.');
+        if(!ok) return;
+        showLoading(true, 'Filing the paperwork…');
+      }
+      var saved = 0;
+      for(var attempt = 0; attempt < 3 && !saved; attempt++){
+        var next = latest + 1;
+        var data = exportState();
+        data.version = next;
+        var r = await withTimeout(db.from(CASE_TABLE).insert({
+          chronicle: CHRONICLE, board: state.slug, name: state.boardName, version: next, data: data
+        }), 20000);
+        if(!r.error){ saved = next; break; }
+        if(r.error.code !== '23505') throw r.error;        // anything but "that number was just taken"
+        latest = await latestVersion(state.slug);
+      }
+      if(!saved) throw new Error('Someone else is saving this case right now. Try again in a moment.');
+      state.version = saved;
       clearDirty();
       renderAll();
-      return true;
+      toast('Saved "' + state.boardName + '" as V' + saved);
     }catch(e){
-      console.error('Could not open ' + DEFAULT_CASE, e);
-      return false;
+      console.error(e);
+      alert('Save failed:\n' + errText(e) + '\n\nYour work is still open in this window.');
+    }finally{
+      showLoading(false);
     }
   }
 
-  function openLoadModalLocal(){
-    var discardRow = state
-      ? '<button class="btn btn-danger btn-block" id="modalDiscard">Discard Open Board (This Session Only)</button>'
-      : '';
-    showModal(
-      '<h3>Case Files</h3>' +
-      '<p class="hint">Case files here are saved to your own computer: Save downloads a file, and Open reads one back in. Nothing is stored on the website.</p>' +
-      '<button class="btn btn-primary btn-block" id="modalNew">＋ New Case File</button>' +
-      '<hr class="modal-divider"/>' +
-      '<button class="btn btn-ghost btn-block" id="modalOpenFile">Open a Case File From Disk…</button>' +
-      (discardRow ? '<hr class="modal-divider"/>' + discardRow +
-        '<p class="hint">There\'s no server copy to delete in this mode — case files are just the .json files you\'ve downloaded. Delete those from your computer\'s downloads folder to remove them for good.</p>' : '') +
-      '<div class="modal-actions"><button class="btn btn-ghost" id="modalClose">Close</button></div>'
-    );
-    document.getElementById('modalNew').addEventListener('click', function(){ closeModal(); newBoardLocal(); });
-    document.getElementById('modalClose').addEventListener('click', closeModal);
-    document.getElementById('modalOpenFile').addEventListener('click', function(){
-      document.getElementById('fileInput').click();
-    });
-    var discardEl = document.getElementById('modalDiscard');
-    if(discardEl){
-      discardEl.addEventListener('click', function(){
-        if(window.confirm('Discard the open board? Anything not downloaded yet will be lost.')){
-          state = null;
-          clearDirty();
-          renderAll();
-          closeModal();
-          toast('Board discarded.');
-        }
-      });
+  async function deleteCase(board, name){
+    showLoading(true, 'Deleting case file…');
+    try{
+      var r = await withTimeout(
+        db.from(CASE_TABLE).delete().eq('chronicle', CHRONICLE).eq('board', board).select('id'), 15000);
+      if(r.error) throw r.error;
+      if(!r.data || !r.data.length) throw new Error('Nothing was deleted. Your account may not be allowed to delete case files.');
+      if(state && state.slug === board){
+        // The board stays open, now unsaved, so deleting by mistake loses nothing yet.
+        state.version = 0;
+        markDirty();
+        renderTopbar();
+      }
+      toast('Deleted "' + name + '".');
+    }catch(e){
+      console.error(e);
+      alert('Could not delete that case file:\n' + errText(e));
+    }finally{
+      showLoading(false);
+      openLoadModal();
     }
   }
-
-  document.getElementById('fileInput').addEventListener('change', function(e){
-    var file = e.target.files && e.target.files[0];
-    if(file){ closeModal(); loadFromFile(file); }
-    e.target.value = '';
-  });
 
   /* ================= rendering ================= */
   function updateControlsEnabled(){
@@ -1232,13 +929,10 @@
 
   function renderTopbar(){
     document.getElementById('boardTitle').textContent = state ? state.boardName : 'No Case File Loaded';
-    var modeText = storageMode === 'local'
-      ? 'Local file mode — Save downloads a version file'
-      : storageMode === 'firebase'
-      ? 'Live shared board — everyone sees changes in real time'
-      : 'Shared board — visible to everyone using this link';
-    document.getElementById('boardSubText').textContent = state ? ('V' + state.version + ' · ' + modeText) : modeText;
-    document.getElementById('connDot').style.display = (storageMode === 'firebase') ? 'inline-block' : 'none';
+    var acct = document.getElementById('btnAccount');
+    acct.style.display = db ? '' : 'none';
+    acct.textContent = session ? 'Sign out' : 'Sign in';
+    acct.title = (session && session.user) ? 'Signed in as ' + session.user.email : 'Sign in to save case files';
     updateControlsEnabled();
   }
 
@@ -1922,6 +1616,7 @@
   document.getElementById('btnNew').addEventListener('click', newBoard);
   document.getElementById('btnSave').addEventListener('click', saveBoard);
   document.getElementById('btnLoad').addEventListener('click', openLoadModal);
+  document.getElementById('btnAccount').addEventListener('click', toggleAccount);
   document.getElementById('btnZone').addEventListener('click', function(){
     if(!state){ alert('Start or open a case file first.'); return; }
     toggleZoneMode();
@@ -1932,11 +1627,14 @@
   document.getElementById('zoomIn').addEventListener('click', zoomIn);
   document.getElementById('zoomOut').addEventListener('click', zoomOut);
   document.getElementById('zoomReset').addEventListener('click', zoomReset);
+  /* The wheel zooms, centred on the pointer; dragging empty board pans.
+     deltaMode 1 counts lines (Firefox), 2 pages. The cap keeps one fast
+     flick from jumping straight to the limit. */
   boardWrap.addEventListener('wheel', function(e){
-    if(e.ctrlKey || e.metaKey){
-      e.preventDefault();
-      if(e.deltaY < 0) zoomIn(); else zoomOut();
-    }
+    e.preventDefault();
+    var dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1);
+    dy = Math.max(-300, Math.min(300, dy));
+    zoomTo(zoom * Math.exp(-dy * 0.0015), e.clientX, e.clientY);
   }, {passive: false});
   applyZoom();
   document.getElementById('btnAddOffboard').addEventListener('click', function(){
@@ -1981,9 +1679,9 @@
     }
   });
 
-  /* In download mode the only copy of unsaved work is this tab. */
+  /* Until it is saved, the only copy of the work is this tab. */
   window.addEventListener('beforeunload', function(e){
-    if(dirty && storageMode === 'local'){ e.preventDefault(); e.returnValue = ''; }
+    if(dirty){ e.preventDefault(); e.returnValue = ''; }
   });
 
   document.addEventListener('keydown', function(e){
@@ -1995,16 +1693,23 @@
   renderTopbar();
 
   /* ================= boot ================= */
+  /* Opens the latest saved version of the RICO case, or a blank one if
+     it has never been saved. */
   (async function boot(){
-    showLoading(true, 'Checking storage…');
-    storageMode = await detectStorageMode();
-    showLoading(false);
-    renderTopbar();
-    if(storageMode === 'local'){
-      if(await openDefaultCase()) return;
-      toast('Running in local file mode — see the Open… dialog for details.');
+    if(!db){ state = blankCase(DEFAULT_BOARD, DEFAULT_NAME); renderAll(); return; }
+    db.auth.onAuthStateChange(function(_event, s){ session = s; renderTopbar(); });
+    session = await currentSession();
+    showLoading(true, 'Pulling the file…');
+    try{
+      if(!(await loadCase(DEFAULT_BOARD))){ state = blankCase(DEFAULT_BOARD, DEFAULT_NAME); renderAll(); }
+    }catch(e){
+      console.error(e);
+      state = blankCase(DEFAULT_BOARD, DEFAULT_NAME);
+      renderAll();
+      toast('Could not reach the saved case files. Try Open… in a moment.');
+    }finally{
+      showLoading(false);
     }
-    openLoadModal();
   })();
 
 })();

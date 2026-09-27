@@ -13,6 +13,9 @@
 
    Leave both empty and the Builders pages say they are not connected
    yet, instead of pretending to work.
+
+   The Dead Hand case board (htr/brooklyn/dead-hand/rico-case/) reads
+   these two values as well, to save its case files online.
    ===================================================================== */
 window.BUILDERS_CONFIG = {
   supabaseUrl: "",

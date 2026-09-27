@@ -126,6 +126,12 @@ in from `vistectus.com/builders/` with a one-time link — no password.
 - **New worlds and chronicles:** add them to the `WORLDS` list at the top
   of `builders.js` so Builders can pick them.
 
+## Also used by the case board
+
+The Dead Hand **RICO Case** board saves its case files to this same
+project, and the same invited accounts can save there. Its extra setup
+(one table, one bucket) is in `htr/brooklyn/dead-hand/README.md`.
+
 ## Before real use
 
 Supabase's built-in email sender is limited to a handful of messages per
