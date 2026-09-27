@@ -16,32 +16,46 @@
 
 <a class="skip" href="#main">Skip to content</a>
 
-<!-- The bar and the footer are plain HTML on every page of this chronicle,
-     so navigation survives with JavaScript switched off or still loading.
-     Adding a page means adding one link here and on the three siblings. -->
 <header class="topbar">
-  <a class="brand" href="../../../index.html"><span class="brand-mark" aria-hidden="true"></span> Vistectus</a>
-  <nav class="topnav">
-    <a href="index.html">Chronicle</a>
-    <a href="players.html">The cell</a>
-    <a href="npcs.html">People</a>
-    <a href="compendium.html" aria-current="page">Compendium</a>
+  <a class="brand" href="../../../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
+  <nav class="topnav" aria-label="Site">
+    <a href="../../../dnd/index.html">D&amp;D</a>
+    <a href="../../../htr/index.html" aria-current="true">Hunter</a>
+    <a href="../../../vtda/index.html">Vampire</a>
+    <a href="../../../index.html#about">About</a>
+    <a href="../../../host/index.html">Host a World</a>
+    <a class="nav-cta" href="../../../builders/index.html">Builders</a>
   </nav>
 </header>
 
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../../../index.html">VisTectus</a></li>
+    <li><a href="../../../htr/index.html">Hunter</a></li>
+    <li><a href="../../../htr/brooklyn/index.html">Brooklyn Chronicles</a></li>
+    <li><a href="../../../htr/brooklyn/dead-hand/index.html">Dead Hand</a></li>
+    <li aria-current="page">Compendium</li>
+  </ol>
+</nav>
+
 <section class="hero hero--compact">
   <div class="hero-inner">
-    <p class="crumb">
-      <a href="../../../index.html">Vistectus</a> /
-      <a href="../../index.html">Hunter</a> /
-      <a href="../index.html">Brooklyn Chronicles</a> /
-      <a href="index.html">Dead Hand Chronicle</a>
-    </p>
     <p class="kicker">Reference</p>
     <h1>The Compendium</h1>
     <p class="lede">The rules and setting reference for the chronicle, embedded below so it keeps its own styling.</p>
   </div>
 </section>
+
+<!-- Tabs: sticky under the top bar. In-page tabs light up as the
+     reader scrolls (tabs.js); tabs to other pages carry aria-current. -->
+<nav class="tabs" aria-label="Chronicle pages">
+  <div class="tabs-inner">
+    <a href="index.html">Chronicle</a>
+    <a href="players.html">The cell</a>
+    <a href="npcs.html">People</a>
+    <a href="compendium.html" aria-current="page">Compendium</a>
+  </div>
+</nav>
 
 <main id="main">
   <section class="row">
@@ -70,7 +84,7 @@
 
 <footer>
   <div class="footer-inner">
-    <p>&copy; 2026 Vistectus</p>
+    <p>&copy; 2026 VisTectus</p>
     <p class="links">
       <a href="../index.html">Brooklyn Chronicles</a>
       <a href="../../../index.html">Back to the hub</a>

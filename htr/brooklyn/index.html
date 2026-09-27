@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Brooklyn Chronicles &middot; Vistectus</title>
+  <title>Brooklyn Chronicles &middot; VisTectus</title>
   <meta name="description" content="Brooklyn Chronicles — a Hunter: the Reckoning world set in Brooklyn, New York.">
 
   <link rel="icon" href="../../art/VisTectus Logo 1.jpg" type="image/jpeg">
@@ -21,28 +21,43 @@
 <a class="skip" href="#main">Skip to content</a>
 
 <header class="topbar">
-  <a class="brand" href="../../index.html"><span class="brand-mark" aria-hidden="true"></span> Vistectus</a>
-  <nav class="topnav">
-    <a href="#chronicles">Chronicles</a>
-    <a href="#overview">Overview</a>
-    <a href="#setting">Setting</a>
-    <a href="#factions">Factions</a>
+  <a class="brand" href="../../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
+  <nav class="topnav" aria-label="Site">
+    <a href="../../dnd/index.html">D&amp;D</a>
+    <a href="../../htr/index.html" aria-current="true">Hunter</a>
+    <a href="../../vtda/index.html">Vampire</a>
+    <a href="../../index.html#about">About</a>
+    <a href="../../host/index.html">Host a World</a>
+    <a class="nav-cta" href="../../builders/index.html">Builders</a>
   </nav>
 </header>
 
-<!-- Key art goes here: style="--hero: url(art/hero.jpg)" -->
-<section class="hero">
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../../index.html">VisTectus</a></li>
+    <li><a href="../../htr/index.html">Hunter</a></li>
+    <li aria-current="page">Brooklyn Chronicles</li>
+  </ol>
+</nav>
+
+<!-- Key art goes here: style="--hero: url('/htr/brooklyn/art/hero.jpg')" -->
+<section class="hero hero--compact">
   <div class="hero-inner">
-    <p class="crumb">
-      <a href="../../index.html">Vistectus</a> /
-      <a href="../index.html">Hunter</a>
-    </p>
     <p class="kicker">Hunter: the Reckoning</p>
     <h1>Brooklyn Chronicles</h1>
     <p class="lede">Brooklyn, New York.<!-- Finish the line: what the world is. --></p>
-    <a class="btn" href="#chronicles">The chronicles</a>
   </div>
 </section>
+
+<!-- Tabs: sticky under the top bar. In-page tabs light up as the
+     reader scrolls (tabs.js); tabs to other pages carry aria-current. -->
+<nav class="tabs" aria-label="On this page">
+  <div class="tabs-inner">
+    <a href="#overview">Overview</a>
+    <a href="#setting">Setting</a>
+    <a href="#factions">Factions</a>
+  </div>
+</nav>
 
 <main id="main">
 
@@ -59,7 +74,7 @@
 
       <article class="card">
         <a class="card-art" href="dead-hand/index.html"
-           style="--art: url('htr/art/Dead Hand Chronicles card.jpg')">
+           style="--art: url('/htr/art/Dead%20Hand%20Chronicles%20card.jpg')">
           <span class="card-badge">Running</span>
         </a>
         <div class="card-body">
@@ -114,7 +129,7 @@
 
 <footer>
   <div class="footer-inner">
-    <p>&copy; 2026 Vistectus</p>
+    <p>&copy; 2026 VisTectus</p>
     <p class="links">
       <a href="../index.html">Hunter</a>
       <a href="../../index.html">Back to the hub</a>

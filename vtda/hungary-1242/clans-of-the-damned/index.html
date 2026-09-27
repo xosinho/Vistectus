@@ -47,7 +47,7 @@ img { max-width: 100%; height: auto; display: block; }
 /* ---------- hero ---------- */
 .hero {
   position: relative;
-  min-height: 78vh;
+  min-height: clamp(14rem, 32vh, 22rem);
   display: grid;
   align-items: center;
   overflow: hidden;
@@ -71,7 +71,7 @@ img { max-width: 100%; height: auto; display: block; }
   width: 100%;
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 6rem 2rem;
+  padding: 2.5rem 2rem;
 }
 .hero h1, .hero__lede { max-width: 22ch; }
 .hero__lede { max-width: 46ch; }
@@ -81,18 +81,18 @@ img { max-width: 100%; height: auto; display: block; }
   letter-spacing: .34em;
   text-transform: uppercase;
   color: var(--bone-dim);
-  margin: 0 0 1.6rem;
+  margin: 0 0 1rem;
 }
 .hero h1 {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: clamp(2.8rem, 8vw, 5.2rem);
+  font-size: clamp(2.3rem, 5.2vw, 3.7rem);
   line-height: 1.02;
   letter-spacing: .005em;
-  margin: 0 0 1.4rem;
+  margin: 0 0 .9rem;
   text-shadow: 0 2px 40px rgba(0,0,0,.8);
 }
-.hero__lede { font-size: 1.15rem; color: var(--bone); margin: 0 0 2.2rem; }
+.hero__lede { font-size: 1.05rem; color: var(--bone); margin: 0 0 1.3rem; }
 
 .chip, .playable {
   display: inline-block;

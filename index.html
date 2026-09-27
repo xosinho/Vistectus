@@ -5,33 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>VisTectus</title>
-  <meta name="description" content="VisTectus is a worldbuilding hub: publish the worlds you create, expand them, organise your campaigns within them, and give players a single reference for each chronicle.">
+  <meta name="description" content="VisTectus is where tabletop worlds are built, run and played: one home for a setting and every campaign set inside it, with a single reference for the whole table.">
 
   <link rel="icon" href="art/VisTectus Logo 1.jpg" type="image/jpeg">
 
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="home-page">
+<body>
 
 <a class="skip" href="#main">Skip to content</a>
 
-<!-- ---- Top bar: identical on every page ------------------------ -->
+<!-- ---- Top bar: the same on every page ------------------------ -->
 <header class="topbar">
   <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
-  <nav class="topnav">
+  <nav class="topnav" aria-label="Site">
     <a href="dnd/index.html">D&amp;D</a>
     <a href="htr/index.html">Hunter</a>
     <a href="vtda/index.html">Vampire</a>
     <a href="#about">About</a>
-    <a href="#contribute">Contribute</a>
+    <a href="host/index.html">Host a World</a>
+    <a class="nav-cta" href="builders/index.html">Builders</a>
   </nav>
 </header>
 
 <!-- ---- Hero ---------------------------------------------------
      Drop your key art in with --hero. Until you do, the gradient
-     from style.css shows instead:
-     <section class="hero" style="--hero: url(art/hero.jpg)">   -->
+     from style.css shows instead. Paths start with a slash:
+     <section class="hero" style="--hero: url('/art/hero.jpg')">   -->
 <section class="hero">
   <div class="hero-inner">
     <p class="kicker">Worldbuilding hub</p>
@@ -48,16 +49,16 @@
   <section class="row" id="systems">
     <div class="row-head">
       <h2>Systems</h2>
-      <a class="row-link" href="#contribute">Host a world</a>
+      <a class="row-link" href="host/index.html">Host a World</a>
     </div>
 
     <!-- One .card per system. Copy a block to add another.
-         Give it artwork with style="--art: url(art/name.jpg)". -->
+         Give it artwork with style="--art: url('/art/name.jpg')". -->
     <div class="cards">
 
       <article class="card">
-        <a class="card-art" href="dnd/index.html"
-           style="--art: url('art/Dnd Art card.jpg'); --art-bg: #000">
+        <a class="card-art" href="dnd/index.html" aria-label="Dungeons &amp; Dragons"
+           style="--art: url('/art/Dnd%20Art%20card.jpg'); --art-bg: #000">
           <span class="card-badge"><!-- how many worlds --></span>
         </a>
         <div class="card-body">
@@ -68,8 +69,8 @@
       </article>
 
       <article class="card">
-        <a class="card-art" href="htr/index.html"
-           style="--art: url('art/Hunter art card.jpg'); --art-fit: contain; --art-bg: #000">
+        <a class="card-art" href="htr/index.html" aria-label="Hunter: the Reckoning"
+           style="--art: url('/art/Hunter%20art%20card.jpg'); --art-fit: contain; --art-bg: #000">
           <span class="card-badge">1 world</span>
         </a>
         <div class="card-body">
@@ -80,8 +81,8 @@
       </article>
 
       <article class="card">
-        <a class="card-art" href="vtda/index.html"
-           style="--art: url('art/Vampire art card.jpg'); --art-fit: contain; --art-bg: #000">
+        <a class="card-art" href="vtda/index.html" aria-label="Vampire: the Dark Ages"
+           style="--art: url('/art/Vampire%20art%20card.jpg'); --art-fit: contain; --art-bg: #000">
           <span class="card-badge"><!-- how many worlds --></span>
         </a>
         <div class="card-body">
@@ -94,44 +95,36 @@
     </div>
   </section>
 
-  <!-- A strip of artwork for atmosphere. Delete it if you would
-       rather not have one, or point --art at a picture. -->
-  <div class="band"></div>
-
   <section class="row" id="about">
     <div class="row-head"><h2>About</h2></div>
-    <div class="prose">
-      <p>
-        VisTectus exists to give worldbuilders a place to publish what they
-        have created.
-      </p>
-      <p>
-        A setting rarely arrives complete. VisTectus is built to receive a
-        world at its origin, in whatever form it has so far taken, and to
-        provide the structure for its expansion: a durable record of what has
-        been established, and room for everything that follows.
-      </p>
-      <p>
-        Within a world, each campaign is kept as a separate chronicle, so that
-        several tables may run in the same setting without interference. Every
-        chronicle serves as the single repository for its players &mdash;
-        character histories, the figures they have encountered, house rules,
-        handouts and reference material &mdash; maintained between sessions.
-      </p>
-      <p>
-        The name joins the Latin <em>vis</em>, force, to the Greek
-        <em>tekton</em>, builder.
-      </p>
-    </div>
-  </section>
 
+    <p class="about-lede">VisTectus is where tabletop worlds are built, run
+      and played &mdash; one home for a setting and every campaign set
+      inside it.</p>
 
-  <section class="row" id="contribute">
-    <div class="row-head"><h2>Contribute</h2></div>
-    <div class="prose">
-      <p><!-- For later: how other creators can host a world here. --></p>
-      <p><a class="btn btn--ghost" href="mailto:">Get in touch</a></p>
+    <div class="pillars">
+      <article class="pillar">
+        <p class="kicker">For builders</p>
+        <h3>Build</h3>
+        <p>Publish a world at any stage &mdash; a single map, one city, a
+          full setting &mdash; and keep expanding it as the ideas arrive.</p>
+      </article>
+      <article class="pillar">
+        <p class="kicker">For game masters</p>
+        <h3>Run</h3>
+        <p>Organise every campaign as its own chronicle, so several tables
+          can share one world without colliding.</p>
+      </article>
+      <article class="pillar">
+        <p class="kicker">For players</p>
+        <h3>Play</h3>
+        <p>Give the table a single, always-current reference: character
+          sheets, backstories, the people they have met and the rules they
+          play by.</p>
+      </article>
     </div>
+
+    <p class="closing-line">One world. Every campaign. A single source of truth for the table.</p>
   </section>
 
 </main>
@@ -140,7 +133,8 @@
   <div class="footer-inner">
     <p>&copy; 2026 VisTectus</p>
     <p class="links">
-      <a href="mailto:">Email</a>
+      <a href="host/index.html">Host a World</a>
+      <a href="builders/index.html">Builders</a>
       <a href="#">Discord</a>
       <a href="#">GitHub</a>
     </p>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Builders &middot; VisTectus</title>
+  <meta name="description" content="Sign in to the VisTectus Builders area to upload maps, art, character sheets and handouts for your world.">
+  <!-- Nothing on the members' pages is for search engines. -->
+  <meta name="robots" content="noindex">
+
+  <link rel="icon" href="../art/VisTectus Logo 1.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
+  <nav class="topnav" aria-label="Site">
+    <a href="../dnd/index.html">D&amp;D</a>
+    <a href="../htr/index.html">Hunter</a>
+    <a href="../vtda/index.html">Vampire</a>
+    <a href="../index.html#about">About</a>
+    <a href="../host/index.html">Host a World</a>
+    <a class="nav-cta" href="index.html" aria-current="page">Builders</a>
+  </nav>
+</header>
+
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">VisTectus</a></li>
+    <li aria-current="page">Builders</li>
+  </ol>
+</nav>
+
+<section class="hero hero--compact">
+  <div class="hero-inner">
+    <p class="kicker">Members</p>
+    <h1>Builders</h1>
+    <p class="lede">The workshop behind the worlds: where the people who
+      build them upload what the table will see.</p>
+  </div>
+</section>
+
+<main id="main">
+  <section class="row">
+    <div class="row-head"><h2>Sign in</h2></div>
+
+    <div class="gate-panel">
+      <p class="form-status" id="offline" data-kind="error" hidden>
+        The Builders area is not connected yet, so signing in is switched
+        off for now.
+      </p>
+
+      <form class="form" id="signin" novalidate>
+        <div class="field">
+          <label for="email">Your email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+          <p class="hint">We email you a one-time sign-in link. No password to remember.</p>
+        </div>
+        <p class="form-status" id="signin-status" role="status" hidden></p>
+        <div><button class="btn" type="submit" id="signin-btn">Send sign-in link</button></div>
+      </form>
+
+      <p class="hint" style="margin-top:1.75rem">
+        Builders are invited. Have a world you want to bring here?
+        <a href="../host/index.html">Host a World</a>.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>&copy; 2026 VisTectus</p>
+    <p class="links"><a href="../index.html">Back to the hub</a></p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="builders.js"></script>
+<script>
+(function () {
+  "use strict";
+  var B = window.Builders;
+  var form = document.getElementById("signin");
+  var btn = document.getElementById("signin-btn");
+  var status = document.getElementById("signin-status");
+
+  function say(kind, text) { status.dataset.kind = kind; status.textContent = text; status.hidden = false; }
+
+  if (!B || !B.connected) {
+    document.getElementById("offline").hidden = false;
+    btn.disabled = true;
+    return;
+  }
+
+  // Already signed in: straight through.
+  B.getSession().then(function (s) { if (s) window.location.replace("dashboard.html"); });
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = document.getElementById("email");
+    if (!email.checkValidity()) { say("error", "Please enter a valid email address."); email.focus(); return; }
+
+    btn.disabled = true;
+    say("ok", "Sending…");
+    B.sendLink(email.value.trim()).then(function () {
+      // Same answer whether or not the address belongs to a Builder, so
+      // this form cannot be used to find out who the Builders are.
+      say("ok", "If that address belongs to a Builder, a sign-in link is on its way. Check your inbox.");
+    }).catch(function () {
+      say("error", "Could not reach the sign-in service. Please try again in a moment.");
+    }).then(function () { btn.disabled = false; });
+  });
+})();
+</script>
+
+</body>
+</html>

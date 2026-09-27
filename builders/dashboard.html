@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Workshop &middot; Builders &middot; VisTectus</title>
+  <meta name="robots" content="noindex">
+
+  <link rel="icon" href="../art/VisTectus Logo 1.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
+  <nav class="topnav" aria-label="Site">
+    <a href="../dnd/index.html">D&amp;D</a>
+    <a href="../htr/index.html">Hunter</a>
+    <a href="../vtda/index.html">Vampire</a>
+    <a href="../index.html#about">About</a>
+    <a href="../host/index.html">Host a World</a>
+    <a class="nav-cta" href="index.html" aria-current="page">Builders</a>
+  </nav>
+</header>
+
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">VisTectus</a></li>
+    <li><a href="index.html">Builders</a></li>
+    <li aria-current="page">Workshop</li>
+  </ol>
+</nav>
+
+<section class="hero hero--compact">
+  <div class="hero-inner">
+    <p class="kicker">Builders</p>
+    <h1>Your workshop</h1>
+    <p class="lede">
+      <span class="whoami" id="whoami">Checking who you are&hellip;</span>
+      &nbsp;<button class="linkbtn" id="signout" type="button" hidden>Sign out</button>
+    </p>
+  </div>
+</section>
+
+<main id="main">
+
+  <section class="row" id="offline" hidden>
+    <p class="form-status" data-kind="error">The Builders area is not connected
+      yet. See <code>builders/README.md</code> to set it up.</p>
+  </section>
+
+  <section class="row" id="workshop" hidden>
+    <p class="form-status" style="margin-bottom:1.75rem">
+      Uploads go to a private area only you can see. Nothing appears on the
+      public site until it has been reviewed and placed on your world's pages.
+    </p>
+
+    <div class="dash">
+
+      <!-- ---- Upload ----------------------------------------------- -->
+      <div>
+        <div class="row-head"><h2>Upload</h2></div>
+        <form class="form" id="upload" novalidate>
+
+          <div class="field">
+            <label for="world">World</label>
+            <select id="world" required></select>
+          </div>
+          <div class="field" id="world-new-wrap" hidden>
+            <label for="world-new">Name of the new world</label>
+            <input id="world-new" type="text">
+          </div>
+
+          <div class="field">
+            <label for="chronicle">Chronicle</label>
+            <select id="chronicle"></select>
+          </div>
+          <div class="field" id="chronicle-new-wrap" hidden>
+            <label for="chronicle-new">Name of the new chronicle</label>
+            <input id="chronicle-new" type="text">
+          </div>
+
+          <div class="field">
+            <label for="category">What is it?</label>
+            <select id="category"></select>
+          </div>
+
+          <div class="field">
+            <label for="note">Note <span class="hint">(optional)</span></label>
+            <input id="note" type="text" maxlength="200" placeholder="Where it goes, who it is for">
+          </div>
+
+          <div class="dropzone" id="dropzone" role="button" tabindex="0"
+               aria-describedby="drop-hint">
+            <strong>Drop files here</strong>
+            <span class="hint" id="drop-hint">or click to choose &middot; images, PDF, Word, text</span>
+            <input type="file" id="picker" multiple hidden>
+          </div>
+
+          <ul class="queue" id="queue" aria-live="polite"></ul>
+
+          <p class="form-status" id="up-status" role="status" hidden></p>
+          <div><button class="btn" type="submit" id="up-btn" disabled>Upload</button></div>
+        </form>
+      </div>
+
+      <!-- ---- Your uploads ----------------------------------------- -->
+      <div>
+        <div class="row-head">
+          <h2>Your uploads</h2>
+          <button class="linkbtn row-link" id="refresh" type="button">Refresh</button>
+        </div>
+        <ul class="filelist" id="files"></ul>
+        <p class="hint" id="files-empty" hidden>Nothing uploaded yet.</p>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>&copy; 2026 VisTectus</p>
+    <p class="links"><a href="../index.html">Back to the hub</a></p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="builders.js"></script>
+<script>
+(function () {
+  "use strict";
+  var B = window.Builders;
+  var $ = function (id) { return document.getElementById(id); };
+
+  if (!B || !B.connected) {
+    $("offline").hidden = false;
+    $("whoami").textContent = "Not connected";
+    return;
+  }
+
+  var client = B.client;
+  var bucket = B.config.bucket || "builder-uploads";
+  var maxBytes = (B.config.maxUploadMb || 25) * 1024 * 1024;
+  var user = null;
+  var queue = [];
+
+  /* ---- gate --------------------------------------------------------
+     No session: back to sign-in. Even if someone skipped this check,
+     every read and write below is refused by Supabase without one. */
+  B.requireSession("index.html").then(function (session) {
+    if (!session) return;
+    user = session.user;
+    $("whoami").textContent = "Signed in as " + user.email;
+    $("signout").hidden = false;
+    $("workshop").hidden = false;
+    fillSelects();
+    loadFiles();
+  });
+
+  $("signout").addEventListener("click", function () {
+    B.signOut().then(function () { window.location.replace("index.html"); });
+  });
+
+  /* ---- the three pickers ------------------------------------------ */
+  function option(sel, value, text) {
+    var o = document.createElement("option");
+    o.value = value; o.textContent = text; sel.appendChild(o);
+  }
+
+  function fillSelects() {
+    var w = $("world");
+    B.WORLDS.forEach(function (x) { option(w, x.id, x.name + " — " + x.system); });
+    option(w, "__new", "A new world…");
+    B.CATEGORIES.forEach(function (c) { option($("category"), c.id, c.name); });
+    fillChronicles();
+  }
+
+  function fillChronicles() {
+    var c = $("chronicle");
+    c.innerHTML = "";
+    option(c, "__world", "The whole world");
+    var world = B.WORLDS.filter(function (x) { return x.id === $("world").value; })[0];
+    (world ? world.chronicles : []).forEach(function (x) { option(c, x.id, x.name); });
+    option(c, "__new", "A new chronicle…");
+    toggleNew();
+  }
+
+  function toggleNew() {
+    $("world-new-wrap").hidden = $("world").value !== "__new";
+    $("chronicle-new-wrap").hidden = $("chronicle").value !== "__new";
+  }
+
+  $("world").addEventListener("change", fillChronicles);
+  $("chronicle").addEventListener("change", toggleNew);
+
+  /* What the three pickers add up to: ids for the path, names for people. */
+  function target() {
+    var wSel = $("world"), cSel = $("chronicle");
+    var world = wSel.value === "__new"
+      ? { id: B.slug($("world-new").value), name: $("world-new").value.trim() }
+      : { id: wSel.value, name: wSel.options[wSel.selectedIndex].text.split(" — ")[0] };
+    var chron = cSel.value === "__world"
+      ? { id: "_world", name: "The whole world" }
+      : cSel.value === "__new"
+        ? { id: B.slug($("chronicle-new").value), name: $("chronicle-new").value.trim() }
+        : { id: cSel.value, name: cSel.options[cSel.selectedIndex].text };
+    return { world: world, chronicle: chron, category: $("category").value };
+  }
+
+  /* ---- the queue --------------------------------------------------- */
+  function say(kind, text) {
+    var s = $("up-status"); s.dataset.kind = kind; s.textContent = text; s.hidden = !text;
+  }
+
+  function addFiles(list) {
+    var refused = [];
+    Array.prototype.forEach.call(list, function (f) {
+      if (B.ACCEPT.indexOf(f.type) === -1) { refused.push(f.name + " (type not accepted)"); return; }
+      if (f.size > maxBytes) { refused.push(f.name + " (over " + B.config.maxUploadMb + " MB)"); return; }
+      queue.push({ file: f, state: "waiting" });
+    });
+    renderQueue();
+    say(refused.length ? "error" : "", refused.length ? "Not added: " + refused.join("; ") : "");
+  }
+
+  function renderQueue() {
+    var ul = $("queue");
+    ul.innerHTML = "";
+    queue.forEach(function (item, i) {
+      var li = document.createElement("li");
+      var name = document.createElement("span");
+      name.className = "name"; name.textContent = item.file.name;
+      var meta = document.createElement("span");
+      meta.className = "meta hint";
+      meta.textContent = B.fmtSize(item.file.size) + (item.state === "waiting" ? "" : " · " + item.state);
+      li.appendChild(name); li.appendChild(meta);
+      if (item.state === "waiting") {
+        var rm = document.createElement("button");
+        rm.type = "button"; rm.className = "linkbtn"; rm.textContent = "Remove";
+        rm.addEventListener("click", function () { queue.splice(i, 1); renderQueue(); });
+        li.appendChild(rm);
+      }
+      ul.appendChild(li);
+    });
+    $("up-btn").disabled = !queue.some(function (q) { return q.state === "waiting"; });
+  }
+
+  var dz = $("dropzone"), picker = $("picker");
+  dz.addEventListener("click", function () { picker.click(); });
+  dz.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); picker.click(); }
+  });
+  picker.addEventListener("change", function () { addFiles(picker.files); picker.value = ""; });
+  ["dragenter", "dragover"].forEach(function (ev) {
+    dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.add("is-over"); });
+  });
+  ["dragleave", "drop"].forEach(function (ev) {
+    dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.remove("is-over"); });
+  });
+  dz.addEventListener("drop", function (e) { addFiles(e.dataTransfer.files); });
+
+  /* ---- upload, one file at a time --------------------------------- */
+  $("upload").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var t = target();
+    if (!t.world.name) { say("error", "Name the new world first."); $("world-new").focus(); return; }
+    if (!t.chronicle.name) { say("error", "Name the new chronicle first."); $("chronicle-new").focus(); return; }
+
+    $("up-btn").disabled = true;
+    say("ok", "Uploading…");
+    var note = $("note").value.trim();
+    var waiting = queue.filter(function (q) { return q.state === "waiting"; });
+
+    waiting.reduce(function (chain, item) {
+      return chain.then(function () {
+        item.state = "uploading"; renderQueue();
+        // First folder is the Builder's own id: the storage policy only
+        // lets them write under it.
+        var path = [user.id, t.world.id, t.chronicle.id, t.category,
+                    Date.now() + "-" + B.slug(item.file.name)].join("/");
+        return client.storage.from(bucket)
+          .upload(path, item.file, { contentType: item.file.type, upsert: false })
+          .then(function (r) {
+            if (r.error) throw r.error;
+            return client.from("builder_uploads").insert({
+              world: t.world.id, world_name: t.world.name,
+              chronicle: t.chronicle.id, chronicle_name: t.chronicle.name,
+              category: t.category, path: path,
+              file_name: item.file.name, size_bytes: item.file.size,
+              content_type: item.file.type, note: note || null
+            });
+          })
+          .then(function (r) {
+            if (r && r.error) throw r.error;
+            item.state = "done";
+          })
+          .catch(function (err) {
+            item.state = "failed";
+            console.error(err);
+          })
+          .then(renderQueue);
+      });
+    }, Promise.resolve()).then(function () {
+      var failed = waiting.filter(function (q) { return q.state === "failed"; }).length;
+      say(failed ? "error" : "ok",
+          failed ? failed + " of " + waiting.length + " did not upload. Try those again."
+                 : "Uploaded " + waiting.length + (waiting.length === 1 ? " file." : " files."));
+      queue = queue.filter(function (q) { return q.state !== "done"; });
+      queue.forEach(function (q) { if (q.state === "failed") q.state = "waiting"; });
+      renderQueue();
+      loadFiles();
+    });
+  });
+
+  /* ---- your uploads ------------------------------------------------ */
+  function loadFiles() {
+    client.from("builder_uploads").select("*")
+      .order("created_at", { ascending: false }).limit(200)
+      .then(function (r) {
+        var ul = $("files");
+        ul.innerHTML = "";
+        var rows = r.data || [];
+        $("files-empty").hidden = rows.length > 0;
+        rows.forEach(function (row) {
+          var li = document.createElement("li");
+          var main = document.createElement("span");
+          main.className = "name";
+          main.textContent = row.file_name;
+          main.title = row.world_name + " / " + row.chronicle_name + (row.note ? " — " + row.note : "");
+          var meta = document.createElement("span");
+          meta.className = "meta hint";
+          var cat = B.CATEGORIES.filter(function (c) { return c.id === row.category; })[0];
+          meta.textContent = (cat ? cat.name : row.category) + " · " + row.world_name + " · " + B.fmtSize(row.size_bytes);
+
+          var open = document.createElement("button");
+          open.type = "button"; open.className = "linkbtn"; open.textContent = "Open";
+          open.addEventListener("click", function () {
+            // A short-lived private link: the bucket itself is not public.
+            client.storage.from(bucket).createSignedUrl(row.path, 60).then(function (s) {
+              if (s.data) window.open(s.data.signedUrl, "_blank", "noopener");
+            });
+          });
+
+          var del = document.createElement("button");
+          del.type = "button"; del.className = "linkbtn"; del.textContent = "Delete";
+          del.addEventListener("click", function () {
+            if (!window.confirm("Delete " + row.file_name + "? This cannot be undone.")) return;
+            client.storage.from(bucket).remove([row.path])
+              .then(function () { return client.from("builder_uploads").delete().eq("id", row.id); })
+              .then(loadFiles);
+          });
+
+          li.appendChild(main); li.appendChild(meta); li.appendChild(open); li.appendChild(del);
+          ul.appendChild(li);
+        });
+      });
+  }
+
+  $("refresh").addEventListener("click", loadFiles);
+})();
+</script>
+
+</body>
+</html>
