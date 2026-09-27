@@ -43,14 +43,19 @@
   </div>
 </section>
 
+<!-- Tabs: sticky under the top bar, marked by tabs.js as the page scrolls. -->
+<nav class="tabs" aria-label="On this page">
+  <div class="tabs-inner">
+    <a href="#systems">Systems</a>
+    <a href="#about">About</a>
+  </div>
+</nav>
+
 <main id="main">
 
   <!-- ---- Systems ---------------------------------------------- -->
   <section class="row" id="systems">
-    <div class="row-head">
-      <h2>Systems</h2>
-      <a class="row-link" href="host/index.html">Host a World</a>
-    </div>
+    <div class="row-head"><h2>Systems</h2></div>
 
     <!-- One .card per system. Copy a block to add another.
          Give it artwork with style="--art: url('/art/name.jpg')". -->
@@ -141,5 +146,6 @@
   </div>
 </footer>
 
+<script src="tabs.js" defer></script>
 </body>
 </html>

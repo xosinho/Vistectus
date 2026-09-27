@@ -47,13 +47,23 @@ at `../_legacy/style.old.css` for reference.
 | `index.html` | Chronicle landing, spoiler-free |
 | `players.html` | The cell |
 | `npcs.html` | People of Red Hook |
-| `compendium.html` | The compendium, in an isolated frame |
+| `resources.html` | Documents, handouts and references from the chronicle |
+| `compendium.html` | Redirects to `resources.html` (kept so old links work) |
 
-## The compendium
+## Resources
 
-Replace `assets/compendium/compendium.html` with the real document,
-keeping the filename. It is embedded in an iframe so its own styling
-stays sealed off from the site.
+The Resources page lists everything the table has been given. Like the
+cell and the NPCs, it is built from a data file:
+
+```
+assets/data/resources.js   one entry per document or link
+assets/resources/          put the files themselves here
+```
+
+Copy an entry, fill it in, and the page lists it under its category.
+Only `title` and `href` are required. The Compendium is one entry among
+the others: replace `assets/compendium/compendium.html` with the real
+document, keeping the filename, and its link keeps working.
 
 ## Pictures
 
