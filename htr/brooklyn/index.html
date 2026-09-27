@@ -53,13 +53,49 @@
      reader scrolls (tabs.js); tabs to other pages carry aria-current. -->
 <nav class="tabs" aria-label="On this page">
   <div class="tabs-inner">
+    <a href="#chronicles">Chronicles</a>
     <a href="#overview">Overview</a>
-    <a href="#setting">Setting</a>
-    <a href="#factions">Factions</a>
+    <a href="factions/index.html">Factions</a>
+    <a href="#resources">Resources</a>
   </div>
 </nav>
 
 <main id="main">
+
+  <!-- ---- Resources: straight under the tabs --------------- -->
+  <section class="row" id="resources">
+    <div class="row-head"><h2>Resources</h2></div>
+    <div class="cards">
+      <article class="card">
+        <a class="card-art" href="factions/index.html"><span class="card-badge">Reference</span></a>
+        <div class="card-body">
+          <h3><a href="factions/index.html">Factions</a></h3>
+          <p class="meta">Power and allegiance</p>
+          <p>The powers at work in Carroll Gardens and Red Hook.</p>
+        </div>
+      </article>
+
+      <!-- Hunter's answer to Playable Clans: the five Creeds. A placeholder
+           until the page exists; point both links at it when it does. -->
+      <article class="card">
+        <a class="card-art" href="#resources"><span class="card-badge">Player options</span></a>
+        <div class="card-body">
+          <h3><a href="#resources">Creeds</a></h3>
+          <p class="meta">Who hunters become</p>
+          <p><!-- Entrepreneurial, Faithful, Inquisitive, Martial, Underground. --></p>
+        </div>
+      </article>
+
+      <article class="card">
+        <a class="card-art" href="#resources"><span class="card-badge">Reference</span></a>
+        <div class="card-body">
+          <h3><a href="#resources">Resources</a></h3>
+          <p class="meta">World materials</p>
+          <p><!-- Resource links will be added here. --></p>
+        </div>
+      </article>
+    </div>
+  </section>
 
   <!-- ---- Chronicles --------------------------------------------
        A world holds as many chronicles as you run in it. One card
@@ -90,38 +126,31 @@
   <section class="row" id="overview">
     <div class="row-head"><h2>Overview</h2></div>
     <div class="prose">
-      <p><!-- The pitch for the WORLD, not one chronicle: premise, tone,
-               what play feels like here. Keep it spoiler-free. --></p>
-    </div>
-  </section>
-
-  <section class="row" id="setting">
-    <div class="row-head"><h2>Setting</h2></div>
-    <div class="entries">
-
-      <article class="entry">
-        <h3>Red Hook</h3>
-        <p class="meta">Brooklyn, New York</p>
-        <p><!-- description --></p>
-      </article>
-
-      <article class="entry">
-        <h3>Region or location</h3>
-        <p class="meta"><!-- where --></p>
-        <p><!-- description --></p>
-      </article>
-
-    </div>
-  </section>
-
-  <section class="row" id="factions">
-    <div class="row-head"><h2>Factions</h2></div>
-    <div class="entries">
-      <article class="entry">
-        <h3>Faction name</h3>
-        <p class="meta"><!-- what they want --></p>
-        <p><!-- description --></p>
-      </article>
+      <p class="about-lede">Brooklyn keeps its dead close.</p>
+      <p>
+        It is November 2022 in Carroll Gardens and Red Hook. Brownstones sell
+        for record prices, and Red Hook's waterfront warehouses are turning
+        into lofts. The old-timers on the stoops notice things the newcomers
+        never will. Behind the neighbourhood's most respectable institutions
+        (a hospital, a funeral home that has buried the parish since 1947, a
+        discreet investment firm with a taste for Venetian names), something
+        has been feeding for decades.
+      </p>
+      <p>
+        <em>Hunter: The Reckoning</em> is not a story about chosen ones.
+        Hunters are ordinary people who saw something they cannot unsee and
+        refused to look away. They have no army, no church and no secret order
+        behind them, only conviction, whatever tools they can carry, and one
+        another. What they hunt is older, richer and better connected than
+        they are, and it is patient.
+      </p>
+      <p>
+        <a href="dead-hand/index.html">Dead Hand</a> is a twelve-session
+        chronicle, fit for 4&ndash;7 players, about what it costs to fight
+        something that owns the institutions meant to stop it, and about what
+        hunters become when the only road forward runs through the thing they
+        are hunting.
+      </p>
     </div>
   </section>
 
@@ -137,5 +166,6 @@
   </div>
 </footer>
 
+<script src="../../tabs.js" defer></script>
 </body>
 </html>

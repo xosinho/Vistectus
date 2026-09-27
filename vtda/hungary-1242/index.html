@@ -53,8 +53,8 @@
      reader scrolls (tabs.js); tabs to other pages carry aria-current. -->
 <nav class="tabs" aria-label="On this page">
   <div class="tabs-inner">
+    <a href="#chronicles">Chronicles</a>
     <a href="#overview">Overview</a>
-    <a href="#setting">Setting</a>
     <a href="factions/index.html">Factions</a>
     <a href="#resources">Resources</a>
   </div>
@@ -62,50 +62,7 @@
 
 <main id="main">
 
-  <!-- ---- Chronicles --------------------------------------------
-       A world holds as many chronicles as you run in it. To add one:
-      copy the crown-of-ice-and-bone folder, rename it, then copy a card
-       below and point both links at the new folder. -->
-  <section class="row" id="chronicles">
-    <div class="row-head"><h2>Chronicles</h2></div>
-
-    <div class="cards">
-
-      <article class="card">
-        <a class="card-art" href="crown-of-ice-and-bone/index.html" style="--art: url('/vtda/hungary-1242/art/Crown%20of%20Ice%20and%20Bones%20image.jpg')">
-          <span class="card-badge"><!-- status --></span>
-        </a>
-        <div class="card-body">
-          <h3><a href="crown-of-ice-and-bone/index.html">A Crown of Ice and Bone</a></h3>
-          <p class="meta">Hungary, 1242</p>
-          <p>The first chronicle of a kingdom braced beneath an impossible winter.</p>
-        </div>
-      </article>
-
-    </div>
-  </section>
-
-  <section class="row" id="overview">
-    <div class="row-head"><h2>Overview</h2></div>
-    <div class="prose">
-      <p><!-- The pitch for the WORLD, not one chronicle. --></p>
-    </div>
-  </section>
-
-  <section class="row" id="setting">
-    <div class="row-head"><h2>Setting</h2></div>
-    <div class="entries">
-      <article class="entry">
-        <h3>Hungary</h3>
-        <p class="meta">1242</p>
-        <p><!-- description --></p>
-      </article>
-    </div>
-  </section>
-
-  <!-- Optional atmosphere strip: style="--art: url('/vtda/hungary-1242/art/band.jpg')" -->
-  <div class="band"></div>
-
+  <!-- ---- Resources: straight under the tabs --------------- -->
   <section class="row" id="resources">
     <div class="row-head"><h2>Resources</h2></div>
     <div class="cards">
@@ -140,6 +97,36 @@
     </div>
   </section>
 
+  <!-- ---- Chronicles --------------------------------------------
+       A world holds as many chronicles as you run in it. To add one:
+      copy the crown-of-ice-and-bone folder, rename it, then copy a card
+       below and point both links at the new folder. -->
+  <section class="row" id="chronicles">
+    <div class="row-head"><h2>Chronicles</h2></div>
+
+    <div class="cards">
+
+      <article class="card">
+        <a class="card-art" href="crown-of-ice-and-bone/index.html" style="--art: url('/vtda/hungary-1242/art/Crown%20of%20Ice%20and%20Bones%20image.jpg')">
+          <span class="card-badge"><!-- status --></span>
+        </a>
+        <div class="card-body">
+          <h3><a href="crown-of-ice-and-bone/index.html">A Crown of Ice and Bone</a></h3>
+          <p class="meta">Hungary, 1242</p>
+          <p>The first chronicle of a kingdom braced beneath an impossible winter.</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="row" id="overview">
+    <div class="row-head"><h2>Overview</h2></div>
+    <div class="prose">
+      <p><!-- The pitch for the WORLD, not one chronicle. --></p>
+    </div>
+  </section>
+
 </main>
 
 <footer>
@@ -152,5 +139,6 @@
   </div>
 </footer>
 
+<script src="../../tabs.js" defer></script>
 </body>
 </html>
