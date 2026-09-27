@@ -309,6 +309,12 @@ footer p { margin: 0 0 .5rem; }
   .faction, .contents { padding-left: 1.5rem; padding-right: 1.5rem; }
 }
 
+
+/* Brooklyn's entries are a name and a text: no chip or tagline above
+   the title, so the head sits tight to the prose. */
+.faction__head { margin-bottom: 1.1rem; }
+.faction__head h2 { margin-top: 0; }
+.faction__prose p { font-size: 1.05rem; }
 </style>
 </head>
 <body>
@@ -341,119 +347,134 @@ footer p { margin: 0 0 .5rem; }
 <nav class="contents" aria-label="The factions">
   <h2>The powers</h2>
   <ol>
-    <li><a href="#faction-one">Faction name<span class="sub"><!-- role --></span></a></li>
-    <li><a href="#faction-two">Faction name<span class="sub"><!-- role --></span></a></li>
-    <li><a href="#faction-three">Faction name<span class="sub"><!-- role --></span></a></li>
+    <li><a href="#the-family">The Family</a></li>
+    <li><a href="#nypd">The NYPD</a></li>
+    <li><a href="#special-affairs-division">The Special Affairs Division (FBI)</a></li>
+    <li><a href="#sinaloa-cartel">The Sinaloa Cartel</a></li>
+    <li><a href="#latino-kings">The Latino Kings</a></li>
+    <li><a href="#society-of-st-leopold">The Society of St. Leopold</a></li>
+    <li><a href="#old-brooklyn">Old Brooklyn</a></li>
   </ol>
 </nav>
 
 <main>
 
   <!-- ============================================================ -->
-  <section class="faction" id="faction-one">
+  <section class="faction" id="the-family">
     <figure class="faction__art">
-      <!-- Drop images/faction-one.jpg in and this fills. Until then the frame
+      <!-- Drop images/the-family.jpg in and this fills. Until then the frame
            shows the CSS gradient and this alt text. 3:4, about 900x1200. -->
-      <img src="images/faction-one.jpg" alt="Artwork for this faction" loading="lazy" width="936" height="1248">
+      <img src="images/the-family.jpg" alt="Artwork: The Family" loading="lazy" width="936" height="1248">
     </figure>
     <div class="faction__body">
-    <div class="faction__head">
-      <p class="chip">Role<!-- two or three words, e.g. The respectable face --></p>
-      <h2>Faction name</h2>
-      <p class="epithet"><!-- The faction in one sentence. --></p>
-    </div>
-    <div class="faction__cols">
-      <div class="faction__stats">
-        <div class="stat">
-          <h3>Goals</h3>
-          <ul>
-            <li><!-- What they want --></li>
-          </ul>
-        </div>
-        <div class="stat">
-          <h3>Key figures</h3>
-          <ul>
-            <li><span class="who"><!-- Name --></span><span class="sep">&middot;</span><!-- who they are --></li>
-          </ul>
-        </div>
+      <div class="faction__head">
+        <h2>The Family</h2>
       </div>
       <div class="faction__prose">
-        <p><!-- Who they are, as the neighbourhood sees them. --></p>
-        <p><!-- How their weight is felt in Carroll Gardens and Red Hook. --></p>
+        <p>In Brooklyn, “the Family” needs no explanation. The Giovanni Crime family run their crew the old way. They own the social clubs and the funeral trade, take a cut of every sanitation contract and demolition permit, and make sure the docks move only what they are paid to move. Loyalty is enforced with omertà, debts are collected in person, and people who talk tend to disappear. They are one crew among the city’s crime families, and they never forget a slight.</p>
       </div>
-    </div>
     </div>
   </section>
 
   <!-- ============================================================ -->
-  <section class="faction faction--right" id="faction-two">
+  <section class="faction faction--right" id="nypd">
     <figure class="faction__art">
-      <!-- Drop images/faction-two.jpg in and this fills. Until then the frame
+      <!-- Drop images/nypd.jpg in and this fills. Until then the frame
            shows the CSS gradient and this alt text. 3:4, about 900x1200. -->
-      <img src="images/faction-two.jpg" alt="Artwork for this faction" loading="lazy" width="936" height="1248">
+      <img src="images/nypd.jpg" alt="Artwork: The NYPD" loading="lazy" width="936" height="1248">
     </figure>
     <div class="faction__body">
-    <div class="faction__head">
-      <p class="chip">Role<!-- two or three words, e.g. The respectable face --></p>
-      <h2>Faction name</h2>
-      <p class="epithet"><!-- The faction in one sentence. --></p>
-    </div>
-    <div class="faction__cols">
-      <div class="faction__stats">
-        <div class="stat">
-          <h3>Goals</h3>
-          <ul>
-            <li><!-- What they want --></li>
-          </ul>
-        </div>
-        <div class="stat">
-          <h3>Key figures</h3>
-          <ul>
-            <li><span class="who"><!-- Name --></span><span class="sep">&middot;</span><!-- who they are --></li>
-          </ul>
-        </div>
+      <div class="faction__head">
+        <h2>The NYPD</h2>
       </div>
       <div class="faction__prose">
-        <p><!-- Who they are, as the neighbourhood sees them. --></p>
-        <p><!-- How their weight is felt in Carroll Gardens and Red Hook. --></p>
+        <p>The NYPD is the largest police force in the country: thirty-six thousand officers, most of them honest and overworked. It is also an institution old enough to have its own geology, with layers of favours, promotions and understandings going back generations. In a few precincts, particularly along the Brooklyn waterfront, the layers run deep. Evidence gets transferred, reports get reworded, and a shooting can have a different culprit by morning. The cops who notice learn quickly which questions end careers.</p>
       </div>
-    </div>
     </div>
   </section>
 
   <!-- ============================================================ -->
-  <section class="faction" id="faction-three">
+  <section class="faction" id="special-affairs-division">
     <figure class="faction__art">
-      <!-- Drop images/faction-three.jpg in and this fills. Until then the frame
+      <!-- Drop images/special-affairs-division.jpg in and this fills. Until then the frame
            shows the CSS gradient and this alt text. 3:4, about 900x1200. -->
-      <img src="images/faction-three.jpg" alt="Artwork for this faction" loading="lazy" width="936" height="1248">
+      <img src="images/special-affairs-division.jpg" alt="Artwork: The Special Affairs Division (FBI)" loading="lazy" width="936" height="1248">
     </figure>
     <div class="faction__body">
-    <div class="faction__head">
-      <p class="chip">Role<!-- two or three words, e.g. The respectable face --></p>
-      <h2>Faction name</h2>
-      <p class="epithet"><!-- The faction in one sentence. --></p>
-    </div>
-    <div class="faction__cols">
-      <div class="faction__stats">
-        <div class="stat">
-          <h3>Goals</h3>
-          <ul>
-            <li><!-- What they want --></li>
-          </ul>
-        </div>
-        <div class="stat">
-          <h3>Key figures</h3>
-          <ul>
-            <li><span class="who"><!-- Name --></span><span class="sep">&middot;</span><!-- who they are --></li>
-          </ul>
-        </div>
+      <div class="faction__head">
+        <h2>The Special Affairs Division (FBI)</h2>
       </div>
       <div class="faction__prose">
-        <p><!-- Who they are, as the neighbourhood sees them. --></p>
-        <p><!-- How their weight is felt in Carroll Gardens and Red Hook. --></p>
+        <p>The Special Affairs Division is a federal unit that does not appear on any public organisation chart. It investigates cases that other agencies close too quickly, and its agents prefer to burn what they find rather than study it. For now it is only a phone number and a voice on the line.</p>
       </div>
     </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="faction faction--right" id="sinaloa-cartel">
+    <figure class="faction__art">
+      <!-- Drop images/sinaloa-cartel.jpg in and this fills. Until then the frame
+           shows the CSS gradient and this alt text. 3:4, about 900x1200. -->
+      <img src="images/sinaloa-cartel.jpg" alt="Artwork: The Sinaloa Cartel" loading="lazy" width="936" height="1248">
+    </figure>
+    <div class="faction__body">
+      <div class="faction__head">
+        <h2>The Sinaloa Cartel</h2>
+      </div>
+      <div class="faction__prose">
+        <p>The cartel came to Red Hook for the same reason smugglers always have: the docks. Its interests are commercial and its patience is finite. Its reach goes well beyond the street, into freight brokers, customs clerks, lawyers and doctors who keep respectable hours by day and different ones by night. It has noticed that someone else controls the waterfront, and it does not share.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="faction" id="latino-kings">
+    <figure class="faction__art">
+      <!-- Drop images/latino-kings.jpg in and this fills. Until then the frame
+           shows the CSS gradient and this alt text. 3:4, about 900x1200. -->
+      <img src="images/latino-kings.jpg" alt="Artwork: The Latino Kings" loading="lazy" width="936" height="1248">
+    </figure>
+    <div class="faction__body">
+      <div class="faction__head">
+        <h2>The Latino Kings</h2>
+      </div>
+      <div class="faction__prose">
+        <p>The Kings are a Queens street organisation pushing south into Red Hook and Carroll Gardens. They are loyal to their own and unforgiving of anyone who leaves. Their expansion into the neighbourhood is bringing old grudges with it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="faction faction--right" id="society-of-st-leopold">
+    <figure class="faction__art">
+      <!-- Drop images/society-of-st-leopold.jpg in and this fills. Until then the frame
+           shows the CSS gradient and this alt text. 3:4, about 900x1200. -->
+      <img src="images/society-of-st-leopold.jpg" alt="Artwork: The Society of St. Leopold" loading="lazy" width="936" height="1248">
+    </figure>
+    <div class="faction__body">
+      <div class="faction__head">
+        <h2>The Society of St. Leopold</h2>
+      </div>
+      <div class="faction__prose">
+        <p>Nobody in Carroll Gardens has heard of the Society, which suits it. It predates the neighbourhood, the city and the nation. For centuries it has kept records, weighed testimony and waited, and it takes the long view on every question. It rarely acts, and never loudly. When it does, a parish priest may receive a letter with no return address, or a stranger may be seen at the back of a Latin Mass. Whether the Society means salvation or judgement for the people it watches has never been clear, perhaps not even to the Society itself.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="faction" id="old-brooklyn">
+    <figure class="faction__art">
+      <!-- Drop images/old-brooklyn.jpg in and this fills. Until then the frame
+           shows the CSS gradient and this alt text. 3:4, about 900x1200. -->
+      <img src="images/old-brooklyn.jpg" alt="Artwork: Old Brooklyn" loading="lazy" width="936" height="1248">
+    </figure>
+    <div class="faction__body">
+      <div class="faction__head">
+        <h2>Old Brooklyn</h2>
+      </div>
+      <div class="faction__prose">
+        <p>Old Brooklyn is not an organisation but a constituency: the parish church, the neighbourhood paper, the tenants’ association, and the old-timers who have watched the blocks change for fifty years. They have seen more than they will say. They are among the few institutions the Family has never managed to buy, and among the few that have not yet realised what they are up against.</p>
+      </div>
     </div>
   </section>
 
