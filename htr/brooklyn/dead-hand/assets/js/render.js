@@ -104,6 +104,17 @@
               '</div>';
     }
 
+    /* extra pages that belong to this character: case boards and the like.
+       links: [{ label: "RICO Case", href: "rico-case/index.html" }] */
+    if (entry.links && entry.links.length) {
+      html += '<p class="detail__section-label">Case files</p><div class="detail__downloads">';
+      entry.links.forEach(function (l) {
+        if (!l || !l.href) return;
+        html += '<a class="btn" href="' + esc(l.href) + '">' + esc(l.label || "Open") + '</a>';
+      });
+      html += '</div>';
+    }
+
     html += '</div>';
     return html;
   }

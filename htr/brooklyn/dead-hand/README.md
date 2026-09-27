@@ -65,6 +65,28 @@ Only `title` and `href` are required. The Compendium is one entry among
 the others: replace `assets/compendium/compendium.html` with the real
 document, keeping the filename, and its link keeps working.
 
+## The RICO Case board
+
+`rico-case/` is the case board, opened from the **RICO Case** button in
+Vivienne's dossier (the `links` field on her entry in `players.js`).
+
+It opens whatever `rico-case/case.json` contains, which starts blank. To
+publish changes:
+
+1. Open the board, build or edit the case.
+2. **Save** — this downloads a file such as `rico-case-v2.json`.
+3. Replace `rico-case/case.json` with that file (keep the name
+   `case.json`) and commit.
+
+Edits a visitor makes are never saved to the site: they stay in their
+own browser unless they download them. Nothing on the board is private,
+so keep the chronicle's secrets off it.
+
+Live shared editing through Firebase is built in but switched off. The
+page is public, so before turning it on, protect the database with
+sign-in rules; the open rules in the code comments would let anyone
+edit or delete the board.
+
 ## Pictures
 
 `art/` beside this file is for chronicle artwork — a hero image, band

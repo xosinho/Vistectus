@@ -139,7 +139,8 @@ window.DEAD_HAND_PLAYERS = [
       "but against the rot itself. Her mentor Harold Voss and her old " +
       "evidence-law professor Rosalind Kane keep her honest; her father’s " +
       "fountain pen keeps her steady.",
-    sheetPdf: "assets/sheets/pdf/vivienne.pdf"
+    sheetPdf: "assets/sheets/pdf/vivienne.pdf",
+    links: [{ label: "RICO Case", href: "rico-case/index.html" }]
   },
 
   {
@@ -178,6 +179,8 @@ window.DEAD_HAND_PLAYERS = [
      background  String (blank lines = paragraphs), array of paragraphs,
                  or a path to an .html/.txt file to link out to
      sheetPdf    Path to the character-sheet PDF  -> assets/sheets/pdf/<file>
+     links       Extra pages shown as buttons under "Case files", e.g.
+                 [{ label: "RICO Case", href: "rico-case/index.html" }]
    Any field except name can be omitted; missing portrait/sheets degrade
    gracefully (placeholder art / hidden download button).
    --------------------------------------------------------------------- */
