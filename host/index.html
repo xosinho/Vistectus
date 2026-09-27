@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Host a World &middot; VisTectus</title>
+  <meta name="description" content="Bring your tabletop world to VisTectus: a home for the setting, a page for every campaign, and a single reference for your players.">
+
+  <link rel="icon" href="../art/VisTectus Logo 1.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
+  <nav class="topnav" aria-label="Site">
+    <a href="../dnd/index.html">D&amp;D</a>
+    <a href="../htr/index.html">Hunter</a>
+    <a href="../vtda/index.html">Vampire</a>
+    <a href="../index.html#about">About</a>
+    <a href="index.html" aria-current="page">Host a World</a>
+    <a class="nav-cta" href="../builders/index.html">Builders</a>
+  </nav>
+</header>
+
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">VisTectus</a></li>
+    <li aria-current="page">Host a World</li>
+  </ol>
+</nav>
+
+<section class="hero hero--compact">
+  <div class="hero-inner">
+    <p class="kicker">Host a World</p>
+    <h1>Bring your world here</h1>
+    <p class="lede">A home for the setting, a page for every campaign run
+      in it, and one reference your players can always find.</p>
+  </div>
+</section>
+
+<main id="main">
+
+  <section class="row" id="how">
+    <div class="row-head"><h2>How it works</h2></div>
+    <div class="pillars">
+      <article class="pillar">
+        <p class="kicker">Step one</p>
+        <h3>Tell us about it</h3>
+        <p>What the world is, what system it runs on, and how far along it
+          is. An idea is enough to start.</p>
+      </article>
+      <article class="pillar">
+        <p class="kicker">Step two</p>
+        <h3>We build its home</h3>
+        <p>A world page, a page for each chronicle, and a Builders account
+          for you.</p>
+      </article>
+      <article class="pillar">
+        <p class="kicker">Step three</p>
+        <h3>Keep building</h3>
+        <p>Upload maps, art, character sheets and handouts through the
+          Builders area as the world grows.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="row" id="apply">
+    <div class="row-head"><h2>Your world</h2></div>
+
+    <!-- Static hosting cannot receive a form, so this posts to a form
+         service. Set FORM_ENDPOINT in the script at the foot of the page
+         to your endpoint (Formspree, Getform, Web3Forms and similar all
+         accept an ordinary POST). Until it is set the form says so,
+         rather than appearing to send and losing the message. -->
+    <form class="form" id="host-form" novalidate>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="f-name">Your name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="f-world">World name</label>
+        <input id="f-world" name="world" type="text" required>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="f-system">System</label>
+          <select id="f-system" name="system" required>
+            <option value="" selected disabled>Choose one</option>
+            <option>Dungeons &amp; Dragons</option>
+            <option>Hunter: the Reckoning</option>
+            <option>Vampire: the Dark Ages</option>
+            <option value="other">Another system</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-stage">How far along is it?</label>
+          <select id="f-stage" name="stage">
+            <option>An idea</option>
+            <option selected>Notes and maps</option>
+            <option>A playable setting</option>
+            <option>Campaigns already running</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field" id="other-wrap" hidden>
+        <label for="f-other">Which system?</label>
+        <input id="f-other" name="system_other" type="text">
+      </div>
+
+      <div class="field">
+        <label for="f-pitch">Tell us about it</label>
+        <textarea id="f-pitch" name="pitch" required></textarea>
+        <p class="hint">The premise, the tone, and what makes it yours. A few lines is plenty.</p>
+      </div>
+
+      <div class="field">
+        <label for="f-links">Where does the material live now? <span class="hint">(optional)</span></label>
+        <input id="f-links" name="links" type="url" placeholder="https://">
+      </div>
+
+      <!-- Honeypot: left empty by people, filled by bots. -->
+      <div class="hp" aria-hidden="true">
+        <label for="f-gotcha">Leave this empty</label>
+        <input id="f-gotcha" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
+      </div>
+
+      <p class="form-status" id="host-status" role="status" hidden></p>
+
+      <div><button class="btn" type="submit" id="host-submit">Send</button></div>
+    </form>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>&copy; 2026 VisTectus</p>
+    <p class="links"><a href="../index.html">Back to the hub</a></p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---- the one setting -------------------------------------------
+     Paste your form service endpoint here, e.g.
+       var FORM_ENDPOINT = "https://formspree.io/f/xxxxxxxx";            */
+  var FORM_ENDPOINT = "";
+
+  var form   = document.getElementById("host-form");
+  var status = document.getElementById("host-status");
+  var button = document.getElementById("host-submit");
+  var system = document.getElementById("f-system");
+  var other  = document.getElementById("other-wrap");
+
+  function say(kind, text) {
+    status.dataset.kind = kind;
+    status.textContent = text;
+    status.hidden = false;
+  }
+
+  system.addEventListener("change", function () {
+    other.hidden = system.value !== "other";
+  });
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    if (!form.checkValidity()) {
+      var bad = form.querySelector(":invalid");
+      var what = bad.labels[0] ? bad.labels[0].textContent.toLowerCase() : "the highlighted field";
+      say("error", (bad.value ? "Please check " : "Please fill in ") + what + ".");
+      bad.focus();
+      return;
+    }
+
+    if (!FORM_ENDPOINT) {
+      say("error", "This form is not connected yet, so nothing has been sent. " +
+                   "Your text is still here if you want to copy it.");
+      return;
+    }
+
+    button.disabled = true;
+    say("ok", "Sending…");
+
+    fetch(FORM_ENDPOINT, {
+      method: "POST",
+      body: new FormData(form),
+      headers: { "Accept": "application/json" }
+    }).then(function (res) {
+      if (!res.ok) throw new Error(res.status);
+      form.reset();
+      other.hidden = true;
+      say("ok", "Thank you — it has arrived. We will be in touch.");
+    }).catch(function () {
+      say("error", "That did not go through. Please try again in a moment; your text is still here.");
+    }).then(function () {
+      button.disabled = false;
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

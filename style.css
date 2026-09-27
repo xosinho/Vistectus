@@ -35,7 +35,7 @@
   /* Logo. Replace art/logo.svg with your own file and every page
      follows. Different filename? Change this one line. Wide wordmark?
      Give --logo-w a bigger value. */
-  --logo:        url("art/VisTectus Logo 1.jpg");
+  --logo:        url("/art/VisTectus%20Logo%201.jpg");
   --logo-w:      26px;
   --logo-h:      26px;
 
@@ -51,9 +51,10 @@
   --bar-h:       60px;      /* height of the fixed top bar         */
 
   /* Art slots. A world.css or an inline style swaps these for
-     url('art/whatever.jpg'). The gradients are what shows until
+     url('/art/whatever.jpg') -- always from the site root, see
+     art/README.txt. The gradients are what shows until
      you have real artwork, so empty pages still look finished. */
-  --hero: url("art/backgrounds/Background 1.jpg");
+  --hero: url("/art/backgrounds/Background%201.jpg");
   --art:  linear-gradient(145deg, #221c42 0%, #110e22 100%);
 }
 
@@ -110,7 +111,7 @@ img { max-width: 100%; display: block; }
 }
 
 /* The logo. The picture comes from --logo, and the path there is
-   relative to THIS stylesheet, so the same line works on every page
+   written from the site root (leading slash), so the same line works on every page
    no matter how deep it sits. Nothing to edit when you swap the file. */
 .brand-mark {
   flex: none;
@@ -140,7 +141,7 @@ img { max-width: 100%; display: block; }
   transition: color .15s, border-color .15s;
 }
 .topnav a:hover,
-.topnav a[aria-current="page"] {
+.topnav a[aria-current] {
   color: var(--ink);
   border-bottom-color: var(--accent);
 }
@@ -149,12 +150,16 @@ img { max-width: 100%; display: block; }
    Full-bleed key art with a dark scrim so text stays readable over
    any image. Set the art with --hero. */
 
+/* Sized so the first row of cards shows on a laptop screen without
+   scrolling: the hero introduces the page, it does not replace it.
+   clamp() keeps it from collapsing on short screens or ballooning on
+   tall ones. */
 .hero {
   position: relative;
-  min-height: 78vh;
+  min-height: clamp(17rem, 44vh, 28rem);
   margin-top: var(--bar-h);
   display: flex; align-items: flex-end;
-  padding: 4rem 1.5rem 4.5rem;
+  padding: 3rem 1.5rem 3rem;
   overflow: hidden;
 }
 
@@ -187,8 +192,14 @@ img { max-width: 100%; display: block; }
   margin: 0 auto;
 }
 
-/* Shorter hero for system and world pages. */
-.hero--compact { min-height: 48vh; padding-bottom: 3rem; }
+/* Every page below the hub uses the compact hero: a title band, with
+   the content starting inside the first screen. */
+.hero--compact {
+  min-height: clamp(11rem, 26vh, 17rem);
+  padding: 2.25rem 1.5rem 2rem;
+}
+.hero--compact h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); margin-bottom: .6rem; }
+.hero--compact .lede { margin-bottom: 1rem; }
 
 .kicker {
   font-family: var(--font-mono);
@@ -242,7 +253,7 @@ img { max-width: 100%; display: block; }
 .row {
   max-width: var(--measure);
   margin: 0 auto;
-  padding: 4rem 1.5rem;
+  padding: 2.75rem 1.5rem;
 }
 
 .row + .row { padding-top: 1rem; }
@@ -272,7 +283,7 @@ h2 {
 
 /* ---- Cards --------------------------------------------------------
    Art-forward tiles. Set each card's picture with an inline
-   style="--art: url('art/name.jpg')". */
+   style="--art: url('/path/from/site/root.jpg')" -- leading slash; see art/README.txt. */
 
 .cards {
   display: grid;
@@ -393,7 +404,7 @@ a:hover { color: var(--ink); }
 
 /* ---- Full-bleed band ----------------------------------------------
    An optional strip of artwork between rows, for atmosphere.
-   Set the picture with style="--art: url('art/name.jpg')". */
+   Set the picture with style="--art: url('/path/from/site/root.jpg')" -- leading slash; see art/README.txt. */
 
 .band {
   position: relative;
@@ -430,8 +441,9 @@ footer {
   .topbar { gap: 1rem; padding: 0 1rem; }
   .brand { font-size: .8rem; letter-spacing: .1em; }
   .topnav { gap: 1.1rem; }
-  .hero { min-height: 62vh; padding: 3rem 1.25rem 3rem; }
-  .row { padding: 2.5rem 1.25rem; }
+  .hero { min-height: 15rem; padding: 2.5rem 1.25rem 2.25rem; }
+  .hero--compact { min-height: 10rem; padding: 1.75rem 1.25rem 1.5rem; }
+  .row { padding: 2rem 1.25rem; }
   .cards { grid-template-columns: 1fr; }
   .footer-inner .links { margin-left: 0; }
 }
@@ -452,9 +464,9 @@ footer {
    It is fixed, so content scrolls over it, and it sits under a scrim
    so text stays readable.
 
-   Turn it on for one page:      <body style="--page-art: url(art/x.jpg)">
+   Turn it on for one page:      <body style="--page-art: url('/art/x.jpg')">
    ...or for a whole world, in that world's world.css:
-                                 :root { --page-art: url(art/x.jpg); }
+                                 :root { --page-art: url('/art/x.jpg'); }
    Left unset, nothing renders and the flat background shows through.
 
    --page-veil controls how heavily the picture is dimmed: 0 is the
@@ -690,4 +702,201 @@ body::after {
   .detail__head { flex-direction: column; }
   .detail__portrait { width: 7rem; }
   .frame-shell iframe { height: 60vh; }
+}
+
+/* ===================================================================
+   NAVIGATION: builders button, breadcrumbs, tabs
+   =================================================================== */
+
+/* The last item in the top bar: the way into the members' area.
+   Outlined so it reads as an action, not another section. */
+.topnav a.nav-cta {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: .35rem .85rem;
+  color: var(--ink);
+}
+.topnav a.nav-cta:hover,
+.topnav a.nav-cta[aria-current="page"] { border-color: var(--accent); color: var(--accent); }
+
+/* ---- Breadcrumbs ---------------------------------------------------
+   A slim bar directly under the top bar on every page below the hub.
+   The last item is the page itself, not a link. */
+.crumbbar {
+  margin-top: var(--bar-h);
+  background: var(--bg-sunken);
+  border-bottom: 1px solid var(--line);
+}
+.crumbbar ol {
+  list-style: none;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: .7rem 1.5rem;
+  display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .55rem;
+  font-family: var(--font-mono);
+  font-size: .72rem; letter-spacing: .1em; text-transform: uppercase;
+}
+.crumbbar li { display: flex; align-items: center; gap: .55rem; color: var(--ink); }
+.crumbbar li + li::before { content: "/"; color: var(--ink-soft); opacity: .5; }
+.crumbbar a { color: var(--ink-soft); text-decoration: none; }
+.crumbbar a:hover { color: var(--accent); }
+.crumbbar + .hero { margin-top: 0; }
+
+/* ---- Tabs ----------------------------------------------------------
+   The sections of a world or chronicle page. Sticky under the top bar,
+   so they stay in reach however far down the page the reader is.
+   The active tab is marked by tabs.js as the page scrolls; tabs that
+   lead to other pages carry aria-current in the HTML instead. */
+.tabs {
+  position: sticky; top: var(--bar-h); z-index: 40;
+  background: rgba(12, 10, 23, .94);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.tabs-inner {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex; gap: .15rem;
+  overflow-x: auto; scrollbar-width: none;
+}
+.tabs-inner::-webkit-scrollbar { display: none; }
+.tabs a {
+  font-family: var(--font-display);
+  font-size: .78rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--ink-soft); text-decoration: none; white-space: nowrap;
+  padding: .95rem 1.1rem .85rem;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+}
+.tabs a:hover { color: var(--ink); }
+.tabs a[aria-current="page"],
+.tabs a.is-active { color: var(--ink); border-bottom-color: var(--accent); }
+
+/* A jumped-to section must land below the bar AND the tabs. */
+main [id] { scroll-margin-top: calc(var(--bar-h) + 3.75rem); }
+
+/* ===================================================================
+   ABOUT: the three pillars
+   =================================================================== */
+.about-lede {
+  font-size: 1.3rem; line-height: 1.5;
+  color: var(--ink);
+  max-width: 44rem;
+  margin: 0 0 1.75rem;
+}
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.25rem;
+  margin: 0 0 1.75rem;
+}
+.pillar {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.3rem 1.35rem;
+}
+.pillar .kicker { margin-bottom: .45rem; }
+.pillar h3 {
+  font-family: var(--font-display);
+  font-size: 1.1rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .05em;
+  margin: 0 0 .55rem;
+}
+.pillar p { margin: 0; color: #c9c4dd; font-size: .97rem; }
+.closing-line {
+  font-family: var(--font-display);
+  font-size: 1rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .1em;
+  color: var(--accent);
+  margin: 0;
+}
+
+/* ===================================================================
+   FORMS: Host a World, Builders sign-in and uploads
+   =================================================================== */
+.form { max-width: 42rem; display: grid; gap: 1.15rem; }
+.field-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.15rem; }
+.field { display: grid; gap: .4rem; }
+.field label {
+  font-family: var(--font-mono);
+  font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.field input, .field select, .field textarea {
+  font: inherit; color: var(--ink);
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: .7rem .85rem;
+  width: 100%;
+}
+.field textarea { min-height: 9rem; resize: vertical; }
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent);
+}
+.hint { font-size: .86rem; color: var(--ink-soft); margin: 0; }
+button.btn { cursor: pointer; }
+button.btn[disabled] { opacity: .55; cursor: progress; transform: none; }
+
+/* Invisible to people, irresistible to spam bots. */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.form-status {
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--accent);
+  background: var(--bg-raised);
+  border-radius: var(--radius);
+  padding: .85rem 1rem;
+  margin: 0;
+}
+.form-status[data-kind="ok"]    { border-left-color: #4fae84; }
+.form-status[data-kind="error"] { border-left-color: #d0556f; }
+
+/* ---- Builders dashboard ------------------------------------------- */
+.dash {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 2.25rem;
+  align-items: start;
+}
+.dropzone {
+  display: grid; place-items: center; gap: .5rem;
+  text-align: center;
+  padding: 2.25rem 1.5rem;
+  background: var(--bg-raised);
+  border: 1px dashed #3d3666;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.dropzone:hover, .dropzone.is-over { border-color: var(--accent); background: #1c1836; }
+.dropzone strong { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .08em; }
+.queue, .filelist { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+.queue li, .filelist li {
+  display: flex; align-items: center; gap: .9rem;
+  padding: .6rem .85rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: .92rem;
+}
+.queue .name, .filelist .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.filelist .meta, .queue .meta { margin: 0; white-space: nowrap; }
+.linkbtn {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  font: inherit; font-size: .72rem;
+  text-transform: uppercase; letter-spacing: .1em;
+  color: var(--ink-soft);
+}
+.linkbtn:hover { color: var(--accent); }
+.whoami { font-family: var(--font-mono); font-size: .78rem; color: var(--ink-soft); }
+.gate-panel { max-width: 30rem; }
+[hidden] { display: none !important; }
+
+@media (max-width: 900px) {
+  .dash { grid-template-columns: minmax(0, 1fr); }
 }

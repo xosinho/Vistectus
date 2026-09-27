@@ -27,13 +27,13 @@
 
   /* This world can carry its own logo too. The path is relative to
      THIS file, so a picture sitting beside it needs no folders: */
-  /* --logo: url(logo.svg); */
+  /* --logo: url('/dnd/world-one/logo.svg'); */
 
   /* Display face for headings, once you have imported one above. */
   /* --font-display: "Cinzel", Georgia, serif; */
 
   /* Key art. Swap the gradient for a picture when you have one:
-     --hero: url(art/hero.jpg); */
+     --hero: url('/dnd/world-one/art/hero.jpg'); */
   --hero: linear-gradient(160deg, #34283f 0%, #0f0c18 58%, #2a2116 100%);
   --art:  linear-gradient(145deg, #241d33 0%, #140f1f 100%);
 }

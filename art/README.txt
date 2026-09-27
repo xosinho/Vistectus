@@ -29,18 +29,18 @@ element, on one page, or for a whole world in its world.css.
 
 On one element:
 
-  <section class="hero" style="--hero: url(art/hero.jpg)">
-  <article class="card" style="--art: url(art/red-hook.jpg)">
-  <div class="band" style="--art: url(art/docks.jpg)"></div>
+  <section class="hero" style="--hero: url('/htr/brooklyn/art/hero.jpg')">
+  <article class="card" style="--art: url('/htr/brooklyn/art/red-hook.jpg')">
+  <div class="band" style="--art: url('/htr/brooklyn/art/docks.jpg')"></div>
 
 On one page, behind everything:
 
-  <body style="--page-art: url(art/paper.jpg)">
+  <body style="--page-art: url('/htr/brooklyn/art/paper.jpg')">
 
 For every page of a world, in that world's world.css:
 
   :root {
-    --page-art:  url(art/paper.jpg);
+    --page-art:  url('/htr/brooklyn/art/paper.jpg');
     --page-veil: .86;
   }
 
@@ -49,13 +49,31 @@ picture) to 1 (hidden). It defaults to .82. Backgrounds compete with
 text, so start high and come down until it reads.
 
 
-PATHS
+PATHS - ALWAYS START WITH A SLASH
 
-A path in a page is relative to THAT page. A path in a stylesheet is
-relative to THAT stylesheet. So art/hero.jpg inside brooklyn/world.css
-means brooklyn/art/hero.jpg, and the same text inside a chronicle page
-means that chronicle's own art folder. This is why each level has its
-own art folder: the short path always means "mine".
+Every picture set through --hero, --art, --page-art or --logo must be
+written from the root of the site, starting with a slash:
+
+  RIGHT   url('/vtda/hungary-1242/art/crown.jpg')
+  WRONG   url('art/crown.jpg')
+  WRONG   url('vtda/hungary-1242/art/crown.jpg')
+
+Why: these slots are CSS variables, and browsers do not agree on what a
+relative path inside a variable is relative to. Chrome resolves it
+against style.css (the site root), not against the page you wrote it
+in - so 'art/crown.jpg' on a world page quietly looks for /art/crown.jpg
+and shows the empty gradient instead. A leading slash means the site
+root in every browser, so it cannot go wrong.
+
+Spaces in filenames are fine inside the quotes, but %20 is safer:
+'/art/World%20Image.jpg'.
+
+One side effect: opening a page straight from disk (file://) will not
+show these pictures, because "/" is then the root of your drive. View
+the site through a local web server, or the live site, to check art.
+
+Ordinary <img src="..."> and <a href="..."> are NOT affected: those are
+relative to their own page, as usual.
 
 
 SIZES

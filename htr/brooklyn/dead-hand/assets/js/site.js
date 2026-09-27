@@ -19,7 +19,7 @@
   "use strict";
 
   var CHRONICLE = "Dead Hand Chronicle";
-  var SITE = "Vistectus";
+  var SITE = "VisTectus";
 
   function setTitle() {
     var page = document.body.getAttribute("data-title");
