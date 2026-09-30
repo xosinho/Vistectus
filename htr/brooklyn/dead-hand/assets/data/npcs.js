@@ -47,7 +47,7 @@ window.DEAD_HAND_NPCS = [
     name: "Diane Patterson",
     tagline: "The first face through the doors",
     role: "Receiving Nurse · St. Jude’s",
-    portrait: "assets/img/npcs/patterson.jpg",
+    portrait: "assets/img/npcs/Diane Patterson.jpg",
     meta: ["St. Jude’s Memorial Hospital"],
     description:
       "A receiving nurse at St. Jude’s who runs the intake desk, the first face " +
@@ -77,7 +77,7 @@ window.DEAD_HAND_NPCS = [
     name: "Marco Moretti",
     tagline: "The brother people do not see coming",
     role: "Enforcer · Brooklyn waterfront",
-    portrait: "assets/img/npcs/marco.jpg",
+    portrait: "assets/img/npcs/Marco Moretti.jpg",
     meta: ["Waterfront muscle"],
     description:
       "Rico’s brother and partner, the quicker and quieter of the two. Where " +
@@ -90,7 +90,7 @@ window.DEAD_HAND_NPCS = [
     name: "Aldo & Ciro Moretti",
     tagline: "More of the Moretti family",
     role: "Moretti family · Carroll Gardens",
-    portrait: "assets/img/placeholder.svg",
+    portrait: "assets/img/npcs/Aldo and Ciro Moretti.jpg",
     meta: ["Waterfront muscle"],
     description:
       "Two more members of the Moretti family, seen with Rico and Marco on the " +
@@ -104,7 +104,7 @@ window.DEAD_HAND_NPCS = [
     name: "Rhys Calder",
     tagline: "The call Payne makes when it is bad",
     role: "Colour Sergeant, SAS · Payne’s friend",
-    portrait: "assets/img/npcs/calder.jpg",
+    portrait: "assets/img/npcs/Rhys Calder.jpg",
     meta: ["Payne’s circle", "Ally"],
     description:
       "Colour Sergeant Rhys Calder of the SAS, Payne’s friend from harder years " +
@@ -130,10 +130,10 @@ window.DEAD_HAND_NPCS = [
   },
 
   {
-    name: "Dr. Francisco Lehder",
+    name: "Dr. Francisco Ledher",
     tagline: "Takes Adelina’s calls at any hour",
     role: "Surgeon · Ferris-Whitlock Memorial",
-    portrait: "assets/img/placeholder.svg",
+    portrait: "assets/img/npcs/Dr. Francisco Ledher.jpg",
     meta: ["Adelina’s circle", "Ally"],
     description:
       "One of the most respected surgeons at Ferris-Whitlock Memorial, with the " +
@@ -148,7 +148,7 @@ window.DEAD_HAND_NPCS = [
     name: "Dr. Jacob Miller",
     tagline: "Raven’s chief, and her quiet cover",
     role: "Chief of ER · St. Jude’s",
-    portrait: "assets/img/npcs/miller.jpg",
+    portrait: "assets/img/placeholder.svg",
     meta: ["St. Jude’s Memorial Hospital", "Raven’s circle"],
     description:
       "Chief of the Emergency Room at St. Jude’s, and the closest thing Raven " +
@@ -175,7 +175,7 @@ window.DEAD_HAND_NPCS = [
   },
 
   {
-    name: "Vincenzo Pellegrino",
+    name: "Vicenzo Pellegrino",
     tagline: "The neighbourhood trusts him with its dead",
     role: "Funeral Director · Pellegrino’s Funeral Home",
     portrait: "assets/img/npcs/Vicenzo Pellegrino.jpg",
@@ -270,7 +270,7 @@ window.DEAD_HAND_NPCS = [
     name: "Gideon Crane",
     tagline: "Judges people as he judges objects",
     role: "Restorer of Liturgical Objects · Cobble Hill",
-    portrait: "assets/img/placeholder.svg",
+    portrait: "assets/img/npcs/Gideon Crane.jpg",
     meta: ["Cobble Hill"],
     description:
       "The owner of a small reliquary atelier in Cobble Hill that restores " +
@@ -283,7 +283,7 @@ window.DEAD_HAND_NPCS = [
   },
 
   {
-    name: "Carol Simmons",
+    name: "Carol Summers",
     tagline: "Wants to know what became of her mother",
     role: "Ezekiel’s client",
     portrait: "assets/img/npcs/Carol Summers.jpg",
@@ -314,7 +314,7 @@ window.DEAD_HAND_NPCS = [
     name: "Marcus Webb",
     tagline: "A tether to the ordinary world",
     role: "Jack’s teammate",
-    portrait: "assets/img/npcs/webb.jpg",
+    portrait: "assets/img/placeholder.svg",
     meta: ["Jack’s circle", "Civilian"],
     description:
       "Jack’s teammate and closest friend on the squad: an ordinary young man " +
@@ -324,10 +324,10 @@ window.DEAD_HAND_NPCS = [
   },
 
   {
-    name: "Matthew",
+    name: "Mathew",
     tagline: "The coach who shaped him",
     role: "College football coach · Jack’s mentor",
-    portrait: "assets/img/placeholder.svg",
+    portrait: "assets/img/npcs/Mathew.jpg",
     meta: ["Jack’s circle", "Touchstone"],
     description:
       "Jack’s college football coach: the man who recruited him and the mentor " +

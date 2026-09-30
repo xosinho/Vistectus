@@ -247,10 +247,33 @@
       h += "</div>";
     });
     h += "</div>";
-    if (S.edit) h += specialtyEditor(d);
+    h += S.edit ? specialtyEditor(d) : specialtiesBox(d);
 
     h += "<h3>Edges and Perks</h3>" + edgesTable(d);
     return h + "</section>";
+  }
+
+  /* Specialties get a box of their own under the Skills, the way the
+     printed form gives Edges theirs. The rules require one for any dot in
+     Academics, Craft, Performance or Science: a missing one shows as
+     "to be chosen", so the gap is plain to player and Storyteller alike. */
+  var NEEDS_SPECIALTY = ["academics", "craft", "performance", "science"];
+  function specialtiesBox(d) {
+    var rows = d.specialties.map(function (s) {
+      return '<li><b>' + esc(label(s.skill)) + ':</b> ' + esc(s.name) + "</li>";
+    });
+    S.requests.forEach(function (r) {
+      if (r.kind === "specialty" && r.status === "pending") {
+        rows.push('<li class="spec-waiting"><b>' + esc(label(r.trait)) + ":</b> " + esc(r.detail) + " <small>(awaiting approval)</small></li>");
+      }
+    });
+    var has = {};
+    d.specialties.forEach(function (s) { has[s.skill] = true; });
+    NEEDS_SPECIALTY.forEach(function (k) {
+      if (d.skills[k] > 0 && !has[k]) rows.push('<li class="spec-missing"><b>' + label(k) + ":</b> to be chosen</li>");
+    });
+    return '<div class="spec-box"><h4>Specialties</h4>' +
+      (rows.length ? '<ul class="spec-list">' + rows.join("") + "</ul>" : '<p class="spec-none">None yet.</p>') + "</div>";
   }
 
   function specialtyEditor(d) {
