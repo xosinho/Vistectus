@@ -58,8 +58,8 @@ insert into public.xp_costs (kind, label, cost, per_level, sort) values
   ('skill',     'Skill',           3,    true,  2),
   ('specialty', 'Specialty',       3,    false, 3),
   ('advantage', 'Advantage (per dot)', 3, false, 4),
-  ('edge',      'Edge',            null, false, 5),
-  ('perk',      'Perk',            null, false, 6);
+  ('edge',      'Edge',            7,    false, 5),
+  ('perk',      'Perk',            3,    false, 6);
 
 -- XP given out by the Storyteller. A character's total is the sum.
 create table public.xp_awards (

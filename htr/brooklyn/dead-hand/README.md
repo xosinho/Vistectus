@@ -82,11 +82,13 @@ same one as the Builders area and the RICO board).
   refund an approved purchase while the sheet still shows it.
 - **You**, as Storyteller, award XP, handle purchases, and change
   anything on any sheet with **Edit sheet**.
+- **The Storyteller tab** (after Resources on every chronicle page)
+  opens `storyteller.html`: sign in there, then see every hunter's XP
+  and the purchases waiting for you, with links to each sheet.
 
 The costs are in the `xp_costs` table (**Table Editor → xp_costs**) and
 are shown on every sheet. Attribute: new level × 5; Skill: new level × 3;
-Specialty 3; Advantage 3 per dot. **Edge and Perk are empty until you
-fill them in**, and cannot be bought until then.
+Specialty 3; Advantage 3 per dot; Edge 7 each; Perk 3 each.
 
 If the online sheet cannot be reached, the page shows the copy in
 `assets/sheets/data/<name>.json` read-only. Those files are the sheets
@@ -121,11 +123,11 @@ In the Supabase dashboard:
    `https://vistectus.com/htr/brooklyn/dead-hand/rico-case/**` with
    `https://vistectus.com/htr/brooklyn/dead-hand/**`, which covers both
    the sheets and the RICO board.
-5. **Edge and Perk costs**, once you know them:
+5. **If you ran `setup.sql` before Edge and Perk had costs**, set them:
 
    ```sql
-   update public.xp_costs set cost = 7 where kind = 'edge';   -- your figure
-   update public.xp_costs set cost = 3 where kind = 'perk';   -- your figure
+   update public.xp_costs set cost = 7 where kind = 'edge';
+   update public.xp_costs set cost = 3 where kind = 'perk';
    ```
 
 A new hunter later: add them to `players.js` with `sheet: "<name>"`,

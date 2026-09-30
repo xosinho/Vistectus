@@ -522,6 +522,9 @@
     }
     setStatus("");
     render();
+    // A link to #xpTitle (from the Storyteller page) arrives before the sheet is drawn.
+    var target = window.location.hash && document.getElementById(window.location.hash.slice(1));
+    if (target) target.scrollIntoView();
   }
 
   async function reload() {
