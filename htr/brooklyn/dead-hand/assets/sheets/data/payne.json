@@ -1,0 +1,155 @@
+{
+  "slug": "payne",
+  "data": {
+    "name": "Remington Ian Payne",
+    "concept": "",
+    "creed": "Martial",
+    "cell": "Dead Hand  -  S.A.B.E.R",
+    "drive": "Guilt",
+    "redemption": "",
+    "attributes": {
+      "strength": 3,
+      "dexterity": 2,
+      "stamina": 3,
+      "charisma": 2,
+      "manipulation": 1,
+      "composure": 2,
+      "intelligence": 4,
+      "wits": 2,
+      "resolve": 3
+    },
+    "skills": {
+      "athletics": 1,
+      "brawl": 1,
+      "craft": 3,
+      "drive": 0,
+      "firearms": 3,
+      "larceny": 1,
+      "melee": 0,
+      "stealth": 2,
+      "survival": 3,
+      "animalken": 0,
+      "etiquette": 0,
+      "insight": 0,
+      "intimidation": 2,
+      "leadership": 2,
+      "performance": 0,
+      "persuasion": 1,
+      "streetwise": 1,
+      "subterfuge": 0,
+      "academics": 0,
+      "awareness": 2,
+      "finance": 0,
+      "investigation": 1,
+      "medicine": 2,
+      "occult": 0,
+      "politics": 0,
+      "science": 0,
+      "technology": 1
+    },
+    "specialties": [
+      {
+        "skill": "craft",
+        "name": "Makeshift explosive devices and propulsion devices"
+      },
+      {
+        "skill": "firearms",
+        "name": "Long Rifle Accuracy"
+      },
+      {
+        "skill": "survival",
+        "name": "Camouflage"
+      }
+    ],
+    "edges": [
+      {
+        "name": "ARSENAL (Asset)",
+        "perks": [
+          "Expand access to bigger guns"
+        ],
+        "notes": "Weapons beyond civilian reach: firearms, melee, kit"
+      },
+      {
+        "name": "ORDNANCE (Asset)",
+        "perks": [],
+        "notes": "Explosives, breaching charges, demolition tools"
+      }
+    ],
+    "advantages": [
+      {
+        "name": "Safe House",
+        "dots": 3
+      },
+      {
+        "name": "Allies",
+        "dots": 3
+      },
+      {
+        "name": "Resources",
+        "dots": 1
+      },
+      {
+        "name": "Nightmares (Flaw)",
+        "dots": 1
+      },
+      {
+        "name": "[Reversed] Enemy in the Institution (Flaw)",
+        "dots": 1
+      }
+    ],
+    "tenets": "",
+    "creedFields": "ANCHOR\nDont Trust Anybody"
+  },
+  "play": {
+    "ambition": "Erradicate the supernatural for OUR planet.",
+    "desire": "Routine post-retirement.",
+    "health": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "willpower": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "despair": false,
+    "touchstones": "DAUGHTER\nWas a twin; one of the twins was\nkilled by a supernatural being.\n\nEX  -  MOTHER OF THE DAUGHTER",
+    "equipment": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "notes": "Player: Sheeno\nHumanity 7 - Health 6 - Willpower 5\nDesperation and Danger are tracked per cell,\nnot per character.",
+    "age": "",
+    "dob": "",
+    "appearance": "",
+    "features": "",
+    "history": ""
+  }
+}

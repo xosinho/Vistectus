@@ -16,11 +16,11 @@ Copy an existing block, fill it in, drop the files where its paths point:
 
 ```
 portrait  -> assets/img/players/   or   assets/img/npcs/    (lowercase filenames)
-sheet     -> assets/sheets/pdf/        (PDF)
+sheet     -> online; see "Character sheets and XP" below
 ```
 
 Any field but `name` may be left out. No portrait falls back to
-`assets/img/placeholder.svg`; no sheetPdf hides the download row;
+`assets/img/placeholder.svg`; no `sheet` hides the sheet button;
 NPCs without `stats` simply show no stat block.
 
 **Use lowercase filenames.** Windows does not care, but a web host does,
@@ -64,6 +64,73 @@ Copy an entry, fill it in, and the page lists it under its category.
 Only `title` and `href` are required. The Compendium is one entry among
 the others: replace `assets/compendium/compendium.html` with the real
 document, keeping the filename, and its link keeps working.
+
+## Character sheets and XP
+
+Each hunter's profile opens `sheet.html?c=<name>`: the sheet laid out
+like the printed one, kept online in the site's Supabase project (the
+same one as the Builders area and the RICO board).
+
+- **Anyone** can read every sheet and download it as the official PDF,
+  filled in with the sheet as it stands.
+- **The player**, signed in, marks Health and Willpower damage and
+  Despair, and keeps their own Ambition, Desire, Touchstones, equipment,
+  notes and description up to date. These save as they type.
+- **XP**: the player asks to buy a dot (or a Specialty, Advantage, Edge
+  or Perk). It shows striped on their sheet and holds the XP until you
+  approve or reject it. Approving writes it onto the sheet. You can
+  refund an approved purchase while the sheet still shows it.
+- **You**, as Storyteller, award XP, handle purchases, and change
+  anything on any sheet with **Edit sheet**.
+
+The costs are in the `xp_costs` table (**Table Editor → xp_costs**) and
+are shown on every sheet. Attribute: new level × 5; Skill: new level × 3;
+Specialty 3; Advantage 3 per dot. **Edge and Perk are empty until you
+fill them in**, and cannot be bought until then.
+
+If the online sheet cannot be reached, the page shows the copy in
+`assets/sheets/data/<name>.json` read-only. Those files are the sheets
+as they stood in the old PDFs, and `sql/seed.sql` is made from them.
+
+### One-time setup
+
+In the Supabase dashboard:
+
+1. **SQL Editor**: run `assets/sheets/sql/setup.sql`, then
+   `assets/sheets/sql/seed.sql`. (Run the seed only once: running it
+   again resets every sheet to its original values.)
+2. **SQL Editor**: say who you are and who plays whom. Use real
+   addresses here, in the dashboard only. Never put them in a file in
+   this repository: it is public.
+
+   ```sql
+   insert into public.storytellers (email) values ('your-email@example.com');
+
+   insert into public.sheet_owners (slug, email) values
+     ('payne',    'player-email@example.com'),
+     ('dorian',   'player-email@example.com'),
+     ('jack',     'player-email@example.com'),
+     ('ezekiel',  'player-email@example.com'),
+     ('adelina',  'player-email@example.com'),
+     ('vivienne', 'player-email@example.com'),
+     ('raven',    'player-email@example.com');
+   ```
+3. **Authentication → Users → Invite user** for each player not yet
+   invited, with the same address.
+4. **Authentication → URL Configuration → Redirect URLs**: replace
+   `https://vistectus.com/htr/brooklyn/dead-hand/rico-case/**` with
+   `https://vistectus.com/htr/brooklyn/dead-hand/**`, which covers both
+   the sheets and the RICO board.
+5. **Edge and Perk costs**, once you know them:
+
+   ```sql
+   update public.xp_costs set cost = 7 where kind = 'edge';   -- your figure
+   update public.xp_costs set cost = 3 where kind = 'perk';   -- your figure
+   ```
+
+A new hunter later: add them to `players.js` with `sheet: "<name>"`,
+then add a row to `character_sheets` (copy one in the Table Editor and
+change `slug` and `name`) and to `sheet_owners`.
 
 ## The RICO Case board
 

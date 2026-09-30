@@ -1,0 +1,158 @@
+{
+  "slug": "dorian",
+  "data": {
+    "name": "Dorian DeLisle",
+    "concept": "Darkweb dealer’s remorse",
+    "creed": "Underground",
+    "cell": "Dead Hand",
+    "drive": "Atonement",
+    "redemption": "The cell must protect someone from the quarry",
+    "attributes": {
+      "strength": 2,
+      "dexterity": 3,
+      "stamina": 2,
+      "charisma": 2,
+      "manipulation": 2,
+      "composure": 1,
+      "intelligence": 3,
+      "wits": 4,
+      "resolve": 3
+    },
+    "skills": {
+      "athletics": 1,
+      "brawl": 1,
+      "craft": 0,
+      "drive": 0,
+      "firearms": 2,
+      "larceny": 1,
+      "melee": 2,
+      "stealth": 2,
+      "survival": 1,
+      "animalken": 0,
+      "etiquette": 1,
+      "insight": 0,
+      "intimidation": 0,
+      "leadership": 0,
+      "performance": 0,
+      "persuasion": 0,
+      "streetwise": 2,
+      "subterfuge": 2,
+      "academics": 0,
+      "awareness": 3,
+      "finance": 0,
+      "investigation": 1,
+      "medicine": 1,
+      "occult": 3,
+      "politics": 0,
+      "science": 0,
+      "technology": 3
+    },
+    "specialties": [
+      {
+        "skill": "occult",
+        "name": "Necromancy"
+      },
+      {
+        "skill": "technology",
+        "name": "Surveillance Systems"
+      }
+    ],
+    "edges": [
+      {
+        "name": "GLOBAL ACCESS (Int + Technology)",
+        "perks": [
+          "All Access Pass",
+          "Big Brother"
+        ],
+        "notes": ""
+      },
+      {
+        "name": "ARTEFACT  -  Fetish of Lwa (Int + Occult)",
+        "perks": [
+          "Shield"
+        ],
+        "notes": "(+1 Stealth) - Sense the Unnatural"
+      }
+    ],
+    "advantages": [
+      {
+        "name": "Mask",
+        "dots": 2
+      },
+      {
+        "name": "Resources",
+        "dots": 1
+      },
+      {
+        "name": "Safe House",
+        "dots": 2
+      },
+      {
+        "name": "Status  -  respected",
+        "dots": 2
+      },
+      {
+        "name": "Adversary (Flaw)",
+        "dots": 1
+      },
+      {
+        "name": "Creepy Safe House (Flaw)",
+        "dots": 1
+      }
+    ],
+    "tenets": "",
+    "creedFields": "CREED FIELD\nStealth and Subterfuge"
+  },
+  "play": {
+    "ambition": "",
+    "desire": "",
+    "health": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "willpower": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "despair": false,
+    "touchstones": "MERCEDES\nDante’s daughter, also living in\nNYC",
+    "equipment": [
+      "Hacking laptop",
+      "Earbuds",
+      "Glock (+2 damage)",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "notes": "Player: Andreas\nChronicle: Dead Hand",
+    "age": "48",
+    "dob": "1984, September",
+    "appearance": "A black man, from the south. Rugged look, wearing lots of accessories like pendants, rings, wristbands; a few faded tattoos on arms and chest. Dreadlocks usually tied in a ponytail, beard unkempt.",
+    "features": "Lots of pendants and charms of Haitian origin; one specific charm in the form of an old voodoo doll hangs on his belt.",
+    "history": "A divorced hipster man of Louisiana, touched by Haitian voodoo, but found passion in cybersecurity. A known figure among smugglers and shady operatives. One leg in the cyberworld, yet hesitant to let go of his late mother’s faith. His house is decorated with various trinkets and decorations he managed to obtain."
+  }
+}

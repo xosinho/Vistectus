@@ -1,0 +1,150 @@
+{
+  "slug": "raven",
+  "data": {
+    "name": "Raven Reyes",
+    "concept": "Former gang survivor, now ER nurse",
+    "creed": "Underground",
+    "cell": "Dead Hand",
+    "drive": "Oath",
+    "redemption": "",
+    "attributes": {
+      "strength": 3,
+      "dexterity": 2,
+      "stamina": 2,
+      "charisma": 3,
+      "manipulation": 1,
+      "composure": 4,
+      "intelligence": 3,
+      "wits": 2,
+      "resolve": 2
+    },
+    "skills": {
+      "athletics": 1,
+      "brawl": 0,
+      "craft": 1,
+      "drive": 2,
+      "firearms": 2,
+      "larceny": 0,
+      "melee": 1,
+      "stealth": 2,
+      "survival": 2,
+      "animalken": 0,
+      "etiquette": 0,
+      "insight": 1,
+      "intimidation": 2,
+      "leadership": 1,
+      "performance": 1,
+      "persuasion": 1,
+      "streetwise": 1,
+      "subterfuge": 0,
+      "academics": 1,
+      "awareness": 0,
+      "finance": 0,
+      "investigation": 1,
+      "medicine": 1,
+      "occult": 0,
+      "politics": 1,
+      "science": 0,
+      "technology": 0
+    },
+    "specialties": [],
+    "edges": [
+      {
+        "name": "IMPROVISED GEAR (Aptitude)",
+        "perks": [],
+        "notes": "Builds something useful out of whatever is lying around"
+      },
+      {
+        "name": "LIBRARY (Asset)",
+        "perks": [
+          "How to Harm Them"
+        ],
+        "notes": "Researching a creature reveals its weaknesses to the cell"
+      }
+    ],
+    "advantages": [
+      {
+        "name": "Iron Will",
+        "dots": 2
+      },
+      {
+        "name": "Allies  -  Dr. Jacob Miller",
+        "dots": 2
+      },
+      {
+        "name": "Danger Sense",
+        "dots": 1
+      },
+      {
+        "name": "Contacts  -  medical and street",
+        "dots": 1
+      },
+      {
+        "name": "Luck",
+        "dots": 1
+      },
+      {
+        "name": "Dark Secret  -  forced into a gang (Flaw)",
+        "dots": 1
+      },
+      {
+        "name": "Enemy  -  a former gang leader (Flaw)",
+        "dots": 1
+      }
+    ],
+    "tenets": "",
+    "creedFields": "ANCHOR\nThe emergency room: where she\nfeels she belongs, and where she\nremembers why she left her old\nlife. Every life is worth saving.\nNo one is beyond redemption."
+  },
+  "play": {
+    "ambition": "Save more lives than the ones she destroyed, exposing the force of corruption.",
+    "desire": "Find out the monster behind the recent attacks",
+    "health": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "willpower": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "despair": false,
+    "touchstones": "LINA, HER YOUNG SISTER\nThe only person she kept away\nfrom the gang. Her safety is a\npriority. She is kept far from\nNew York at Mr Wilson’s farm, an\nold friend of her late father.",
+    "equipment": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "notes": "Player: Lily\nHumanity 7 - Health 5 - Willpower 6\nDesperation and Danger are tracked per cell,\nnot per character.",
+    "age": "",
+    "dob": "",
+    "appearance": "",
+    "features": "",
+    "history": "Former gang member forced into a life of violence. Escaped, changed her life, and became an ER nurse. Now she secretly hunts the creatures preying on New York while trying to keep her past away.\n\nIron Will: years of surviving a violent gang and later working in the ER have made her exceptionally resilient; she remains calm under fear, pain and stress.\n\nDanger Sense: her gang past makes her instinctively notice when something is wrong.\n\nContacts: doctors, nurses, paramedics and medical examiners can provide information to her; underground gang members from her past and some allies cooperate.\n\nAllies: Dr. Jacob Miller, Chief of Emergency Medicine and her mentor, can quietly access records, change schedules, cover up, and shows up whenever she needs him.\n\nLuck: she always seems to survive impossible situations."
+  }
+}

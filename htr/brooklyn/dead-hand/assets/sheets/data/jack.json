@@ -1,0 +1,155 @@
+{
+  "slug": "jack",
+  "data": {
+    "name": "Jack Zeppelin",
+    "concept": "Envious College Football Talent",
+    "creed": "Martial",
+    "cell": "Dead Hand",
+    "drive": "Envy",
+    "redemption": "",
+    "attributes": {
+      "strength": 4,
+      "dexterity": 3,
+      "stamina": 2,
+      "charisma": 3,
+      "manipulation": 1,
+      "composure": 3,
+      "intelligence": 2,
+      "wits": 2,
+      "resolve": 2
+    },
+    "skills": {
+      "athletics": 3,
+      "brawl": 3,
+      "craft": 0,
+      "drive": 0,
+      "firearms": 0,
+      "larceny": 0,
+      "melee": 0,
+      "stealth": 3,
+      "survival": 2,
+      "animalken": 0,
+      "etiquette": 0,
+      "insight": 2,
+      "intimidation": 3,
+      "leadership": 1,
+      "performance": 0,
+      "persuasion": 0,
+      "streetwise": 0,
+      "subterfuge": 0,
+      "academics": 1,
+      "awareness": 2,
+      "finance": 0,
+      "investigation": 0,
+      "medicine": 0,
+      "occult": 0,
+      "politics": 0,
+      "science": 0,
+      "technology": 1
+    },
+    "specialties": [
+      {
+        "skill": "athletics",
+        "name": "Football"
+      },
+      {
+        "skill": "academics",
+        "name": "First Nation History"
+      }
+    ],
+    "edges": [
+      {
+        "name": "ARTIFACT (Endowment)",
+        "perks": [
+          "add 1 die twice, or 2 dice once, to Str or Dex"
+        ],
+        "notes": "A strange object carrying a genuine supernatural effect"
+      },
+      {
+        "name": "REPEL THE UNNATURAL (Endowment)",
+        "perks": [],
+        "notes": "Ward off or drive back a supernatural creature"
+      }
+    ],
+    "advantages": [
+      {
+        "name": "Mentor  -  Mathew, his coach",
+        "dots": 2
+      },
+      {
+        "name": "Fast Reflexes",
+        "dots": 3
+      },
+      {
+        "name": "Iron Will",
+        "dots": 2
+      },
+      {
+        "name": "Nightmares (Flaw)",
+        "dots": 1
+      },
+      {
+        "name": "Overconfident (Flaw)",
+        "dots": 1
+      },
+      {
+        "name": "Infamy (Flaw)",
+        "dots": 1
+      }
+    ],
+    "tenets": "",
+    "creedFields": "ANCHOR\nI believe that everyone can be\nredeemed with the right help."
+  },
+  "play": {
+    "ambition": "Become a professional NFL player",
+    "desire": "Find his missing grandma, and return her to his father to make him proud",
+    "health": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "willpower": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "despair": false,
+    "touchstones": "MATTHEW\nHis coach and father figure, looked\nup to and cherished.\n\nJAMES ZEPPELIN (little brother)\nKeeps him grounded and lets him\nremember his roots.\n\nMARRIONET ZEPPELIN\nJack’s mother; she is a housewife.",
+    "equipment": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "notes": "Player: Youssef\nHumanity 7 - Health 5 - Willpower 5\nDesperation and Danger are tracked per cell,\nnot per character.",
+    "age": "",
+    "dob": "",
+    "appearance": "A tall 6’3 white college student. Short scruffy hair, always in oversized hoodies. Wears a gifted bracelet on one wrist and a watch on the other. Scar on his shoulder from surgery. Growing a beard.",
+    "features": "",
+    "history": "Mentor: Mathew, his coach, whom Jack sees as a father figure. Matthew comes from a line of Hunters, however he chose to become an athlete over the family tradition. He has now retired and helps the Tradition by recruiting and training new talent.\n\nFast Reflexes: after many years of continuous practice he knows how to focus, and is able to gather his focus to have fast reflexes.\n\nIron Will: due to how people underestimate him, and people thinking that he doesn’t deserve his spot, he is almost always dead set on proving to himself that he is worth being here.\n\nOverconfident: people his whole life have been complimenting him and giving him confidence, not knowing his own limits.\n\nInfamy: his father is the president of the football association, so people think he doesn’t deserve his status.\n\nNightmares: for the last year, he has not been able to get a good night’s rest."
+  }
+}

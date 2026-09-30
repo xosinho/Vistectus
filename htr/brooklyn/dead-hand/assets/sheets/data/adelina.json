@@ -1,0 +1,155 @@
+{
+  "slug": "adelina",
+  "data": {
+    "name": "Adelina Morte",
+    "concept": "Vengeful ex-spy",
+    "creed": "Underground",
+    "cell": "Dead Hand",
+    "drive": "Rage",
+    "redemption": "",
+    "attributes": {
+      "strength": 1,
+      "dexterity": 3,
+      "stamina": 2,
+      "charisma": 2,
+      "manipulation": 3,
+      "composure": 2,
+      "intelligence": 4,
+      "wits": 3,
+      "resolve": 2
+    },
+    "skills": {
+      "athletics": 0,
+      "brawl": 0,
+      "craft": 0,
+      "drive": 0,
+      "firearms": 0,
+      "larceny": 2,
+      "melee": 1,
+      "stealth": 2,
+      "survival": 2,
+      "animalken": 0,
+      "etiquette": 0,
+      "insight": 2,
+      "intimidation": 0,
+      "leadership": 0,
+      "performance": 0,
+      "persuasion": 3,
+      "streetwise": 3,
+      "subterfuge": 3,
+      "academics": 0,
+      "awareness": 0,
+      "finance": 0,
+      "investigation": 1,
+      "medicine": 2,
+      "occult": 0,
+      "politics": 0,
+      "science": 1,
+      "technology": 0
+    },
+    "specialties": [
+      {
+        "skill": "subterfuge",
+        "name": "Lies"
+      },
+      {
+        "skill": "streetwise",
+        "name": "Mafia Methods"
+      },
+      {
+        "skill": "persuasion",
+        "name": "Seduction"
+      }
+    ],
+    "edges": [
+      {
+        "name": "MEDICAL CACHE (Asset)",
+        "perks": [
+          "Controlled Pharmaceuticals"
+        ],
+        "notes": "Surgical supplies, pharmaceuticals, a contact who asks nothing"
+      },
+      {
+        "name": "CRIMINAL NETWORK (Asset)",
+        "perks": [],
+        "notes": "Organised crime, grey market, the underground"
+      }
+    ],
+    "advantages": [
+      {
+        "name": "Retainer",
+        "dots": 3
+      },
+      {
+        "name": "Iron Will",
+        "dots": 2
+      },
+      {
+        "name": "Striking Looks",
+        "dots": 2
+      },
+      {
+        "name": "Trauma  -  sound of a light drill (Flaw)",
+        "dots": 1
+      },
+      {
+        "name": "Nightmares  -  recalling the torture (Flaw)",
+        "dots": 1
+      }
+    ],
+    "tenets": "",
+    "creedFields": "ANCHOR\nRage against the machine"
+  },
+  "play": {
+    "ambition": "Reveal the identity of the true Capo Famiglia of the Giovanni Crime Family, and hurt him as much as they did her.",
+    "desire": "Spill the blood of mobsters",
+    "health": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "willpower": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "despair": false,
+    "touchstones": "FRANCESCA PASSERINI\nAdelina’s young sister. They grew\nup together, and Adelina would\nkill a thousand people for her.",
+    "equipment": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "notes": "Player: Maria\nHumanity 7 - Health 5 - Willpower 4\nDesperation and Danger are tracked per cell,\nnot per character.",
+    "age": "",
+    "dob": "",
+    "appearance": "",
+    "features": "",
+    "history": "Grew up in an orphanage, recruited by the Italian secret service, trained as a spy, sent on a Mafia infiltration mission in NYC which went awry when she was captured and tortured by the goons of the Giovanni family."
+  }
+}

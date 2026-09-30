@@ -95,12 +95,15 @@
       html += '<p class="detail__section-label">Stat block</p>' + statblockHtml(entry.stats, entry.statNote);
     }
 
-    /* player character sheet. No sheetPdf on the entry, no section. */
-    if (opts.type === "player" && entry.sheetPdf) {
+    /* player character sheet: the online sheet page. An older entry with
+       only a sheetPdf still gets its download. No sheet, no section. */
+    if (opts.type === "player" && (entry.sheet || entry.sheetPdf)) {
       html += '<p class="detail__section-label">Character sheet</p>' +
               '<div class="detail__downloads">' +
-                '<a class="btn" href="' + esc(entry.sheetPdf) +
-                '" download target="_blank" rel="noopener">&#8681; PDF sheet</a>' +
+                (entry.sheet
+                  ? '<a class="btn" href="sheet.html?c=' + encodeURIComponent(entry.sheet) + '">Open character sheet</a>'
+                  : '<a class="btn" href="' + esc(entry.sheetPdf) +
+                    '" download target="_blank" rel="noopener">&#8681; PDF sheet</a>') +
               '</div>';
     }
 

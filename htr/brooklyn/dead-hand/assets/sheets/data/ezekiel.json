@@ -1,0 +1,151 @@
+{
+  "slug": "ezekiel",
+  "data": {
+    "name": "Ezekiel Delacroix",
+    "concept": "The ex-cop New Orleans forgot to stop",
+    "creed": "Inquisitive",
+    "cell": "Dead Hand",
+    "drive": "Oath",
+    "redemption": "",
+    "attributes": {
+      "strength": 2,
+      "dexterity": 2,
+      "stamina": 2,
+      "charisma": 3,
+      "manipulation": 1,
+      "composure": 2,
+      "intelligence": 4,
+      "wits": 3,
+      "resolve": 3
+    },
+    "skills": {
+      "athletics": 1,
+      "brawl": 0,
+      "craft": 0,
+      "drive": 0,
+      "firearms": 1,
+      "larceny": 0,
+      "melee": 0,
+      "stealth": 1,
+      "survival": 1,
+      "animalken": 1,
+      "etiquette": 0,
+      "insight": 2,
+      "intimidation": 1,
+      "leadership": 0,
+      "performance": 0,
+      "persuasion": 0,
+      "streetwise": 2,
+      "subterfuge": 1,
+      "academics": 0,
+      "awareness": 2,
+      "finance": 0,
+      "investigation": 3,
+      "medicine": 0,
+      "occult": 2,
+      "politics": 0,
+      "science": 2,
+      "technology": 2
+    },
+    "specialties": [
+      {
+        "skill": "investigation",
+        "name": "Cold Cases"
+      },
+      {
+        "skill": "streetwise",
+        "name": "Informants"
+      },
+      {
+        "skill": "occult",
+        "name": "Louisiana Folklore"
+      }
+    ],
+    "edges": [
+      {
+        "name": "GLOBAL ACCESS (Aptitude)",
+        "perks": [
+          "call in a favour beyond his own reach"
+        ],
+        "notes": "Hacking, surveillance, data access most cannot touch"
+      },
+      {
+        "name": "LIBRARY (Asset)",
+        "perks": [],
+        "notes": "Archives, contacts, a database on the supernatural"
+      }
+    ],
+    "advantages": [
+      {
+        "name": "Contacts",
+        "dots": 3
+      },
+      {
+        "name": "Iron Will",
+        "dots": 2
+      },
+      {
+        "name": "Status",
+        "dots": 2
+      },
+      {
+        "name": "Addiction (Flaw)",
+        "dots": 2
+      }
+    ],
+    "tenets": "",
+    "creedFields": "CONCEPT\nStill dragging a corkboard and a\ndead K9 handler’s dog through\ncases the department wants buried\n-  and he’s rarely wrong about\nwhat’s underneath."
+  },
+  "play": {
+    "ambition": "Find the name behind the case that ended his career  -  the one that isn’t supposed to exist on paper  -  and finally make it stick to something real.",
+    "desire": "Close this case clean, for once, without anyone else paying for what he didn’t catch in time.",
+    "health": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "willpower": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "despair": false,
+    "touchstones": "PRYIA CHEN\nThe hacker friend, known for years. One of maybe two\npeople he trusts without reservation. She has stopped\nasking follow-up questions, which worries him more than\nif she pushed.\n\nBISHOP\nNot a warm dog. Trained, controlled, present. Since\nRosa’s death he alerts on things in no K9 manual  -  a\nflat, dead stillness aimed at a person or a room. He is\nnever wrong.\n\nDARA SILVA\nRosa’s younger sister. The official story never sat\nright with her either. Ezekiel checks in on her more\nthan he would admit.",
+    "equipment": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "notes": "Player: Ibra\nHumanity 7 - Health 5 - Willpower 5\nDesperation and Danger are tracked per cell,\nnot per character.\n\nTONE\nWorn-down conviction, gallows humour; a man\nwho ran out of capacity for surprise a long\ntime ago and kept working anyway.",
+    "age": "",
+    "dob": "",
+    "appearance": "",
+    "features": "",
+    "history": "Fourteen years on the force, mostly homicide, and Ezekiel was good at it  -  not flashy, just relentless. He didn’t let go of threads other detectives filed and forgot. That is what got him: a string of deaths written up as unrelated  -  overdoses, accidents, one ruled suicide he still doesn’t believe. He pulled the thread anyway and found all of them connected to a name that kept not existing on paper. His captain told him to drop it. He didn’t. Six months later he was out. Official story: conduct unbecoming. Unofficial story: somebody above his pay grade didn’t want the questions asked.\n\nHe has run his own PI shop since, taking the cases nobody else wants  -  missing persons that don’t add up, deaths closed too fast, families who know something is wrong and can’t get anyone in a uniform to listen. He has a corkboard that would make a task force uncomfortable, red string included, and he is right often enough that it has stopped being funny.\n\nHe smokes constantly. Not really for the nicotine  -  for the ritual. Lighting up is punctuation: the two seconds he allows himself between finding out something terrible and having to do something about it."
+  }
+}

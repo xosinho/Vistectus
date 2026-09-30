@@ -1,0 +1,143 @@
+{
+  "slug": "vivienne",
+  "data": {
+    "name": "Vivienne Okafor",
+    "concept": "Assistant District Attorney, New York",
+    "creed": "Inquisitive",
+    "cell": "Dead Hand",
+    "drive": "Atonement",
+    "redemption": "",
+    "attributes": {
+      "strength": 1,
+      "dexterity": 2,
+      "stamina": 2,
+      "charisma": 3,
+      "manipulation": 3,
+      "composure": 2,
+      "intelligence": 4,
+      "wits": 3,
+      "resolve": 2
+    },
+    "skills": {
+      "athletics": 1,
+      "brawl": 1,
+      "craft": 0,
+      "drive": 0,
+      "firearms": 1,
+      "larceny": 0,
+      "melee": 0,
+      "stealth": 0,
+      "survival": 0,
+      "animalken": 0,
+      "etiquette": 1,
+      "insight": 2,
+      "intimidation": 0,
+      "leadership": 0,
+      "performance": 0,
+      "persuasion": 3,
+      "streetwise": 2,
+      "subterfuge": 2,
+      "academics": 3,
+      "awareness": 2,
+      "finance": 0,
+      "investigation": 3,
+      "medicine": 0,
+      "occult": 1,
+      "politics": 2,
+      "science": 0,
+      "technology": 1
+    },
+    "specialties": [
+      {
+        "skill": "academics",
+        "name": "Law"
+      }
+    ],
+    "edges": [
+      {
+        "name": "GLOBAL ACCESS (Int + Technology)",
+        "perks": [
+          "Letter of the Law  -  can modify criminal records"
+        ],
+        "notes": "Pulls records, filings, financial data, surveillance"
+      },
+      {
+        "name": "SENSE THE UNNATURAL",
+        "perks": [],
+        "notes": "While holding a focus object, detects nearby creatures"
+      }
+    ],
+    "advantages": [
+      {
+        "name": "Status  -  DA’s office and legal circles",
+        "dots": 3
+      },
+      {
+        "name": "Contacts  -  judges, detectives, court clerks",
+        "dots": 2
+      },
+      {
+        "name": "Resources",
+        "dots": 2
+      },
+      {
+        "name": "Living on the Edge (Flaw)",
+        "dots": 2
+      }
+    ],
+    "tenets": "Don’t let the system’s blind spots\nbecome an excuse.\n\nEvery case gets a real answer, even\nthe ones no court will hear.\n\nNever let someone else pay for what\nyou missed.\n\n(Suggested  -  confirm with the\ntable.)",
+    "creedFields": "CREED: INQUISITIVE\nCounters threats by studying\nthem, finding the pattern,\nworking the angle.\n\nDRIVE: ATONEMENT\nShe believes she failed to stop\nsomething dangerous once,\nknowingly or not, and is trying\nto settle that debt."
+  },
+  "play": {
+    "ambition": "Build an airtight case  -  proof enough for herself  -  against the thing that walked out of her courtroom, and make sure it never happens to anyone else.",
+    "desire": "Get through the next case without letting the system fail someone the way it failed her.",
+    "health": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "willpower": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "despair": false,
+    "touchstones": "Open  -  still to be built out.\nCandidates: a mentor in the DA’s\noffice who does not know why she\nhas changed; a defendant she\nhelped convict while distracted\nby the real case; someone from\nthe original case still out\nthere, unaware of what almost\nhappened to them.",
+    "equipment": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "notes": "Best trait: Intelligence  -  the relentless,\ndetail-obsessed legal mind that missed nothing the\nsecond time around.\n\nTONE\nSharp, controlled, courtroom-composed even in\ndanger. She does not lose her cool; she redirects\nit.\n\nNOTE ON SKILLS\nThe source sheet lists Empathy 1 alongside Insight\n2. Hunter 5e renamed Empathy to Insight, so the\nhigher value is used here.",
+    "age": "",
+    "dob": "",
+    "appearance": "",
+    "features": "",
+    "history": "Vivienne Okafor is an Assistant District Attorney in New York, seven years in, sharp enough that she has stopped being surprised when opposing counsel recognises her name before she has said it. She built her reputation on being unshakeable  -  the kind of prosecutor who does not blink, does not rattle, closes strong. Then she lost a case she should have won.\n\nThe defendant walked. Clean acquittal, no technicality, just a jury that believed a story Vivienne knew was not true. She spent months afterward picking the trial apart, convinced she had missed something in the evidence or the witness prep. What she eventually found was not a legal error. It was a pattern of details she had dismissed as irrelevant  -  because they made no rational sense  -  that only made sense once she stopped assuming the defendant was human.\n\nShe never got to retry the case; double jeopardy saw to that. What she got instead was the absolute certainty that something walked out of her courtroom that should never have been found not guilty by any court, and that certainty has not left her. She still works the DA’s office by day. At night she is trying to make sure it does not happen again  -  and quietly hunting for a way to finish what the trial could not."
+  }
+}

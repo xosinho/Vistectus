@@ -9,11 +9,11 @@
 
    Edit an object below and the Players page updates itself.
    Fields: name / tagline / role / portrait / meta / background /
-           sheetPdf   (full reference at the end of the file).
+           sheet      (full reference at the end of the file).
 
    WHERE TO PUT FILES (filenames must match the paths below):
      Portraits ...... assets/img/players/       (jpg / png / webp)
-     PDF sheets ..... assets/sheets/pdf/         (.pdf)
+     Sheets ......... online; first published in assets/sheets/data/
    ===================================================================== */
 
 window.DEAD_HAND_PLAYERS = [
@@ -38,7 +38,7 @@ window.DEAD_HAND_PLAYERS = [
       "sister Yasmin is a grief he’s never made peace with. Of everyone in the " +
       "cell, Payne is the one who already knew the dark was real. He has his own " +
       "word for what’s out there, and it isn’t “vampire.”",
-    sheetPdf: "assets/sheets/pdf/payne.pdf"
+    sheet: "payne"
   },
 
   {
@@ -58,7 +58,7 @@ window.DEAD_HAND_PLAYERS = [
       "records that vanish, leads that die, paperwork that was never filed. " +
       "Someone is very good at keeping the ghost behind that breach a ghost. " +
       "Dorian intends to find out who.",
-    sheetPdf: "assets/sheets/pdf/dorian.pdf"
+    sheet: "dorian"
   },
 
   {
@@ -78,7 +78,7 @@ window.DEAD_HAND_PLAYERS = [
       "loud and hard-drinking and unconvincingly “sober,” is someone Jack keeps " +
       "at arm’s length, unsure the old man belongs in the same category as the " +
       "people he’d protect.",
-    sheetPdf: "assets/sheets/pdf/jack.pdf"
+    sheet: "jack"
   },
 
   {
@@ -98,7 +98,7 @@ window.DEAD_HAND_PLAYERS = [
       "sister he couldn’t save; Bishop, a dog that notices what people miss; " +
       "and Priya Chen, the friend he calls when a trail goes digital. An oath he " +
       "made keeps him moving when sense says stop.",
-    sheetPdf: "assets/sheets/pdf/ezekiel.pdf"
+    sheet: "ezekiel"
   },
 
   {
@@ -117,7 +117,7 @@ window.DEAD_HAND_PLAYERS = [
       "the organization that broke her. The one bright thread she still holds is " +
       "her sister Francesca — the reason she’s careful, and the reason she " +
       "hasn’t burned all the way down. Yet.",
-    sheetPdf: "assets/sheets/pdf/adelina.pdf"
+    sheet: "adelina"
   },
 
   {
@@ -139,7 +139,7 @@ window.DEAD_HAND_PLAYERS = [
       "but against the rot itself. Her mentor Harold Voss and her old " +
       "evidence-law professor Rosalind Kane keep her honest; her father’s " +
       "fountain pen keeps her steady.",
-    sheetPdf: "assets/sheets/pdf/vivienne.pdf",
+    sheet: "vivienne",
     links: [{ label: "RICO Case", href: "rico-case/index.html" }]
   },
 
@@ -163,7 +163,7 @@ window.DEAD_HAND_PLAYERS = [
       "saving. She keeps a quiet private list of things she’s seen on shift that " +
       "medicine can’t explain. Her creed is simple: every life is worth saving, " +
       "and no one is beyond redemption.",
-    sheetPdf: "assets/sheets/pdf/raven.pdf"
+    sheet: "raven"
   },
 
 
@@ -178,7 +178,10 @@ window.DEAD_HAND_PLAYERS = [
      meta        Array of little tags (creed, drive, touchstone, ...)
      background  String (blank lines = paragraphs), array of paragraphs,
                  or a path to an .html/.txt file to link out to
-     sheetPdf    Path to the character-sheet PDF  -> assets/sheets/pdf/<file>
+     sheet       The character sheet's name, e.g. "vivienne": opens
+                 sheet.html?c=vivienne. The sheet itself is online (see
+                 the README); assets/sheets/data/<name>.json is the copy
+                 shown when the online one cannot be reached.
      links       Extra pages shown as buttons under "Case files", e.g.
                  [{ label: "RICO Case", href: "rico-case/index.html" }]
    Any field except name can be omitted; missing portrait/sheets degrade
