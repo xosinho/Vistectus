@@ -21,7 +21,7 @@ window.DEAD_HAND_NPCS = [
     name: "Elias Thorne",
     tagline: "They met him too late to help",
     role: "The dead man · Payne’s old comrade",
-    portrait: "assets/img/npcs/thorne.jpg",
+    portrait: "assets/img/npcs/Elias Thorne.jpg",
     meta: ["Session 1 · St. Jude’s", "Deceased"],
     description:
       "A veteran — once, long ago, one of Payne’s brothers-in-arms, back when a " +
@@ -38,7 +38,7 @@ window.DEAD_HAND_NPCS = [
     name: "Gary Hollis",
     tagline: "Gave the official story, and not much else",
     role: "Ward Administrator · St. Jude’s",
-    portrait: "assets/img/npcs/hollis.jpg",
+    portrait: "assets/img/npcs/Gary Hollis.jpg",
     meta: ["St. Jude’s Hospital", "Disposition: Evasive"],
     description:
       "The ward administrator on duty at St. Jude’s the night the body came in. " +
@@ -69,7 +69,7 @@ window.DEAD_HAND_NPCS = [
     name: "Rico Moretti",
     tagline: "Came for the body — didn’t leave on his feet",
     role: "Enforcer",
-    portrait: "assets/img/npcs/rico.jpg",
+    portrait: "assets/img/npcs/Rico Moretti.jpg",
     meta: ["Session 1 · St. Jude’s", "Threat: Violent"],
     description:
       "One of two men who arrived at St. Jude’s in ill-fitting scrubs to collect " +
