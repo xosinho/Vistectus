@@ -94,7 +94,7 @@
   .zone-active{background:rgba(184,147,90,0.25) !important;}
 
   /* ---------- Main layout ---------- */
-  #main{flex:1;display:flex;min-height:0;}
+  #main{flex:1;display:flex;min-height:0;position:relative;--locker-w:440px;}
   #boardWrap{
     flex:1;overflow:auto;position:relative;
     background:var(--cork-dark);
@@ -107,8 +107,10 @@
       radial-gradient(circle at 12% 18%, rgba(0,0,0,0.18) 0 3px, transparent 4px) 0 0/64px 64px,
       radial-gradient(circle at 55% 62%, rgba(0,0,0,0.15) 0 3px, transparent 4px) 0 0/78px 78px,
       radial-gradient(circle at 80% 30%, rgba(255,255,255,0.04) 0 2px, transparent 3px) 0 0/52px 52px,
+      linear-gradient(90deg, var(--cork-shadow), transparent 140px, transparent calc(100% - 140px), var(--cork-shadow)),
+      linear-gradient(180deg, var(--cork-shadow), transparent 140px, transparent calc(100% - 140px), var(--cork-shadow)),
       linear-gradient(160deg, var(--cork), var(--cork-dark) 70%);
-    box-shadow:inset 0 0 140px var(--cork-shadow);
+    contain:layout paint;
     cursor:default;
   }
   #board.zoning{cursor:crosshair;}
@@ -256,7 +258,7 @@
 
   /* ---------- Offboard / locker ---------- */
   #offboard{
-    width:440px;flex-shrink:0;
+    width:var(--locker-w);flex-shrink:0;
     background:
       repeating-linear-gradient(180deg, rgba(255,255,255,0.02) 0 3px, transparent 3px 7px),
       linear-gradient(180deg, var(--frame-2), var(--frame));
@@ -264,6 +266,20 @@
     padding:16px 16px 0;
     display:flex;flex-direction:column;min-height:0;
   }
+  /* The tab on the locker's edge hides and shows it. */
+  #lockerTab{
+    position:absolute;top:50%;right:var(--locker-w);z-index:35;transform:translateY(-50%);
+    width:22px;min-height:64px;padding:8px 0;
+    background:var(--frame-2);color:var(--brass-light);
+    border:1px solid var(--brass);border-right:none;border-radius:4px 0 0 4px;
+    font-family:var(--mono);font-size:14px;line-height:1;cursor:pointer;
+    box-shadow:-3px 0 10px rgba(0,0,0,0.35);
+  }
+  #lockerTab:hover{background:#3a2c20;}
+  #lockerTab .tab-label{writing-mode:vertical-rl;transform:rotate(180deg);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-top:6px;}
+  body.locker-closed #offboard{display:none;}
+  body.locker-closed #lockerTab{right:0;display:flex;flex-direction:column;align-items:center;}
+  body.locker-closed #zoomControls{right:18px;}
   #offboard h2{
     font-family:var(--disp);font-size:22px;letter-spacing:1px;color:var(--brass-light);margin:0 0 2px;
   }
@@ -348,8 +364,8 @@
   .string-label-group:active{cursor:grabbing;}
 
   @media (max-width:820px){
-    #offboard{position:fixed;right:0;top:0;bottom:0;z-index:30;transform:translateX(100%);transition:transform .2s;}
-    #offboard.open{transform:translateX(0);box-shadow:-8px 0 30px rgba(0,0,0,0.5);}
+    #main{--locker-w:min(440px, 86vw);}
+    #offboard{position:fixed;right:0;top:0;bottom:0;z-index:30;box-shadow:-8px 0 30px rgba(0,0,0,0.5);}
     #boardTitle{max-width:38vw;}
     #zoomControls{right:18px;}
   }
@@ -368,7 +384,6 @@
       <a class="btn btn-ghost" href="../players.html" title="Back to the cell">&larr; The cell</a>
       <button id="btnAccount" class="btn btn-ghost" style="display:none">Sign in</button>
       <button id="btnZone" class="btn btn-ghost">＋ Zone</button>
-      <button id="btnLockerToggle" class="btn btn-ghost">Locker</button>
       <button id="btnLoad" class="btn btn-ghost">Open…</button>
       <button id="btnNew" class="btn btn-ghost">New Case</button>
       <button id="btnSave" class="btn btn-primary">Save <span id="dirtyDot" class="dirty-dot" style="display:none"></span></button>
@@ -391,6 +406,7 @@
         <button id="zoomReset" class="btn btn-ghost btn-small" title="Reset zoom">Reset</button>
       </div>
     </div>
+    <button id="lockerTab" type="button" aria-controls="offboard" aria-expanded="true" title="Hide the evidence locker">›</button>
     <aside id="offboard">
       <h2>Evidence Locker</h2>
       <p class="hint">Build a lead, then drag it onto the board. Drag from a card's red pin to link two leads.</p>
@@ -1595,11 +1611,14 @@
     // Pan mode — drag empty board space to scroll
     e.preventDefault();
     boardEl.classList.add('panning');
-    var startX = e.clientX + boardWrap.scrollLeft;
-    var startY = e.clientY + boardWrap.scrollTop;
+    /* Move by how far the pointer travelled since the last event. Measured
+       from where the drag began instead, a board stopped at its edge would
+       not move again until the pointer came all the way back. */
+    var lastX = e.clientX, lastY = e.clientY;
     function onMoveP(ev){
-      boardWrap.scrollLeft = startX - ev.clientX;
-      boardWrap.scrollTop  = startY - ev.clientY;
+      boardWrap.scrollLeft -= ev.clientX - lastX;
+      boardWrap.scrollTop  -= ev.clientY - lastY;
+      lastX = ev.clientX; lastY = ev.clientY;
     }
     function onUpP(){
       document.removeEventListener('pointermove', onMoveP);
@@ -1621,20 +1640,52 @@
     if(!state){ alert('Start or open a case file first.'); return; }
     toggleZoneMode();
   });
-  document.getElementById('btnLockerToggle').addEventListener('click', function(){
-    document.getElementById('offboard').classList.toggle('open');
+  /* The locker opens beside the board on wide screens and over it on
+     narrow ones, where it starts closed. The choice is remembered in
+     this browser. */
+  var lockerTab = document.getElementById('lockerTab');
+  function setLocker(open){
+    document.body.classList.toggle('locker-closed', !open);
+    lockerTab.setAttribute('aria-expanded', open ? 'true' : 'false');
+    lockerTab.title = open ? 'Hide the evidence locker' : 'Show the evidence locker';
+    lockerTab.innerHTML = open ? '›' : '‹<span class="tab-label">Locker</span>';
+    try{ localStorage.setItem('caseboard-locker', open ? 'open' : 'closed'); }catch(e){}
+  }
+  (function(){
+    var saved = null;
+    try{ saved = localStorage.getItem('caseboard-locker'); }catch(e){}
+    var narrow = window.matchMedia('(max-width:820px)').matches;
+    setLocker(narrow ? false : saved !== 'closed');
+  })();
+  lockerTab.addEventListener('click', function(){
+    setLocker(document.body.classList.contains('locker-closed'));
   });
   document.getElementById('zoomIn').addEventListener('click', zoomIn);
   document.getElementById('zoomOut').addEventListener('click', zoomOut);
   document.getElementById('zoomReset').addEventListener('click', zoomReset);
   /* The wheel zooms, centred on the pointer; dragging empty board pans.
-     deltaMode 1 counts lines (Firefox), 2 pages. The cap keeps one fast
-     flick from jumping straight to the limit. */
+     deltaMode 1 counts lines (Firefox), 2 pages.
+     Wheel events pile up faster than the screen redraws, so they are
+     summed and applied once per frame. While zooming, the board is
+     scaled as a finished picture (will-change); it is redrawn sharp
+     once the wheel stops. */
+  var wheelDy = 0, wheelX = 0, wheelY = 0, wheelQueued = false, wheelSettle = null;
   boardWrap.addEventListener('wheel', function(e){
     e.preventDefault();
     var dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1);
-    dy = Math.max(-300, Math.min(300, dy));
-    zoomTo(zoom * Math.exp(-dy * 0.0015), e.clientX, e.clientY);
+    wheelDy += Math.max(-300, Math.min(300, dy));   // one fast flick cannot jump to the limit
+    wheelX = e.clientX; wheelY = e.clientY;
+    if(wheelQueued) return;
+    wheelQueued = true;
+    requestAnimationFrame(function(){
+      wheelQueued = false;
+      var dy = wheelDy;
+      wheelDy = 0;
+      boardEl.style.willChange = 'transform';
+      zoomTo(zoom * Math.exp(-dy * 0.0015), wheelX, wheelY);
+      clearTimeout(wheelSettle);
+      wheelSettle = setTimeout(function(){ boardEl.style.willChange = ''; }, 250);
+    });
   }, {passive: false});
   applyZoom();
   document.getElementById('btnAddOffboard').addEventListener('click', function(){
