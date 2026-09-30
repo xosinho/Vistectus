@@ -7,9 +7,8 @@
    plot, faction secrets) left OUT. No stat blocks on this page — those
    are ST-only.
 
-   NOT included yet (players have not met them): Vincenzo Pellegrino,
-   Aldo Moretti, Ciro Moretti, Guido Giovanni. Add them here only once
-   the cell actually meets them.
+   New names to add once the cell meets them: Aldo Moretti, Ciro Moretti.
+   The roster below includes the key figures linked to the current case file.
 
    Edit an object below and the NPC page updates itself.
    Portraits -> assets/img/npcs/<file>.  (Add a "stats" object later
@@ -135,7 +134,7 @@ window.DEAD_HAND_NPCS = [
     name: "Harold Voss",
     tagline: "Taught her the law was worth defending",
     role: "District Attorney · Vivienne’s mentor",
-    portrait: "assets/img/npcs/voss.jpg",
+    portrait: "assets/img/npcs/Harold Voss.jpg",
     meta: ["Vivienne’s circle", "Ally"],
     description:
       "The District Attorney, and Vivienne’s boss, mentor, and moral compass. " +
@@ -148,10 +147,82 @@ window.DEAD_HAND_NPCS = [
   },
 
   {
+    name: "Vicenzo Pellegrino",
+    tagline: "The right man for a bad bargain",
+    role: "Fixer · Red Hook underworld",
+    portrait: "assets/img/npcs/Vicenzo Pellegrino.jpg",
+    meta: ["Underworld contact", "Priority: Watch"],
+    description:
+      "Vicenzo Pellegrino is the sort of man who arrives before the problem does, " +
+      "and leaves only after the bill is paid. He keeps his own counsel and has " +
+      "the kind of patience that makes other people nervous.\n\n" +
+      "The cell knows him as a useful intermediary and a dangerous one: someone " +
+      "who can get a door opened, a file transferred, or a message delivered with " +
+      "no witnesses and no second chances."
+  },
+
+  {
+    name: "Guido Giovanni",
+    tagline: "A name that turns heads",
+    role: "Giovanni lieutenant",
+    portrait: "assets/img/npcs/Guido Giovanni.jpg",
+    meta: ["Giovanni family", "Threat: High"],
+    description:
+      "Guido Giovanni has the expression of a man who’s already decided how the " +
+      "conversation will end. He is all clean tailoring, perfect posture, and the " +
+      "kind of calm that makes every room feel like it has already lost.\n\n" +
+      "The cell has only heard enough to know he is important. Whatever he wants " +
+      "from Red Hook, it is not minor, and it is not likely to be honest."
+  },
+
+  {
+    name: "Mara Reyes",
+    tagline: "Knows who pays the city’s bills",
+    role: "Political fixer · Red Hook",
+    portrait: "assets/img/npcs/Mara Reyes.jpg",
+    meta: ["Local power", "Source: Rumour"],
+    description:
+      "Mara Reyes moves through the corridors of power with the calm of a woman " +
+      "who knows which doors are open and which doors are bait. The city keeps " +
+      "her at arm’s length, but she is still the sort of person who gets called " +
+      "when a problem has too many owners to trust.\n\n" +
+      "To the cell, she is a useful lead and a warning: if she is interested, the " +
+      "city is already listening."
+  },
+
+  {
+    name: "Silas Reed",
+    tagline: "A quiet man with a dangerous inbox",
+    role: "Information broker",
+    portrait: "assets/img/placeholder.svg",
+    meta: ["Rumour network", "Status: Unknown"],
+    description:
+      "Silas Reed is the sort of contact people only name when they are already in " +
+      "trouble. He trades in ugly truths, reputations, and things no one officially " +
+      "keeps on file.\n\n" +
+      "Nobody is sure how deep his line runs, but the cell knows enough to treat " +
+      "him as a risk: useful, available, and impossible to trust for long."
+  },
+
+  {
+    name: "Gideon Crane",
+    tagline: "The man who watches the exits",
+    role: "Security specialist",
+    portrait: "assets/img/placeholder.svg",
+    meta: ["Observation", "Status: Unclear"],
+    description:
+      "Gideon Crane keeps to shadows, exits, and the corners of rooms where the " +
+      "people in charge would rather not be seen. His talent is noticing what anyone " +
+      "else is trying to ignore, and then making sure it stays useful.\n\n" +
+      "He may be a fixer, a watcher, or simply a man with too much patience. Either " +
+      "way, the cell has learned not to underestimate a person who knows every route out."
+  },
+
+  {
     name: "Carol Simmons",
     tagline: "Looking for a mother who vanished",
     role: "Ezekiel’s client",
-    portrait: "assets/img/npcs/simmons.jpg",
+    portrait: "assets/img/npcs/Carol Summers.jpg",
     meta: ["Ezekiel’s case", "Civilian"],
     description:
       "The woman who hired Ezekiel to find out what happened to her mother, who " +

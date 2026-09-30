@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register of Works</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:      #e7ddc6;
+    --paper-2:    #ddd0b3;
+    --rule:       #b9a982;
+    --rule-red:   #9a4a3a;
+    --ink:        #2a2418;
+    --ink-soft:   #4a4030;
+    --ink-blue:   #33384a;
+    --ink-red:    #7a2a20;
+    --edge:       #7c6b45;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ background:#1a1712; }
+  body{
+    font-family:'EB Garamond', serif;
+    color:var(--ink);
+    padding:2.5rem 1rem 4rem;
+    display:flex; justify-content:center;
+  }
+  .ledger{
+    width:100%; max-width:1040px;
+    background:
+      radial-gradient(ellipse at 15% 0%, rgba(120,95,45,0.10), transparent 55%),
+      radial-gradient(ellipse at 90% 100%, rgba(90,60,30,0.14), transparent 50%),
+      repeating-linear-gradient(0deg, transparent 0 33px, rgba(120,105,70,0.16) 33px 34px),
+      linear-gradient(160deg, var(--paper), var(--paper-2));
+    border:1px solid var(--edge);
+    box-shadow: 0 12px 44px rgba(0,0,0,0.6), inset 0 0 60px rgba(90,65,30,0.18);
+    padding:2.2rem 2rem 2.6rem;
+    position:relative;
+  }
+  /* aging stains */
+  .ledger::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(circle at 78% 22%, rgba(90,55,20,0.16), transparent 8%),
+      radial-gradient(circle at 12% 68%, rgba(70,45,20,0.14), transparent 7%),
+      radial-gradient(circle at 60% 88%, rgba(80,50,20,0.12), transparent 9%);
+    mix-blend-mode:multiply;
+  }
+
+  /* ── Masthead ── */
+  .mast{ text-align:center; border-bottom:2.5px double var(--edge); padding-bottom:0.9rem; margin-bottom:0.3rem; }
+  .mast .firm{
+    font-variant:small-caps; letter-spacing:0.10em;
+    font-size:2.3rem; font-weight:600; color:var(--ink);
+    text-shadow:0 1px 0 rgba(255,250,235,0.35);
+  }
+
+  .regline{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-family:'Special Elite', monospace; font-size:0.72rem; letter-spacing:0.06em;
+    color:var(--ink-soft); margin:0.7rem 0 0.2rem;
+  }
+  .regline .title{ font-variant:small-caps; letter-spacing:0.18em; font-size:0.9rem; color:var(--ink); }
+
+  /* ── Table ── */
+  .tbl-wrap{ overflow-x:auto; margin-top:0.6rem; }
+  table{ width:100%; border-collapse:collapse; min-width:920px; }
+  thead th{
+    font-family:'Special Elite', monospace;
+    font-size:0.58rem; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--ink-soft); font-weight:400;
+    border-bottom:1.5px solid var(--edge);
+    padding:0.35rem 0.5rem; text-align:left; vertical-align:bottom;
+  }
+  tbody td{
+    border-bottom:1px solid var(--rule);
+    padding:0.5rem 0.5rem 0.7rem;
+    vertical-align:top;
+    font-size:0.95rem;
+  }
+  .no{ font-family:'Special Elite', monospace; font-size:0.72rem; color:var(--ink-soft); white-space:nowrap; }
+  .hand{ font-family:'Caveat', cursive; font-size:1.28rem; line-height:1.15; color:var(--ink-blue); }
+  .hand.name{ font-weight:600; font-size:1.4rem; color:var(--ink); }
+  .hand.red{ color:var(--ink-red); }
+  .sub2{ font-family:'EB Garamond',serif; font-style:italic; font-size:0.78rem; color:var(--ink-soft); display:block; margin-top:0.15rem; }
+  .code{ font-family:'Special Elite', monospace; font-size:0.64rem; letter-spacing:0.03em; color:var(--edge); display:block; margin-top:0.25rem; }
+  .redstamp{
+    display:inline-block; transform:rotate(-4deg);
+    border:2px solid var(--rule-red); color:var(--rule-red);
+    font-family:'Special Elite',monospace; font-size:0.6rem; letter-spacing:0.1em;
+    padding:0.1rem 0.4rem; border-radius:2px; margin-top:0.3rem; opacity:0.9;
+  }
+
+  .footnote{
+    margin-top:1.1rem; border-top:1px solid var(--rule);
+    padding-top:0.6rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;
+    font-family:'EB Garamond',serif; font-style:italic; font-size:0.8rem; color:var(--ink-soft);
+  }
+  .sig{ font-family:'Caveat',cursive; font-size:1.3rem; color:var(--ink-blue); font-style:normal; }
+</style>
+</head>
+<body>
+<div class="ledger">
+
+  <div class="mast">
+    <div class="firm">Register of Works</div>
+  </div>
+
+  <div class="regline">
+    <span class="title">Works — current cycle</span>
+    <span>vol. II &nbsp;·&nbsp; fol. 31</span>
+  </div>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th style="width:52px;">No.</th>
+        <th style="width:20%;">Subject</th>
+        <th style="width:12%;">Rec'd from</th>
+        <th style="width:14%;">Time &amp; Date of Death</th>
+        <th style="width:14%;">Time &amp; Date of Intake</th>
+        <th style="width:15%;">Work</th>
+        <th>Remarks</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- LUCIA -->
+      <tr>
+        <td class="no">09</td>
+        <td><span class="hand name">Zeppelin, Lucia</span><span class="sub2">née <strong>Conti</strong> · F · 81 yrs · Ellis Is. Foundation</span></td>
+        <td><span class="hand">HQ</span><span class="sub2">Hecate</span></td>
+        <td><span class="hand">6.00 p.m.</span><span class="sub2">9 Nov 2022</span></td>
+        <td><span class="hand">7.30 p.m.</span><span class="sub2">9 Nov 2022</span></td>
+        <td><span class="hand red">Interview — see rem.</span><span class="sub2">cremated 13 Nov · c/s <em>C.M.</em></span></td>
+        <td>
+          <span class="hand">Interview comm. 8.00 p.m. — concl. <strong>11.00 p.m.</strong>, 9 Nov. Led to: <strong>MANCINI</strong> (see below), via the Foundation records.</span>
+          <span class="sub2">personal effects stored: spectacles, wedding band, Foundation lanyard.</span>
+          <span class="code">prov. 7 · CONTI line · «Foundation» · R.d.P. f.47r</span>
+        </td>
+      </tr>
+
+      <!-- MANCINI -->
+      <tr>
+        <td class="no">10</td>
+        <td><span class="hand name">Mancini, R.</span><span class="sub2">F · 66 yrs · Mancini line</span></td>
+        <td><span class="hand">residence</span><span class="sub2">loc. via Zeppelin</span></td>
+        <td><span class="hand">2.15 p.m.</span><span class="sub2">11 Nov 2022</span></td>
+        <td><span class="hand">4.00 p.m.</span><span class="sub2">11 Nov 2022</span></td>
+        <td><span class="hand red">Interview — see rem.</span><span class="sub2">remains disposed 12 Nov</span></td>
+        <td>
+          <span class="hand">Interview 5.00 — 7.30 p.m., 11 Nov. Confirmed «the '25 network» — Obol location <strong>NOT recovered</strong> (the chronicle is elsewhere).</span>
+          <span class="code">prov. 5 · Mancini / Calloway '25 · R.d.P. f.31</span>
+          <span class="redstamp">NIL — see Thorne</span>
+        </td>
+      </tr>
+
+      <!-- GABLE -->
+      <tr>
+        <td class="no">11</td>
+        <td><span class="hand name">Gable, Margaret A.</span><span class="sub2">«Peggy» · F · 74 yrs · widow</span></td>
+        <td><span class="hand">St. Jude's</span><span class="sub2">Ward 4-C</span></td>
+        <td><span class="hand">3.22 p.m.</span><span class="sub2">13 Nov 2022</span></td>
+        <td><span class="hand">10.40 p.m.</span><span class="sub2">13 Nov 2022</span></td>
+        <td><span class="hand red">Exsang. + preserve</span><span class="sub2">to sub-basement</span></td>
+        <td><span class="hand">HOLD — do not release.</span><span class="code">prov. 7 · Ferraro-Gable · harmonic · R.d.P. f.46r</span><span class="redstamp">RETAINED</span></td>
+      </tr>
+
+      <!-- THORNE -->
+      <tr>
+        <td class="no">12</td>
+        <td><span class="hand name">Thorne, Elias</span><span class="sub2">M · 62 yrs · <strong>Tonello</strong> line</span></td>
+        <td><span class="hand">St. Jude's</span><span class="sub2">release — <em>S.R.</em></span></td>
+        <td><span class="hand">1.05 a.m.</span><span class="sub2">16 Nov 2022 · cardiac</span></td>
+        <td><span class="hand">5.50 p.m.</span><span class="sub2">16 Nov 2022</span></td>
+        <td><span class="hand red">DO NOT EMBALM</span><span class="sub2">keep intact</span></td>
+        <td>
+          <span class="hand red">Ossuary — interview set 12.00 a.m., 17 Nov. Last recourse for the Obol location.</span>
+          <span class="code">prov. 9 · Tonello · PRIMARY · R.d.P. f.47v</span>
+          <span class="redstamp">PRIMARY — HOLD INTACT</span>
+        </td>
+      </tr>
+
+      <!-- RICO (latest) -->
+      <tr>
+        <td class="no">13</td>
+        <td><span class="hand name">Moretti, Rico</span><span class="sub2">M · 34 yrs · family</span></td>
+        <td><span class="hand">76th Pct.</span><span class="sub2">via St. Jude's</span></td>
+        <td><span class="hand">9.48 a.m.</span><span class="sub2">16 Nov 2022</span></td>
+        <td><span class="hand">6.20 p.m.</span><span class="sub2">16 Nov 2022</span></td>
+        <td><span class="hand red">Simulacrum — Judecca</span><span class="sub2">penalty of traitors</span></td>
+        <td>
+          <span class="hand red">Restraints applied (×4). Awaiting disposition — binding pending.</span>
+          <span class="code">DO NOT release · G. attends</span>
+          <span class="redstamp">RETENTION</span>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+  </div>
+
+  <div class="footnote">
+    <span>In the hand of <span class="sig">G. Giovanni</span></span>
+    <span>dispositions c/s <span class="sig">C. Moretti</span></span>
+  </div>
+
+</div>
+</body>
+</html>
