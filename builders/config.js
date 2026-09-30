@@ -18,8 +18,8 @@
    these two values as well, to save its case files online.
    ===================================================================== */
 window.BUILDERS_CONFIG = {
-  supabaseUrl: "",
-  supabaseAnonKey: "",
+  supabaseUrl: "https://yodxdjdhdtadvuhroftu.supabase.co",
+  supabaseAnonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlvZHhkamRoZHRhZHZ1aHJvZnR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MzQxNjYsImV4cCI6MjEwNjMxMDE2Nn0.ZB9PQ0nWv_ZWOrYNJswYDMjtbpVIHvk3rSRMv3EtWV8",
 
   // Storage bucket for uploads. Must match the bucket in README.md.
   bucket: "builder-uploads",
