@@ -1,8 +1,9 @@
 /* =====================================================================
    PLAYERS  —  the cell of "The Dead Hand"  (from DeadHand_Canon.md §2)
    ---------------------------------------------------------------------
-   Backgrounds here are PLAYER-SAFE: each character's own known history,
-   people, creed and drive. ST-confidential material (secret Adversaries,
+   Backgrounds here are PLAYER-SAFE and describe each hunter as they
+   stood BEFORE play began: their history, people, creed and drive,
+   and nothing that has happened at the table since. ST-confidential material (secret Adversaries,
    the Giovanni / Cenotaph plot, Kassim / Rodrigo, cross-character
    reveals) is deliberately left OUT so this page is safe to share with
    the whole table.
@@ -20,103 +21,112 @@ window.DEAD_HAND_PLAYERS = [
 
   {
     name: "Major Payne",
-    tagline: "Already knew the dark was real",
-    role: "Ex-Delta Force · Contractor",
+    tagline: "Knew what was out there before the others",
+    role: "Ex-Delta Force · Private contractor",
     portrait: "assets/img/players/payne.jpg",
     meta: ["Creed: Martial", "Drive: Atonement", "Touchstone: Nadia"],
     background:
-      "Ex-Delta Force — “Major” is the rank he actually held. These days he " +
-      "works freelance for a British unit that handles the things official " +
-      "reports never mention, brought in through his old SAS friend Colour " +
-      "Sergeant Rhys Calder. He served fourteen months in Afghanistan beside " +
-      "Elias Thorne, who used to grin and say “the trains are always on time” " +
-      "every time resupply landed on schedule.\n\n" +
-      "Elias called him three days before everything started. Payne didn’t pick " +
-      "up. There was no voicemail, and there won’t be another call — and that " +
-      "silence is the weight he carries. He met Noor Haddad overseas; her " +
-      "daughter Nadia is the person he’d burn the world to protect, and her " +
-      "sister Yasmin is a grief he’s never made peace with. Of everyone in the " +
-      "cell, Payne is the one who already knew the dark was real. He has his own " +
-      "word for what’s out there, and it isn’t “vampire.”",
+      "Remington Ian Payne served with Delta Force, and “Major” is the rank he " +
+      "actually held. He now works freelance for a British unit that handles " +
+      "matters official reports never mention, work that came to him through an " +
+      "old SAS friend, Colour Sergeant Rhys Calder. In Afghanistan he spent " +
+      "fourteen months beside Elias Thorne, who liked to say “the trains are " +
+      "always on time” whenever resupply landed on schedule.\n\n" +
+      "He met Noor Haddad in the Middle East, and they had twin daughters. " +
+      "Yasmin was taken one night and never came home; the account Noor was " +
+      "given is not the truth, and Payne has never corrected it. Nadia, the " +
+      "surviving twin, is the person he would do anything to protect. At the " +
+      "CIA, an Associate Deputy Director named Eleanor Marsh has decided he is " +
+      "a foreign asset operating where he should not be.\n\n" +
+      "Long before the others, Payne knew that the dark has things living in " +
+      "it. He has his own word for them, and it is not “vampire.” Three days " +
+      "before the chronicle opens, Elias Thorne called him. Payne did not pick up.",
     sheet: "payne"
   },
 
   {
     name: "Dorian DeLisle",
-    tagline: "Two years chasing a job he can’t take back",
-    role: "Hacker · Former Dark-Web Operator",
+    tagline: "One job he cannot take back",
+    role: "Hacker · Former dark-web operator",
     portrait: "assets/img/players/dorian.jpg",
     meta: ["Creed: Underground", "Drive: Atonement"],
     background:
-      "A hacker and former dark-web operator who has spent two years trying to " +
-      "undo something he can’t take back. A job he took as a faceless cutout — " +
-      "one he had no reason to think twice about — disabled the monitoring on a " +
-      "hospital ward during the hours people died in it. He didn’t know. That " +
-      "has never once made it easier.\n\n" +
-      "Since then he’s been quietly trying to trace the job back to whoever " +
-      "really commissioned it, and every time he gets close the trail dissolves: " +
-      "records that vanish, leads that die, paperwork that was never filed. " +
-      "Someone is very good at keeping the ghost behind that breach a ghost. " +
-      "Dorian intends to find out who.",
+      "A hacker from the South who for years made his living as a faceless " +
+      "operator on the dark web, taking work through cutouts and never asking " +
+      "who was paying. Two years ago one of those jobs disabled the patient " +
+      "monitoring on a hospital ward during the very hours people died on it. " +
+      "He did not know what the job was for. That has never made it easier.\n\n" +
+      "Since then he has been trying to trace it back to whoever commissioned " +
+      "it, and every time he comes close the trail dissolves: records vanish, " +
+      "contacts go quiet, paperwork turns out never to have been filed. He grew " +
+      "up on his mother’s stories of spirits and old powers, and carries a charm " +
+      "he half believes in. Dorian means to find the person behind that breach, " +
+      "whatever it costs him.",
     sheet: "dorian"
   },
 
   {
     name: "Jack Zeppelin",
-    tagline: "Believes no one is beyond saving",
-    role: "College Athlete",
+    tagline: "Believes anyone can be saved",
+    role: "College athlete",
     portrait: "assets/img/players/jack.jpg",
     meta: ["Creed: Martial", "Drive: Envy", "Touchstone: Matthew"],
     background:
-      "A college athlete who genuinely believes what most people only say — " +
-      "that anyone can be saved with the right help. His mother Marrionet and " +
-      "his brother James are home to him; his coach and mentor Matthew is the " +
-      "man who shaped him, and who handed him a bracelet that has lately started " +
-      "doing things a bracelet shouldn’t.\n\n" +
-      "His grandmother Lucia was taken and killed just days before the cell came " +
-      "together — a loss that’s still raw and far from explained. His father, " +
-      "loud and hard-drinking and unconvincingly “sober,” is someone Jack keeps " +
-      "at arm’s length, unsure the old man belongs in the same category as the " +
-      "people he’d protect.",
+      "A college football player who believes what most people only say: that " +
+      "anyone can be redeemed with the right help. His mother Marrionet and his " +
+      "brother James are home to him. His coach, Matthew, is the man who shaped " +
+      "him on the field and off it, and the one who gave him the bracelet he " +
+      "never takes off.\n\n" +
+      "His father, president of the football association and a hard drinker " +
+      "making an unconvincing attempt at sobriety, is another matter. Jack keeps " +
+      "him at arm’s length and is not sure the old man belongs among the people " +
+      "he would protect. When the chronicle opens, Jack is also grieving his " +
+      "grandmother Lucia, who died only days before.",
     sheet: "jack"
   },
 
   {
     name: "Ezekiel Delacroix",
-    tagline: "The case that followed him from New Orleans",
-    role: "Ex-NOPD Detective · Brooklyn PI",
+    tagline: "Brought one case north from New Orleans",
+    role: "Ex-NOPD detective · Brooklyn PI",
     portrait: "assets/img/players/ezekiel.jpg",
     meta: ["Creed: Inquisitive", "Drive: Oath", "Touchstone: Dara"],
     background:
-      "Fourteen years a homicide detective with the New Orleans PD, now a " +
-      "private investigator in Brooklyn. He came north carrying a case that was " +
-      "never officially a case: his partner Cormac Roux died in an “accident” " +
-      "Ezekiel never believed, and the thread he keeps pulling leads back to a " +
-      "figure from home known only as the Baron.\n\n" +
-      "He works the way he always has — patient, methodical, allergic to the " +
-      "easy answer. His circle is small and hard-earned: Dara Silva, whose " +
-      "sister he couldn’t save; Bishop, a dog that notices what people miss; " +
-      "and Priya Chen, the friend he calls when a trail goes digital. An oath he " +
-      "made keeps him moving when sense says stop.",
+      "Fourteen years a homicide detective with the New Orleans Police " +
+      "Department, now a private investigator in Brooklyn. He came north with a " +
+      "case that was never officially a case. His partner, Cormac Roux, died in " +
+      "an accident Ezekiel has never accepted, and every thread he pulls leads " +
+      "back to a figure from home known only as the Baron. An oath keeps him on " +
+      "it when sense says stop.\n\n" +
+      "He works as he always has: patiently, methodically, distrustful of easy " +
+      "answers. His circle is small and hard-won. Dara Silva lost her sister " +
+      "Rosa, a K9 handler who worked beside him, to a heart attack no one could " +
+      "explain; Bishop, Rosa’s dog, now stays with him and notices what people " +
+      "miss. Priya Chen is the friend he calls when a trail goes digital. In " +
+      "Brooklyn his current client is Carol Simmons, who wants to know what has " +
+      "become of her mother, and he knows Vivienne Okafor from the courts.",
     sheet: "ezekiel"
   },
 
   {
     name: "Adelina Morte",
     tagline: "A chosen name for a burned life",
-    role: "Ex-Intelligence Officer",
+    role: "Former intelligence officer",
     portrait: "assets/img/players/adelina.jpg",
     meta: ["Creed: Underground", "Drive: Rage", "Touchstone: Francesca"],
     background:
-      "Once an officer of Italian intelligence, she spent years buried deep " +
-      "undercover inside a criminal network in New York — until her handler was " +
-      "caught and her cover collapsed. What they did to her afterward she " +
-      "survived by making sure the man who did it did not. “Morte” is a name she " +
-      "chose; the one she was born with belongs to a life she can’t go back to.\n\n" +
-      "Everything she does now runs on a cold, patient rage, pointed squarely at " +
-      "the organization that broke her. The one bright thread she still holds is " +
-      "her sister Francesca — the reason she’s careful, and the reason she " +
-      "hasn’t burned all the way down. Yet.",
+      "She was an officer of AISE, Italy’s foreign intelligence service, and " +
+      "spent years undercover inside the Family’s operations in New York. When " +
+      "her handler, Paolo Bertuzzi, was caught and killed, her cover went with " +
+      "him. She was taken and tortured, and escaped by killing the man doing " +
+      "it. “Morte” is a name she chose; the one she was born with belongs to a " +
+      "life she cannot return to.\n\n" +
+      "Everything she does now runs on a cold, patient rage aimed at the " +
+      "organisation that broke her, and at whoever truly sits at its head. She " +
+      "keeps one professional ally: Dr. Francisco Lehder, a leading surgeon at " +
+      "Ferris-Whitlock Memorial, who owes her and asks few questions. The one " +
+      "bright thread she still holds is her sister Francesca, the reason she " +
+      "remains careful.",
     sheet: "adelina"
   },
 
@@ -127,18 +137,17 @@ window.DEAD_HAND_PLAYERS = [
     portrait: "assets/img/players/vivienne.jpg",
     meta: ["Creed: Inquisitive", "Drive: Atonement", "Touchstone: Harold Voss"],
     background:
-      "Seven years an Assistant District Attorney, and the kind who still " +
-      "believes the law is supposed to mean something. She prosecuted a case she " +
-      "should have won and watched it come apart around her — evidence " +
-      "compromised, testimony gone soft, the whole thing quietly gutted from " +
-      "somewhere inside the system she serves.\n\n" +
-      "What turned suspicion into something colder was a detail no one else " +
-      "flagged: a suspect’s injuries that had healed wrong between the booking " +
-      "photo and the arraignment, and a records request that came back " +
-      "mysteriously incomplete. She’s building a case now not against one man " +
-      "but against the rot itself. Her mentor Harold Voss and her old " +
-      "evidence-law professor Rosalind Kane keep her honest; her father’s " +
-      "fountain pen keeps her steady.",
+      "Seven years an Assistant District Attorney, and still the kind who " +
+      "believes the law is supposed to mean something. She prosecuted Rico " +
+      "Moretti and lost: evidence was compromised, testimony softened, and the " +
+      "case came apart from somewhere inside the system she serves.\n\n" +
+      "What turned suspicion into something colder were details no one else " +
+      "flagged: injuries that had healed impossibly between a suspect’s booking " +
+      "photograph and his arraignment, and a records request that came back " +
+      "mysteriously incomplete. She is now building a case against the rot " +
+      "itself rather than any one man. Her mentor, District Attorney Harold " +
+      "Voss, and her old evidence-law professor, Rosalind Kane, keep her honest; " +
+      "her late father’s fountain pen keeps her steady.",
     sheet: "vivienne",
     links: [{ label: "RICO Case", href: "rico-case/index.html" }]
   },
@@ -150,22 +159,23 @@ window.DEAD_HAND_PLAYERS = [
     portrait: "assets/img/players/raven.jpg",
     meta: ["Creed: Underground", "Drive: Oath", "Touchstone: Lina"],
     background:
-      "She grew up fast in Queens: her mother died bringing her sister Lina into " +
-      "the world, her father died leaving debt, and at fourteen Raven became the " +
-      "only thing standing between Lina and the street. That’s the lever Hector " +
-      "Cruz and the Latino Kings used to pull her in, and for years she ran with " +
-      "them — until a job went wrong and someone who shouldn’t have gotten hurt " +
-      "did. She got herself and Lina out and never looked back.\n\n" +
-      "Lina’s safe now, out of the city with a family friend and reachable only " +
-      "by a landline — Raven takes no chances that Hector could find her. In the " +
-      "years since, she poured herself into medicine with something close to " +
-      "obsession, and today she’s an ER nurse happiest with her hands doing the " +
-      "saving. She keeps a quiet private list of things she’s seen on shift that " +
-      "medicine can’t explain. Her creed is simple: every life is worth saving, " +
-      "and no one is beyond redemption.",
+      "She grew up fast in Queens. Her mother died bringing her sister Lina " +
+      "into the world, her father died leaving debt, and at fourteen Raven " +
+      "became the only thing standing between Lina and the street. That was the " +
+      "lever Hector Cruz used to pull her into the Latino Kings, and for years " +
+      "she ran with them, until a job went wrong and a bystander who should " +
+      "never have been hurt was. She walked away, and Hector has never accepted " +
+      "it.\n\n" +
+      "Lina is safe now, living out of state with a family friend and reachable " +
+      "only by landline; Raven takes no chances that Hector could find her. In " +
+      "the years since, Raven has poured herself into medicine with something " +
+      "close to obsession. She is an ER nurse at St. Jude’s Memorial, happiest " +
+      "with her hands doing the saving, and the Chief of ER, Dr. Jacob Miller, " +
+      "covers for her more than he has to. She keeps a private list of things " +
+      "she has seen on shift that medicine cannot explain. Her creed is simple: " +
+      "every life is worth saving, and no one is beyond redemption.",
     sheet: "raven"
-  },
-
+  }
 
 ];
 

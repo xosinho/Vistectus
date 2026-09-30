@@ -1,14 +1,11 @@
 /* =====================================================================
-   NPCs  —  people the cell has MET so far  (player-safe)
+   NPCs  —  the people around the cell  (player-safe)
    ---------------------------------------------------------------------
-   Only characters the players have actually encountered are listed here,
-   and every entry is written PLAYER-SAFE: what the cell has observed,
-   with ST-confidential material (true natures, the Giovanni / Cenotaph
-   plot, faction secrets) left OUT. No stat blocks on this page — those
+   Every entry describes the person as they stood BEFORE play began:
+   their place in the world, and nothing that has happened at the table.
+   ST-confidential material (true natures, the Giovanni / Cenotaph plot,
+   faction secrets) is left OUT. No stat blocks on this page — those
    are ST-only.
-
-   New names to add once the cell meets them: Aldo Moretti, Ciro Moretti.
-   The roster below includes the key figures linked to the current case file.
 
    Edit an object below and the NPC page updates itself.
    Portraits -> assets/img/npcs/<file>.  (Add a "stats" object later
@@ -19,115 +16,147 @@ window.DEAD_HAND_NPCS = [
 
   {
     name: "Elias Thorne",
-    tagline: "They met him too late to help",
-    role: "The dead man · Payne’s old comrade",
+    tagline: "The friend who called one last time",
+    role: "Veteran · Payne’s old comrade",
     portrait: "assets/img/npcs/Elias Thorne.jpg",
-    meta: ["Session 1 · St. Jude’s", "Deceased"],
+    meta: ["Payne’s circle"],
     description:
-      "A veteran — once, long ago, one of Payne’s brothers-in-arms, back when a " +
-      "good resupply meant Elias grinning that “the trains are always on time.” " +
-      "The cell never knew him in life. They met him as a body on a gurney at " +
-      "St. Jude’s, brought in from an apartment colder than the winter outside.\n\n" +
-      "He did not stay quiet. Cold to the touch and hours dead, his hand closed " +
-      "on a wrist and his mouth shaped a single word — “Pellegrino” — before he " +
-      "was still again. Whatever was done to Elias Thorne, his death is the " +
-      "thread that pulled all of them into the same room."
+      "A veteran who served fourteen months in Afghanistan alongside Payne, " +
+      "remembered for greeting every on-time resupply with “the trains are " +
+      "always on time.” Back in civilian life he lived quietly in Brooklyn, kept " +
+      "to himself, and stayed in loose touch with the men he had served with.\n\n" +
+      "In the months before the chronicle opens he tried to reach Payne more " +
+      "than once. His death is where the story begins."
   },
 
   {
     name: "Gary Hollis",
-    tagline: "Gave the official story, and not much else",
+    tagline: "Keeps the paperwork moving",
     role: "Ward Administrator · St. Jude’s",
     portrait: "assets/img/npcs/Gary Hollis.jpg",
-    meta: ["St. Jude’s Hospital", "Disposition: Evasive"],
+    meta: ["St. Jude’s Memorial Hospital"],
     description:
-      "The ward administrator on duty at St. Jude’s the night the body came in. " +
-      "Pressed hard enough, he produced an official account of Elias Thorne’s " +
-      "transfer — clean, tidy, and clearly not the whole truth. He has the look " +
-      "of a man reciting lines someone else wrote, and the fear of a man who " +
-      "knows what happens if he improvises.\n\n" +
-      "His name and credentials turned up on the paperwork that moved Thorne’s " +
-      "body. Whether he signed willingly or was simply the most convenient " +
-      "signature to borrow is a question he very much does not want asked."
+      "The ward administrator at St. Jude’s Memorial Hospital, responsible for " +
+      "admissions, transfers and the paperwork that follows patients in and out " +
+      "of the building. He has held the post for about a year and a half.\n\n" +
+      "To the staff he is a mid-level manager like any other: rarely seen on the " +
+      "floor, particular about procedure, and always reachable by memo."
   },
 
   {
-    name: "Nurse Patterson",
-    tagline: "The intake desk on a bad night",
+    name: "Diane Patterson",
+    tagline: "The first face through the doors",
     role: "Receiving Nurse · St. Jude’s",
     portrait: "assets/img/npcs/patterson.jpg",
-    meta: ["St. Jude’s Hospital"],
+    meta: ["St. Jude’s Memorial Hospital"],
     description:
-      "A receiving nurse at St. Jude’s who works the intake desk — distinct from " +
-      "Raven on the ER floor. Diane Patterson processes what comes through the " +
-      "doors and moves on to the next chart.\n\n" +
-      "She was on shift the night the cell came together: a familiar, ordinary " +
-      "face in a place that stopped feeling ordinary very quickly."
+      "A receiving nurse at St. Jude’s who runs the intake desk, the first face " +
+      "anyone sees when they come through the doors at night. Experienced, " +
+      "unflappable and always busy, she processes what arrives and moves on to " +
+      "the next chart.\n\n" +
+      "She works alongside Raven, though their jobs differ: Patterson takes " +
+      "people in, and Raven works to keep them alive."
   },
 
   {
     name: "Rico Moretti",
-    tagline: "Came for the body — didn’t leave on his feet",
-    role: "Enforcer",
+    tagline: "Walked free from Vivienne’s case",
+    role: "Enforcer · Brooklyn waterfront",
     portrait: "assets/img/npcs/Rico Moretti.jpg",
-    meta: ["Session 1 · St. Jude’s", "Threat: Violent"],
+    meta: ["Waterfront muscle"],
     description:
-      "One of two men who arrived at St. Jude’s in ill-fitting scrubs to collect " +
-      "Elias Thorne’s body, carrying paperwork that didn’t hold up. Strong in a " +
-      "way that doesn’t match his frame, and cold — the air itself seemed to " +
-      "drop around him.\n\n" +
-      "The night ended badly for Rico. Left wounded, he begged to be put down " +
-      "rather than face whatever waited for him, and was taken away instead. " +
-      "Whatever he is, he bleeds — and whatever he was afraid of, it wasn’t the " +
-      "cell."
+      "A known enforcer on the Carroll Gardens and Red Hook waterfront, heavily " +
+      "built and quick to violence, who works alongside his brother Marco. " +
+      "Vivienne prosecuted him and lost when the case against him fell apart; " +
+      "he walked out of court and went back to work.\n\n" +
+      "People in the neighbourhood lower their voices when the Moretti brothers " +
+      "pass, and take care never to give them a reason to stop."
   },
 
   {
     name: "Marco Moretti",
-    tagline: "Rico’s brother — faster than anything should be",
-    role: "Enforcer",
+    tagline: "The brother people do not see coming",
+    role: "Enforcer · Brooklyn waterfront",
     portrait: "assets/img/npcs/marco.jpg",
-    meta: ["Session 1 · St. Jude’s", "Threat: Violent"],
+    meta: ["Waterfront muscle"],
     description:
-      "Rico’s brother, and the faster of the two. When he lunged he moved wrong " +
-      "— quicker than the eye wants to allow — and only Jack’s bracelet, snapping " +
-      "up between them, turned the strike aside. That moment told the cell more " +
-      "than any paperwork could: whatever the Morettis are, the ordinary rules " +
-      "don’t fully apply to them.\n\n" +
-      "Marco slipped away before the night was over. He is still out there, and " +
-      "unlikely to have forgotten the people who put his brother on a gurney."
+      "Rico’s brother and partner, the quicker and quieter of the two. Where " +
+      "Rico is the muscle people see coming, Marco is the one they do not.\n\n" +
+      "The brothers have worked as a pair for years, and their reputation on " +
+      "the waterfront has been earned together."
+  },
+
+  {
+    name: "Aldo & Ciro Moretti",
+    tagline: "More of the Moretti family",
+    role: "Moretti family · Carroll Gardens",
+    portrait: "assets/img/placeholder.svg",
+    meta: ["Waterfront muscle"],
+    description:
+      "Two more members of the Moretti family, seen with Rico and Marco on the " +
+      "waterfront and around Carroll Gardens. Neither has Rico’s reputation, " +
+      "and neither seems to want one.\n\n" +
+      "The Morettis keep their business, whatever it is, among their own, and " +
+      "Aldo and Ciro are part of it."
   },
 
   {
     name: "Rhys Calder",
-    tagline: "The call Payne makes when it’s bad",
-    role: "Colour Sergeant, SAS · Payne’s contact",
+    tagline: "The call Payne makes when it is bad",
+    role: "Colour Sergeant, SAS · Payne’s friend",
     portrait: "assets/img/npcs/calder.jpg",
     meta: ["Payne’s circle", "Ally"],
     description:
-      "Colour Sergeant Rhys Calder, SAS — Payne’s friend from a harder chapter " +
-      "of his life, and the man he reaches for when a situation outgrows what " +
-      "one person can handle. Where Payne goes quiet, Rhys is the steady voice " +
-      "on the other end of the line, and the bridge to resources that don’t " +
-      "officially exist.\n\n" +
-      "He’s a lifeline — the kind of ally you’re glad to have, and careful never " +
-      "to take for granted."
+      "Colour Sergeant Rhys Calder of the SAS, Payne’s friend from harder years " +
+      "and the man who brought him the freelance work he now does for a British " +
+      "unit that does not appear in official reports.\n\n" +
+      "Steady, discreet and loyal, he is the voice Payne reaches for when a " +
+      "situation outgrows what one man can handle, and a bridge to resources " +
+      "that do not officially exist."
+  },
+
+  {
+    name: "Eleanor Marsh",
+    tagline: "Has decided Payne is a problem",
+    role: "Associate Deputy Director · CIA",
+    portrait: "assets/img/placeholder.svg",
+    meta: ["Payne’s circle", "Enemy"],
+    description:
+      "An Associate Deputy Director at the CIA, and a careful reader of files. " +
+      "She has read Payne’s, and concluded that a decorated American officer " +
+      "now working for a British unit on American soil has gone rogue.\n\n" +
+      "Marsh is patient, well connected and in no hurry. She is building a " +
+      "dossier, and means it to be complete before she acts on it."
+  },
+
+  {
+    name: "Dr. Francisco Lehder",
+    tagline: "Takes Adelina’s calls at any hour",
+    role: "Surgeon · Ferris-Whitlock Memorial",
+    portrait: "assets/img/placeholder.svg",
+    meta: ["Adelina’s circle", "Ally"],
+    description:
+      "One of the most respected surgeons at Ferris-Whitlock Memorial, with the " +
+      "steady hands, long hours and quiet authority that such a reputation " +
+      "demands.\n\n" +
+      "He is also Adelina’s ally: a man who owes her, keeps her confidences and " +
+      "asks few questions in return. What binds them is business, and they " +
+      "keep it that way."
   },
 
   {
     name: "Dr. Jacob Miller",
-    tagline: "Raven’s boss, and quiet cover",
+    tagline: "Raven’s chief, and her quiet cover",
     role: "Chief of ER · St. Jude’s",
     portrait: "assets/img/npcs/miller.jpg",
-    meta: ["St. Jude’s Hospital", "Ally"],
+    meta: ["St. Jude’s Memorial Hospital", "Raven’s circle"],
     description:
       "Chief of the Emergency Room at St. Jude’s, and the closest thing Raven " +
-      "has to a guardian angel on the inside. He covers for her, signs off on " +
-      "the shifts and absences that don’t quite line up, and asks fewer " +
-      "questions than he could.\n\n" +
-      "Whether that’s trust, exhaustion, or something he’s chosen not to look at " +
-      "too closely, Miller is a door that stays open when the cell needs one — " +
-      "and a good man to keep on side."
+      "has to a guardian on the inside. He covers for her, signs off on shifts " +
+      "and absences that do not quite line up, and asks fewer questions than he " +
+      "could.\n\n" +
+      "Whether that is trust, exhaustion or something he has chosen not to look " +
+      "at too closely, Miller is a good man in a hard job."
   },
 
   {
@@ -137,100 +166,148 @@ window.DEAD_HAND_NPCS = [
     portrait: "assets/img/npcs/Harold Voss.jpg",
     meta: ["Vivienne’s circle", "Ally"],
     description:
-      "The District Attorney, and Vivienne’s boss, mentor, and moral compass. " +
-      "He’s the one who taught her that the law is only as good as the people " +
-      "willing to defend it when it’s inconvenient — and he still believes it, " +
-      "which in this city is either courage or a liability.\n\n" +
-      "For now he’s an ally and a steady hand. How much of what Vivienne is " +
-      "uncovering she can bring to his desk without endangering him is a " +
-      "question she hasn’t wanted to answer."
+      "The District Attorney, and Vivienne’s boss, mentor and moral compass. He " +
+      "taught her that the law is only as good as the people willing to defend " +
+      "it when doing so is inconvenient, and he still believes it, which in this " +
+      "city is either courage or a liability.\n\n" +
+      "He is an ally and a steady hand, and one of the few people Vivienne " +
+      "trusts without reservation."
   },
 
   {
-    name: "Vicenzo Pellegrino",
-    tagline: "The right man for a bad bargain",
-    role: "Fixer · Red Hook underworld",
+    name: "Vincenzo Pellegrino",
+    tagline: "The neighbourhood trusts him with its dead",
+    role: "Funeral Director · Pellegrino’s Funeral Home",
     portrait: "assets/img/npcs/Vicenzo Pellegrino.jpg",
-    meta: ["Underworld contact", "Priority: Watch"],
+    meta: ["Court Street, Carroll Gardens"],
     description:
-      "Vicenzo Pellegrino is the sort of man who arrives before the problem does, " +
-      "and leaves only after the bill is paid. He keeps his own counsel and has " +
-      "the kind of patience that makes other people nervous.\n\n" +
-      "The cell knows him as a useful intermediary and a dangerous one: someone " +
-      "who can get a door opened, a file transferred, or a message delivered with " +
-      "no witnesses and no second chances."
+      "The proprietor of Pellegrino’s Funeral Home, a neo-Gothic brownstone on " +
+      "the Court Street corridor and one of the old Italian undertakers of " +
+      "Carroll Gardens. Families have trusted the Pellegrinos with their dead " +
+      "for generations, and Vincenzo carries the office with courtly, unhurried " +
+      "dignity.\n\n" +
+      "In a neighbourhood where the funeral trade has long kept company with " +
+      "other kinds of business, he is discreet about his clients, and about " +
+      "everyone else’s."
+  },
+
+  {
+    name: "Cosimo Salerno",
+    tagline: "Everyone’s favourite at the social club",
+    role: "Old-guard regular · Carroll Gardens",
+    portrait: "assets/img/placeholder.svg",
+    meta: ["Carroll Gardens"],
+    description:
+      "A fixture of the neighbourhood’s old-guard social club: courtly, " +
+      "generous with his time, and at home among the card tables and the bingo " +
+      "nights. He knows everyone’s grandparents and remembers every name.\n\n" +
+      "The regulars adore him. He is the one who checks on the widows, sits " +
+      "with the lonely, and makes sure no one at the club is forgotten."
   },
 
   {
     name: "Guido Giovanni",
-    tagline: "A name that turns heads",
-    role: "Giovanni lieutenant",
+    tagline: "A name on every board that matters",
+    role: "Businessman · The Giovanni family",
     portrait: "assets/img/npcs/Guido Giovanni.jpg",
-    meta: ["Giovanni family", "Threat: High"],
+    meta: ["The Giovanni family"],
     description:
-      "Guido Giovanni has the expression of a man who’s already decided how the " +
-      "conversation will end. He is all clean tailoring, perfect posture, and the " +
-      "kind of calm that makes every room feel like it has already lost.\n\n" +
-      "The cell has only heard enough to know he is important. Whatever he wants " +
-      "from Red Hook, it is not minor, and it is not likely to be honest."
+      "A member of the old Giovanni family, whose name appears on property, " +
+      "holdings and charitable boards across this part of Brooklyn. He is " +
+      "seldom seen in public, and then only at the kind of dinner where money " +
+      "is raised politely: clean tailoring, perfect posture, and a calm that " +
+      "makes every room feel it has already lost the argument.\n\n" +
+      "Those who deal with him describe a patient administrator, courteous and " +
+      "precise, who never raises his voice and never seems to need to."
+  },
+
+  {
+    name: "Marisol Vega",
+    tagline: "Builds structures for a discreet family office",
+    role: "Director of Corporate Structuring · Hecate Holdings",
+    portrait: "assets/img/placeholder.svg",
+    meta: ["Hecate Holdings"],
+    description:
+      "Director of Corporate Structuring at Hecate Holdings, a privately held " +
+      "property and investment firm. Her work is the architecture of " +
+      "companies: holding entities, trusts and the arrangements that let a " +
+      "discreet family office own a great deal without appearing to own " +
+      "anything.\n\n" +
+      "She is meticulous, well paid and proud of the elegance of what she " +
+      "builds. She reads every page, and has never needed to ask whose money " +
+      "it is."
   },
 
   {
     name: "Mara Reyes",
-    tagline: "Knows who pays the city’s bills",
-    role: "Political fixer · Red Hook",
+    tagline: "No relation",
+    role: "Special Agent · FBI",
     portrait: "assets/img/npcs/Mara Reyes.jpg",
-    meta: ["Local power", "Source: Rumour"],
+    meta: ["Federal"],
     description:
-      "Mara Reyes moves through the corridors of power with the calm of a woman " +
-      "who knows which doors are open and which doors are bait. The city keeps " +
-      "her at arm’s length, but she is still the sort of person who gets called " +
-      "when a problem has too many owners to trust.\n\n" +
-      "To the cell, she is a useful lead and a warning: if she is interested, the " +
-      "city is already listening."
+      "A Special Agent with the FBI in New York. Her cases rarely make the " +
+      "news, and her reports seem to travel further up the chain than her rank " +
+      "would suggest.\n\n" +
+      "She shares a surname with Raven, and nothing else."
   },
 
   {
     name: "Silas Reed",
-    tagline: "A quiet man with a dangerous inbox",
-    role: "Information broker",
+    tagline: "Runs a quiet house",
+    role: "Captain · 76th Precinct, NYPD",
     portrait: "assets/img/placeholder.svg",
-    meta: ["Rumour network", "Status: Unknown"],
+    meta: ["NYPD"],
     description:
-      "Silas Reed is the sort of contact people only name when they are already in " +
-      "trouble. He trades in ugly truths, reputations, and things no one officially " +
-      "keeps on file.\n\n" +
-      "Nobody is sure how deep his line runs, but the cell knows enough to treat " +
-      "him as a risk: useful, available, and impossible to trust for long."
+      "Captain of the NYPD’s 76th Precinct on Union Street, which covers " +
+      "Carroll Gardens, Red Hook, Cobble Hill and the Columbia Street " +
+      "Waterfront.\n\n" +
+      "A long-serving commander with a reputation for running a quiet house: " +
+      "crime figures that behave, evidence rooms that balance, and paperwork " +
+      "that is always in order."
   },
 
   {
     name: "Gideon Crane",
-    tagline: "The man who watches the exits",
-    role: "Security specialist",
+    tagline: "Judges people as he judges objects",
+    role: "Restorer of Liturgical Objects · Cobble Hill",
     portrait: "assets/img/placeholder.svg",
-    meta: ["Observation", "Status: Unclear"],
+    meta: ["Cobble Hill"],
     description:
-      "Gideon Crane keeps to shadows, exits, and the corners of rooms where the " +
-      "people in charge would rather not be seen. His talent is noticing what anyone " +
-      "else is trying to ignore, and then making sure it stays useful.\n\n" +
-      "He may be a fixer, a watcher, or simply a man with too much patience. Either " +
-      "way, the cell has learned not to underestimate a person who knows every route out."
+      "The owner of a small reliquary atelier in Cobble Hill that restores " +
+      "liturgical objects, reliquaries and church silver for parishes and " +
+      "private collectors across the North-East. Exacting, courteous and " +
+      "quietly formidable, he is well known to the clergy of Brooklyn and to " +
+      "few people outside it.\n\n" +
+      "He assesses people much as he assesses objects: by where they came from, " +
+      "and by what they can bear."
   },
 
   {
     name: "Carol Simmons",
-    tagline: "Looking for a mother who vanished",
+    tagline: "Wants to know what became of her mother",
     role: "Ezekiel’s client",
     portrait: "assets/img/npcs/Carol Summers.jpg",
+    meta: ["Ezekiel’s circle", "Civilian"],
+    description:
+      "Her mother, Peggy Gable, has gone missing, and the official answers do " +
+      "not add up. When the calls stopped being returned, Carol hired Ezekiel " +
+      "to find her.\n\n" +
+      "She is worried, persistent and entirely ordinary, and she wants one " +
+      "thing: to know what happened to her mother."
+  },
+
+  {
+    name: "Peggy Gable",
+    tagline: "The mother Carol is looking for",
+    role: "Carol Simmons’s mother",
+    portrait: "assets/img/npcs/Peggy Gable.jpg",
     meta: ["Ezekiel’s case", "Civilian"],
     description:
-      "The woman who hired Ezekiel to find out what happened to her mother, who " +
-      "slipped out of the hospital’s care and out of every record that should " +
-      "have tracked her. Carol is worried, persistent, and unaware of how deep " +
-      "the hole she’s asked him to look into really goes.\n\n" +
-      "She doesn’t know the worst of it. Keeping it that way — or deciding when " +
-      "she deserves the truth — is a weight Ezekiel now carries on her behalf."
+      "Margaret Gable, known to everyone as Peggy: Carol Simmons’s mother, and " +
+      "a Brooklyn woman of the kind every block has, with family roots in the " +
+      "borough going back generations.\n\n" +
+      "In November she dropped out of sight, and nothing her daughter has been " +
+      "told about where she went holds together."
   },
 
   {
@@ -240,12 +317,24 @@ window.DEAD_HAND_NPCS = [
     portrait: "assets/img/npcs/webb.jpg",
     meta: ["Jack’s circle", "Civilian"],
     description:
-      "Jack’s teammate and friend — an ordinary guy with an ordinary life, no " +
-      "idea that Jack’s bracelet is anything more than a good-luck charm, and no " +
-      "notion of what his friend has walked into.\n\n" +
-      "Marcus is a reminder of the life Jack is trying to protect: normal, " +
-      "uncomplicated, and worth keeping that way. Which is exactly why Jack will " +
-      "do almost anything to keep him clear of it."
+      "Jack’s teammate and closest friend on the squad: an ordinary young man " +
+      "with an ordinary life.\n\n" +
+      "Marcus is a reminder of everything Jack wants to protect: normal, " +
+      "uncomplicated, and worth keeping that way."
+  },
+
+  {
+    name: "Matthew",
+    tagline: "The coach who shaped him",
+    role: "College football coach · Jack’s mentor",
+    portrait: "assets/img/placeholder.svg",
+    meta: ["Jack’s circle", "Touchstone"],
+    description:
+      "Jack’s college football coach: the man who recruited him and the mentor " +
+      "who shaped him, on the field and off it. Matthew scouts players the way " +
+      "he coaches them, for character first.\n\n" +
+      "He gave Jack the bracelet Jack never takes off, and he is the person " +
+      "Jack calls when he does not know what to do next."
   }
 
 ];
