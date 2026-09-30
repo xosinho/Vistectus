@@ -119,7 +119,7 @@ window.DEAD_HAND_NPCS = [
     name: "Eleanor Marsh",
     tagline: "Has decided Payne is a problem",
     role: "Associate Deputy Director · CIA",
-    portrait: "assets/img/placeholder.svg",
+    portrait: "assets/img/npcs/Eleanor Marsh.jpg",
     meta: ["Payne’s circle", "Enemy"],
     description:
       "An Associate Deputy Director at the CIA, and a careful reader of files. " +
@@ -195,7 +195,7 @@ window.DEAD_HAND_NPCS = [
     name: "Cosimo Salerno",
     tagline: "Everyone’s favourite at the social club",
     role: "Old-guard regular · Carroll Gardens",
-    portrait: "assets/img/placeholder.svg",
+    portrait: "assets/img/npcs/Cosimo Salerno.jpg",
     meta: ["Carroll Gardens"],
     description:
       "A fixture of the neighbourhood’s old-guard social club: courtly, " +
@@ -225,7 +225,7 @@ window.DEAD_HAND_NPCS = [
     name: "Marisol Vega",
     tagline: "Builds structures for a discreet family office",
     role: "Director of Corporate Structuring · Hecate Holdings",
-    portrait: "assets/img/placeholder.svg",
+    portrait: "assets/img/npcs/Marisol Vega.jpg",
     meta: ["Hecate Holdings"],
     description:
       "Director of Corporate Structuring at Hecate Holdings, a privately held " +
