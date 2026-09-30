@@ -134,6 +134,44 @@ A new hunter later: add them to `players.js` with `sheet: "<name>"`,
 then add a row to `character_sheets` (copy one in the Table Editor and
 change `slug` and `name`) and to `sheet_owners`.
 
+## Documents, Maps and Locations
+
+The Resources page leads to three archives:
+
+- **Documents** (`documents.html`): handouts that open in a pop-up.
+  Put the file in `assets/resources/Documents/` and add an entry to
+  `assets/data/documents.js`. HTML, PDF and images all work; a PDF can
+  also be offered as a download alongside an HTML version.
+- **Maps** (`maps.html`): pictures that open full size in a pop-up.
+  Put the image in `assets/resources/Maps/` and add an entry to
+  `assets/data/maps.js`.
+- **Locations** (`locations/`): the Locations board, kept online in the
+  Supabase project. Players see only the pins and maps you have
+  revealed, with the description you wrote for them. Signed in as
+  Storyteller (the button at the top of its panel, or the Storyteller
+  tab), you also see your private notes and factions, and can add,
+  drag, edit, reveal, hide and delete pins, upload area maps and
+  building plans, place tokens, and save or load setups.
+
+All three are public: only publish what the players have been given.
+
+### Locations: one-time setup
+
+1. **SQL Editor**: run `locations/setup.sql` (after the character sheet
+   setup, which it builds on).
+2. **SQL Editor**: run `locations-seed.sql`. This is **not** in this
+   repository: it holds the chronicle's secrets and sits beside the
+   original app, in `WoD/Dead Hand/Apps/Maps/`. It loads the built-in
+   locations with the Session 3 positions and pins. Every pin starts
+   hidden; nothing shows to players until you reveal it.
+3. Open the Locations board, sign in, and reveal what the cell knows.
+   A pin's **name** and **description** are what players read; the
+   Thorne house is named "Thorne house (74 Degraw St.)" for that
+   reason, with its full title kept in your notes.
+
+Never put the seed file, or a setups file exported from the board, in
+this repository: both contain your notes.
+
 ## The RICO Case board
 
 `rico-case/` is the case board, opened from the **RICO Case** button in

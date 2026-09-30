@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Resources for the Dead Hand chronicle: documents, handouts and references produced over the course of play.">
+  <meta name="description" content="Resources for the Dead Hand chronicle: documents, maps, locations and references.">
 
   <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
 
@@ -42,7 +42,7 @@
   <div class="hero-inner">
     <p class="kicker">The chronicle's archive</p>
     <h1>Resources</h1>
-    <p class="lede">Documents, handouts and references produced over the course of the chronicle.</p>
+    <p class="lede">Documents, maps and locations gathered over the course of the chronicle.</p>
   </div>
 </section>
 
@@ -59,14 +59,47 @@
 </nav>
 
 <main id="main">
-  <!-- The list is built from assets/data/resources.js. To publish a new
-       document, add an entry there; this page never needs editing. -->
+  <!-- The three archives. Each has its own page and data file:
+       documents.html  <- assets/data/documents.js
+       maps.html       <- assets/data/maps.js
+       locations/      the Locations app -->
+  <section class="row">
+    <div class="row-head"><h2>The archive</h2></div>
+    <div class="cards">
+      <article class="card">
+        <a class="card-art" href="documents.html"><span class="card-badge">Handouts</span></a>
+        <div class="card-body">
+          <h3><a href="documents.html">Documents</a></h3>
+          <p class="meta">Papers the cell has found</p>
+          <p>Ledgers, letters, reports and records, each opened to read in place.</p>
+        </div>
+      </article>
+      <article class="card">
+        <a class="card-art" href="maps.html"><span class="card-badge">Plans</span></a>
+        <div class="card-body">
+          <h3><a href="maps.html">Maps</a></h3>
+          <p class="meta">Where it happened</p>
+          <p>Maps and floor plans of the places the cell has been.</p>
+        </div>
+      </article>
+      <article class="card">
+        <a class="card-art" href="locations/index.html"><span class="card-badge">Case geography</span></a>
+        <div class="card-body">
+          <h3><a href="locations/index.html">Locations</a></h3>
+          <p class="meta">Carroll Gardens and Red Hook</p>
+          <p>The places the cell knows of, pinned on the city map, with area maps and building plans.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Reference material from assets/data/resources.js. To add some,
+       add an entry there; this page never needs editing. -->
   <div id="resources"></div>
 
   <noscript>
     <section class="row">
-      <p class="prose">This list needs JavaScript. The
-        <a href="assets/compendium/compendium.html">Compendium</a> can be opened directly.</p>
+      <p class="prose">The reference list below needs JavaScript.</p>
     </section>
   </noscript>
 </main>

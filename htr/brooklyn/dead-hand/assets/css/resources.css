@@ -1,0 +1,62 @@
+/* =====================================================================
+   Documents and Maps: the list, the gallery and the pop-up viewer.
+   Colours and faces come from the site tokens (style.css, world.css).
+   ===================================================================== */
+
+/* ---------------------------------------------------------- documents */
+.doc-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); gap: 1rem; }
+.doc-item {
+  display: flex; flex-direction: column; gap: .35rem; text-align: left; cursor: pointer;
+  background: var(--bg-raised); color: var(--ink); border: 1px solid var(--line);
+  border-left: 3px solid var(--accent); padding: 1rem 1.1rem; font: inherit;
+  transition: border-color .15s, transform .15s;
+}
+.doc-item:hover, .doc-item:focus-visible { border-color: var(--accent); transform: translateY(-1px); }
+.doc-kind { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.doc-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; letter-spacing: .02em; }
+.doc-meta { color: var(--ink-soft); font-size: .95rem; }
+
+/* --------------------------------------------------------------- maps */
+.map-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: 1.2rem; }
+.map-tile {
+  display: flex; flex-direction: column; padding: 0; cursor: zoom-in; text-align: left; font: inherit;
+  background: var(--bg-raised); color: var(--ink); border: 1px solid var(--line);
+  transition: border-color .15s, transform .15s;
+}
+.map-tile:hover, .map-tile:focus-visible { border-color: var(--accent); transform: translateY(-1px); }
+.map-tile img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: var(--bg-sunken); }
+.map-cap { display: flex; flex-direction: column; gap: .2rem; padding: .7rem .9rem .85rem; }
+.map-cap strong { font-family: var(--font-display); font-weight: 600; letter-spacing: .02em; }
+.map-cap span { color: var(--ink-soft); font-size: .92rem; }
+
+/* ------------------------------------------------------------ pop-up */
+.viewer {
+  width: min(1200px, 96vw); height: min(92vh, 1400px); max-width: none; max-height: none;
+  padding: 0; border: 1px solid var(--accent); background: var(--bg-sunken); color: var(--ink);
+  display: none; flex-direction: column;
+}
+.viewer[open] { display: flex; }
+.viewer::backdrop { background: rgba(4, 4, 8, .82); }
+.viewer-bar {
+  display: flex; align-items: center; gap: .8rem; flex-wrap: wrap;
+  padding: .6rem .8rem .6rem 1.1rem; border-bottom: 1px solid var(--line); background: var(--bg-raised);
+}
+.viewer-bar h2 { margin: 0; flex: 1; min-width: 12rem; font-size: 1.05rem; letter-spacing: .04em; }
+.viewer-tools { display: flex; gap: .4rem; flex-wrap: wrap; }
+.viewer-btn {
+  font-family: var(--font-mono); font-size: .75rem; text-transform: uppercase; letter-spacing: .06em;
+  padding: .4rem .7rem; border: 1px solid var(--line); background: transparent; color: var(--ink);
+  text-decoration: none; cursor: pointer;
+}
+.viewer-btn:hover { border-color: var(--accent); color: var(--accent-ink); background: var(--accent-soft); }
+.viewer-close { font-size: 1.1rem; line-height: 1; padding: .3rem .65rem; }
+.viewer-body { flex: 1; min-height: 0; overflow: auto; display: flex; align-items: center; justify-content: center; }
+.viewer-body iframe { width: 100%; height: 100%; border: 0; background: #fff; }
+.viewer-body img { max-width: 100%; max-height: 100%; object-fit: contain; cursor: zoom-in; }
+.viewer-body.is-zoomed { display: block; }
+.viewer-body.is-zoomed img { max-width: none; max-height: none; cursor: zoom-out; }
+.viewer-note { margin: 0; padding: .45rem 1.1rem; font-size: .85rem; color: var(--ink-soft); border-top: 1px solid var(--line); }
+
+@media (max-width: 600px) {
+  .viewer { width: 100vw; height: 100vh; border: 0; }
+}

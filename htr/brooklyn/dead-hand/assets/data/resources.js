@@ -1,9 +1,10 @@
 /* =====================================================================
    RESOURCES  —  documents produced over the course of the chronicle
    ---------------------------------------------------------------------
-   Everything the table has been given, in one place: handouts, maps,
-   rules references, session documents. Add an entry below and the
-   Resources page lists it. Newest first within each category reads
+   Reference material listed under the Documents, Maps and Locations
+   cards on the Resources page. Handouts go in assets/data/documents.js
+   and maps in assets/data/maps.js instead: those open in pop-ups on
+   their own pages. Add an entry below and the Resources page lists it. Newest first within each category reads
    best, so add new entries at the top of their group.
 
    Fields (full reference at the end of the file):
@@ -15,15 +16,6 @@
    ===================================================================== */
 
 window.DEAD_HAND_RESOURCES = [
-
-  {
-    title: "The Compendium",
-    category: "Reference",
-    kind: "Document",
-    when: "",
-    description: "The rules and setting reference for the chronicle.",
-    href: "assets/compendium/compendium.html"
-  },
 
   {
     title: "Blank character sheet",
