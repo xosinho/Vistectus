@@ -640,12 +640,27 @@
     catch(e){ console.error(e); return null; }
   }
 
+  /* Who may save and delete is decided by the database
+     (rico-case/editors.sql): the players of Vivienne and Ezekiel, and the
+     Storyteller. The
+     page asks the same question only to decide what to offer. */
+  var canEdit = false;
+  var EDITORS_TEXT = "Only Vivienne's and Ezekiel's players and the Storyteller can save or delete case files. You can still open and read every saved version.";
+  async function checkEditor(){
+    canEdit = false;
+    if(!db || !session) return;
+    try{
+      var r = await db.rpc('case_board_editor');
+      canEdit = !r.error && r.data === true;
+    }catch(e){ console.error(e); }
+  }
+
   /* Magic-link sign-in, as in the Builders area. shouldCreateUser:false
      means only invited addresses get a link. */
   function openSignIn(){
     showModal(
       '<h3>Sign in to save</h3>' +
-      '<p class="hint">Saving needs an invited account. Enter your email and a sign-in link will be sent to it. Keep this tab open: after using the link, come back here and press Save again.</p>' +
+      '<p class="hint">Saving is for Vivienne’s and Ezekiel’s players and the Storyteller. Enter your email and a sign-in link will be sent to it. Keep this tab open: after using the link, come back here and press Save again.</p>' +
       '<form id="signInForm">' +
         '<input id="signInEmail" type="email" autocomplete="email" placeholder="you@example.com" required/>' +
         '<p class="hint" id="signInMsg" role="status"></p>' +
@@ -769,7 +784,7 @@
         '<div class="load-row-name">' + escapeHtml(f.name) + '</div>' +
         '<select class="load-version" aria-label="Version of ' + escapeHtml(f.name) + '">' + opts + '</select>' +
         '<button class="btn btn-small btn-primary load-open">Open</button>' +
-        (session ? '<button class="btn btn-small btn-danger load-delete" title="Delete this case file and every saved version">Delete</button>' : '') +
+        (canEdit ? '<button class="btn btn-small btn-danger load-delete" title="Delete this case file and every saved version">Delete</button>' : '') +
       '</div>';
     });
     var statusLine = '';
@@ -780,7 +795,7 @@
     }
     showModal(
       '<h3>Case Files</h3>' +
-      '<p class="hint">Every save is kept. Pick a case file and a version to open.</p>' +
+      '<p class="hint">Every save is kept. Pick a case file and a version to open.' + (canEdit ? '' : ' ' + EDITORS_TEXT) + '</p>' +
       statusLine +
       '<div class="load-list">' + rows + '</div>' +
       '<hr class="modal-divider"/>' +
@@ -873,6 +888,8 @@
     session = await currentSession();
     renderTopbar();
     if(!session) return openSignIn();
+    await checkEditor();
+    if(!canEdit){ alert(EDITORS_TEXT); return; }
 
     showLoading(true, 'Filing the paperwork…');
     try{
@@ -1748,8 +1765,9 @@
      it has never been saved. */
   (async function boot(){
     if(!db){ state = blankCase(DEFAULT_BOARD, DEFAULT_NAME); renderAll(); return; }
-    db.auth.onAuthStateChange(function(_event, s){ session = s; renderTopbar(); });
+    db.auth.onAuthStateChange(function(_event, s){ session = s; checkEditor().then(renderTopbar); });
     session = await currentSession();
+    await checkEditor();
     showLoading(true, 'Pulling the file…');
     try{
       if(!(await loadCase(DEFAULT_BOARD))){ state = blankCase(DEFAULT_BOARD, DEFAULT_NAME); renderAll(); }

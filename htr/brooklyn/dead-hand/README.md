@@ -197,6 +197,13 @@ area (the board reads its address and key from `builders/config.js`).
 Until `builders/config.js` is filled in, the board still works but says
 "Not connected" when you Save or Open.
 
+**Who may save and delete:** only the players of Vivienne and Ezekiel,
+and the Storyteller,
+set by `rico-case/editors.sql` (run it once, after the sheet setup).
+It uses the `sheet_owners` table, so their emails must be linked to
+their hunters there. Anyone can still open and read the board. To change
+the list, edit `case_board_editor()` in that file and run it again.
+
 ### One-time setup
 
 Do the Builders setup first (`builders/README.md`, steps 1 and 2). Then:
