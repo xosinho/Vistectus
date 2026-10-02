@@ -71,12 +71,17 @@
   function detailHtml(entry, opts) {
     var portrait = entry.portrait || PLACEHOLDER;
     var meta = (entry.meta || []).map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join("");
+    // A real portrait opens full size when clicked; the placeholder does not.
+    var zoomable = !!entry.portrait && entry.portrait !== PLACEHOLDER;
 
     var html =
       '<button class="detail__close" aria-label="Close">&times;</button>' +
       '<div class="detail__head">' +
+        (zoomable ? '<button type="button" class="detail__zoom" data-full="' + esc(portrait) + '" ' +
+                    'aria-label="Show the portrait of ' + esc(entry.name) + ' full size" title="Show full size">' : '') +
         '<img class="detail__portrait" src="' + esc(portrait) + '" alt="Portrait of ' + esc(entry.name) + '" ' +
              'onerror="this.onerror=null;this.src=\'' + PLACEHOLDER + '\'">' +
+        (zoomable ? '</button>' : '') +
         '<div class="detail__titles">' +
           '<h2 class="detail__name" id="detail-title">' + esc(entry.name || "Unnamed") + '</h2>' +
           (entry.role ? '<p class="detail__role">' + esc(entry.role) + '</p>' : '') +
@@ -89,6 +94,11 @@
     var bgLabel = opts.type === "player" ? "Background" : "Dossier";
     html += '<p class="detail__section-label">' + bgLabel + '</p>' +
             '<div class="detail__prose">' + bodyToHtml(entry.background || entry.description) + '</div>';
+
+    /* NPC subject file, from the dossier */
+    if (opts.type === "npc" && entry.file) {
+      html += '<p class="detail__section-label">Subject file</p>' + statblockHtml(entry.file);
+    }
 
     /* NPC stat block */
     if (opts.type === "npc" && entry.stats) {
@@ -122,6 +132,36 @@
     return html;
   }
 
+  /* ------------------------------------------- full-size portrait pop-up */
+  var lightbox;
+  function openLightbox(src, alt) {
+    if (!lightbox) {
+      lightbox = document.createElement("div");
+      lightbox.className = "lightbox";
+      lightbox.setAttribute("role", "dialog");
+      lightbox.setAttribute("aria-modal", "true");
+      lightbox.setAttribute("aria-label", "Portrait, full size");
+      lightbox.innerHTML = '<button class="lightbox__close" aria-label="Close">&times;</button><img alt="">';
+      document.body.appendChild(lightbox);
+      lightbox.addEventListener("click", function (e) {
+        if (e.target === lightbox || e.target.classList.contains("lightbox__close")) closeLightbox();
+      });
+    }
+    var img = lightbox.querySelector("img");
+    img.src = src;
+    img.alt = alt || "";
+    lightbox.classList.add("open");
+    lightbox.querySelector(".lightbox__close").focus();
+  }
+  // Returns whether there was a portrait open to close.
+  function closeLightbox() {
+    if (!lightbox || !lightbox.classList.contains("open")) return false;
+    lightbox.classList.remove("open");
+    var zoom = panel && panel.querySelector(".detail__zoom");
+    if (zoom) zoom.focus();
+    return true;
+  }
+
   /* ------------------------------------------------------ modal machinery */
   var backdrop, panel, lastFocused;
 
@@ -138,8 +178,11 @@
     document.body.appendChild(backdrop);
 
     backdrop.addEventListener("click", function (e) { if (e.target === backdrop) closeModal(); });
+    // Escape closes the full-size portrait first, then the profile.
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && backdrop.classList.contains("open")) closeModal();
+      if (e.key !== "Escape") return;
+      if (closeLightbox()) return;
+      if (backdrop.classList.contains("open")) closeModal();
     });
   }
 
@@ -148,6 +191,10 @@
     lastFocused = document.activeElement;
     panel.innerHTML = detailHtml(entry, opts);
     panel.querySelector(".detail__close").addEventListener("click", closeModal);
+    var zoom = panel.querySelector(".detail__zoom");
+    if (zoom) zoom.addEventListener("click", function () {
+      openLightbox(zoom.getAttribute("data-full"), "Portrait of " + (entry.name || ""));
+    });
     backdrop.classList.add("open");
     document.body.style.overflow = "hidden";
     panel.querySelector(".detail__close").focus();
@@ -155,6 +202,7 @@
 
   function closeModal() {
     if (!backdrop) return;
+    closeLightbox();
     backdrop.classList.remove("open");
     document.body.style.overflow = "";
     if (lastFocused && lastFocused.focus) lastFocused.focus();

@@ -60,3 +60,23 @@
 @media (max-width: 600px) {
   .viewer { width: 100vw; height: 100vh; border: 0; }
 }
+
+/* ---------------------------------------- Storyteller: hide / show */
+.archive-item { display: flex; flex-direction: column; gap: .35rem; }
+.archive-item > .doc-item, .archive-item > .map-tile { flex: 1; }
+.archive-item.is-hidden > .doc-item, .archive-item.is-hidden > .map-tile { opacity: .55; border-style: dashed; }
+.archive-toggle {
+  align-self: flex-start; cursor: pointer;
+  font-family: var(--font-mono); font-size: .7rem; letter-spacing: .06em; text-transform: uppercase;
+  padding: .3rem .6rem; background: transparent; color: var(--ink-soft); border: 1px solid var(--line);
+}
+.archive-toggle:hover { color: var(--accent); border-color: var(--accent); }
+.archive-hidden {
+  display: inline-block; margin-top: .3rem;
+  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--accent); border: 1px dashed var(--accent); padding: .1rem .4rem; align-self: flex-start;
+}
+.archive-note {
+  max-width: 72rem; margin: 1rem auto 0; padding: .6rem 1rem;
+  color: var(--ink-soft); font-size: .92rem; border: 1px dashed var(--line);
+}

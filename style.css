@@ -646,7 +646,40 @@ body::after {
   font-family: var(--font-mono);
   font-size: .7rem; letter-spacing: .1em; text-transform: uppercase;
   color: var(--ink-soft);
+  flex: none; padding-top: .15rem;
 }
+.statline .v { text-align: right; }
+
+/* ---- Portrait: click for full size --------------------------------- */
+
+.detail__zoom {
+  flex: none; padding: 0; border: 0; background: none;
+  cursor: zoom-in; border-radius: var(--radius);
+}
+.detail__zoom:hover .detail__portrait,
+.detail__zoom:focus-visible .detail__portrait { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.lightbox {
+  position: fixed; inset: 0; z-index: 200;
+  display: none; place-items: center;
+  padding: 1.5rem;
+  background: rgba(4, 3, 8, .92);
+  cursor: zoom-out;
+}
+.lightbox.open { display: grid; }
+.lightbox img {
+  max-width: 100%; max-height: calc(100vh - 3rem);
+  object-fit: contain;
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .6);
+  cursor: default;
+}
+.lightbox__close {
+  position: absolute; top: .8rem; right: 1rem;
+  background: none; border: 0; cursor: pointer;
+  color: var(--ink); font-size: 2rem; line-height: 1;
+}
+.lightbox__close:hover { color: var(--accent); }
 
 .stat-note {
   padding: .6rem .8rem;

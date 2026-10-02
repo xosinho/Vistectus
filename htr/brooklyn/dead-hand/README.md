@@ -155,6 +155,13 @@ The Resources page leads to three archives:
 
 All three are public: only publish what the players have been given.
 
+**Hiding a document or map (Storyteller):** signed in as Storyteller
+(from the Storyteller tab), each document and map shows a **Hide from
+players** button; hidden ones stay visible to you, marked. One-time
+setup: run `assets/sheets/sql/archive-hidden.sql` in Supabase. Hiding
+takes an item off the page only; the file itself is still on the site,
+so do not upload anything that must stay secret until you reveal it.
+
 ### Locations: one-time setup
 
 1. **SQL Editor**: run `locations/setup.sql` (after the character sheet

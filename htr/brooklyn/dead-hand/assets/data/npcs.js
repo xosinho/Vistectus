@@ -17,16 +17,74 @@ window.DEAD_HAND_NPCS = [
   {
     name: "Elias Thorne",
     tagline: "The friend who called one last time",
-    role: "Veteran · Payne’s old comrade",
+    role: "Retired U.S. Army Ranger",
     portrait: "assets/img/npcs/Elias Thorne.jpg",
-    meta: ["Payne’s circle"],
+    meta: ["Central figure"],
     description:
-      "A veteran who served fourteen months in Afghanistan alongside Payne, " +
-      "remembered for greeting every on-time resupply with “the trains are " +
-      "always on time.” Back in civilian life he lived quietly in Brooklyn, kept " +
-      "to himself, and stayed in loose touch with the men he had served with.\n\n" +
-      "In the months before the chronicle opens he tried to reach Payne more " +
-      "than once. His death is where the story begins."
+      "Retired U.S. Army veteran, 75th Ranger Regiment — logistics and " +
+      "intelligence background. Maternal line traces to a Venetian family, " +
+      "Tonello, recorded in American documents under the anglicised form " +
+      "Tonnelli. Sole occupant of a private residence at 74 Degraw Street, " +
+      "Carroll Gardens, inherited from a deceased relative. No immediate family " +
+      "listed as next of kin on file. Recently deceased; the residence and the " +
+      "circumstances surrounding his death are the subject of an active, " +
+      "multi-party inquiry. Subject is a person of interest connecting several " +
+      "currently unresolved threads.",
+    file: {
+      "File status": "Active / Under Investigation",
+      "Age": "62",
+      "Status": "Deceased — cause and circumstances pending final determination. Recent.",
+      "Race": "White American",
+      "Height": "5'11\"",
+      "Weight": "~185 lbs",
+      "Hair": "Grey, close-cropped, military-style cut",
+      "Distinguishing marks": "Old shrapnel scarring, left forearm; faded 75th Ranger Regiment tab tattoo, right shoulder. Weathered, sun-worn complexion consistent with extensive overseas deployment history."
+    }
+  },
+
+  {
+    name: "Peggy Gable",
+    tagline: "The mother Carol is looking for",
+    role: "Missing person · Carol Simmons’s mother",
+    portrait: "assets/img/npcs/Peggy Gable.jpg",
+    meta: ["Central figure"],
+    description:
+      "Mother of Carol Simmons and a long-time Carroll Gardens resident. " +
+      "Dropped out of sight in November. Her daughter has been unable to obtain " +
+      "a clear account of her whereabouts through official channels and has " +
+      "retained a private investigator.",
+    file: {
+      "File status": "Active / Missing Person",
+      "Age": "71",
+      "Status": "Missing since mid-November. Reported by family.",
+      "Race": "White American (Italian-American, Ferraro family)",
+      "Height": "5'3\"",
+      "Weight": "~135 lbs",
+      "Hair": "Silver, set in soft short curls",
+      "Distinguishing marks": "Warm, lined face; reading glasses on a beaded chain. Wedding band worn on a chain around her neck since widowhood. A lifelong Carroll Gardens resident, recognisable at the parish and the local shops."
+    }
+  },
+
+  {
+    name: "Carol Simmons",
+    tagline: "Wants to know what became of her mother",
+    role: "Peggy Gable’s daughter",
+    portrait: "assets/img/npcs/Carol Summers.jpg",
+    meta: ["Central figure"],
+    description:
+      "Daughter of Margaret \"Peggy\" Gable, recently admitted to St. Jude's " +
+      "Hospital. Has retained a private investigator regarding her mother's " +
+      "whereabouts after failing to obtain answers through official channels.",
+    file: {
+      "File status": "Active / Complainant",
+      "Age": "46",
+      "Status": "Alive.",
+      "Race": "Mixed heritage — Black American (father) and Italian-American (mother)",
+      "Height": "5'5\"",
+      "Weight": "~130 lbs",
+      "Hair": "Dark, loosely curled, greying, worn short",
+      "Distinguishing marks": "Slender build; her mother's features in the eyes and jaw. Visibly strained composure; dark circles consistent with prolonged stress."
+    }
   },
 
   {
@@ -34,13 +92,23 @@ window.DEAD_HAND_NPCS = [
     tagline: "Keeps the paperwork moving",
     role: "Ward Administrator · St. Jude’s",
     portrait: "assets/img/npcs/Gary Hollis.jpg",
-    meta: ["St. Jude’s Memorial Hospital"],
+    meta: ["St. Jude’s Hospital"],
     description:
-      "The ward administrator at St. Jude’s Memorial Hospital, responsible for " +
-      "admissions, transfers and the paperwork that follows patients in and out " +
-      "of the building. He has held the post for about a year and a half.\n\n" +
-      "To the staff he is a mid-level manager like any other: rarely seen on the " +
-      "floor, particular about procedure, and always reachable by memo."
+      "Ward administrator, St. Jude's Hospital. Holds system access relevant to " +
+      "patient records and transfer documentation. Has provided inconsistent " +
+      "accounts regarding recent administrative irregularities. Subject is " +
+      "considered a cooperative-under-pressure witness of uncertain " +
+      "reliability.",
+    file: {
+      "File status": "Active / Under Investigation",
+      "Age": "54",
+      "Status": "Alive.",
+      "Race": "Black American",
+      "Height": "5'9\"",
+      "Weight": "~200 lbs",
+      "Hair": "Short, greying at the temples; neatly trimmed moustache",
+      "Distinguishing marks": "Reading glasses, habitually removed to rub the bridge of his nose. Rumpled administrative attire; visible fatigue."
+    }
   },
 
   {
@@ -48,42 +116,135 @@ window.DEAD_HAND_NPCS = [
     tagline: "The first face through the doors",
     role: "Receiving Nurse · St. Jude’s",
     portrait: "assets/img/npcs/Diane Patterson.jpg",
-    meta: ["St. Jude’s Memorial Hospital"],
+    meta: ["St. Jude’s Hospital"],
     description:
-      "A receiving nurse at St. Jude’s who runs the intake desk, the first face " +
-      "anyone sees when they come through the doors at night. Experienced, " +
-      "unflappable and always busy, she processes what arrives and moves on to " +
-      "the next chart.\n\n" +
-      "She works alongside Raven, though their jobs differ: Patterson takes " +
-      "people in, and Raven works to keep them alive."
+      "Receiving nurse, St. Jude's Hospital. Peripheral witness to routine " +
+      "hospital intake procedure during a recent incident. No further " +
+      "involvement established.",
+    file: {
+      "File status": "Closed / Peripheral",
+      "Age": "41",
+      "Status": "Alive.",
+      "Race": "White American",
+      "Height": "5'6\"",
+      "Weight": "~140 lbs",
+      "Hair": "Brown, worn in a practical bun",
+      "Distinguishing marks": "None noted. Typically in hospital scrubs with a lanyard ID."
+    }
+  },
+
+  {
+    name: "Dr. Jacob Miller",
+    tagline: "Raven’s chief, and her quiet cover",
+    role: "Chief of Emergency Medicine · St. Jude’s",
+    portrait: "assets/img/placeholder.svg",
+    meta: ["St. Jude’s Hospital"],
+    description:
+      "Chief of Emergency Medicine, St. Jude's Hospital. Professional mentor to " +
+      "a member of the emergency nursing staff. Cooperative with official " +
+      "inquiries; no direct involvement in open matters established.",
+    file: {
+      "File status": "Closed / Peripheral",
+      "Age": "58",
+      "Status": "Alive.",
+      "Race": "White American",
+      "Height": "6'0\"",
+      "Weight": "~180 lbs",
+      "Hair": "Silver-grey, kept short; clean-shaven",
+      "Distinguishing marks": "Wire-rimmed glasses; deep-set lines around the eyes. Tall and slightly stooped, with the unhurried manner of a long-serving trauma physician. Usually in a white coat over scrubs."
+    }
+  },
+
+  {
+    name: "Guido Giovanni",
+    tagline: "No photograph worth keeping",
+    role: "Principal · Brooklyn holdings firm",
+    portrait: "assets/img/npcs/Guido Giovanni.jpg",
+    meta: ["The Family & its holdings"],
+    description:
+      "Reputed principal behind a Brooklyn holdings firm and an associated " +
+      "network of Venetian-named shell entities. No criminal record. Named in " +
+      "connection with an enterprise-level organized-crime inquiry; a direct " +
+      "evidentiary link to his person has so far proven difficult to establish.",
+    file: {
+      "File status": "Active / Under Investigation — Priority",
+      "Age": "Apparent mid-50s (documentary age unverified)",
+      "Status": "Alive; whereabouts intermittently known.",
+      "Race": "White (Italian national origin)",
+      "Height": "5'10\"",
+      "Weight": "~170 lbs",
+      "Hair": "Dark, greying at the temples, neatly barbered",
+      "Distinguishing marks": "Trim, composed build; understated bespoke tailoring. Consistently described as unusually calm. No known photographs of acceptable quality on file."
+    }
+  },
+
+  {
+    name: "Vincenzo Pellegrino",
+    tagline: "Third generation of the family trade",
+    role: "Owner · Pellegrino & Sons Funeral Home",
+    portrait: "assets/img/npcs/Vicenzo Pellegrino.jpg",
+    meta: ["The Family & its holdings"],
+    description:
+      "Third-generation owner-operator of Pellegrino & Sons Funeral Home, " +
+      "Carroll Gardens (est. 1947). The premises were subsequently destroyed in " +
+      "an explosion publicly attributed to a gas leak. The business's records " +
+      "and associations are of significant investigative interest.",
+    file: {
+      "File status": "Active / Under Investigation",
+      "Age": "59",
+      "Status": "Deceased — circumstances under active investigation. Recent.",
+      "Race": "White American (Italian-American)",
+      "Height": "5'8\"",
+      "Weight": "~160 lbs",
+      "Hair": "Silver, immaculately combed",
+      "Distinguishing marks": "Trim, composed bearing. Always in funeral-director black; soft-spoken; gold signet ring, right hand."
+    }
   },
 
   {
     name: "Rico Moretti",
     tagline: "Walked free from Vivienne’s case",
-    role: "Enforcer · Brooklyn waterfront",
+    role: "Organized-crime associate",
     portrait: "assets/img/npcs/Rico Moretti.jpg",
-    meta: ["Waterfront muscle"],
+    meta: ["The Family & its holdings"],
     description:
-      "A known enforcer on the Carroll Gardens and Red Hook waterfront, heavily " +
-      "built and quick to violence, who works alongside his brother Marco. " +
-      "Vivienne prosecuted him and lost when the case against him fell apart; " +
-      "he walked out of court and went back to work.\n\n" +
-      "People in the neighbourhood lower their voices when the Moretti brothers " +
-      "pass, and take care never to give them a reason to stop."
+      "Known associate of a Brooklyn-based organized-crime concern. Former " +
+      "defendant in an unsuccessful prosecution. Publicly identified as the " +
+      "perpetrator of a recent hospital shooting and reported killed at the " +
+      "scene; that account is contested. Subject's associations remain relevant " +
+      "to several open matters.",
+    file: {
+      "File status": "Active / Under Investigation",
+      "Age": "34",
+      "Status": "Deceased — official account disputed by multiple witnesses. Recent.",
+      "Race": "White American (Italian-American)",
+      "Height": "6'1\"",
+      "Weight": "~230 lbs",
+      "Hair": "Dark, short; short full beard",
+      "Distinguishing marks": "Old scar bisecting the left eyebrow. Heavyset, muscular build; witnesses consistently describe unusual physical resilience."
+    }
   },
 
   {
     name: "Marco Moretti",
-    tagline: "The brother people do not see coming",
-    role: "Enforcer · Brooklyn waterfront",
+    tagline: "Not seen since the night of the 16th",
+    role: "Organized-crime associate",
     portrait: "assets/img/npcs/Marco Moretti.jpg",
-    meta: ["Waterfront muscle"],
+    meta: ["The Family & its holdings"],
     description:
-      "Rico’s brother and partner, the quicker and quieter of the two. Where " +
-      "Rico is the muscle people see coming, Marco is the one they do not.\n\n" +
-      "The brothers have worked as a pair for years, and their reputation on " +
-      "the waterfront has been earned together."
+      "Brother of Rico Moretti and known associate of the same organized-crime " +
+      "concern. Last linked to a residential property on Columbia Street held " +
+      "through a corporate shell; not seen since. No body has been recovered.",
+    file: {
+      "File status": "Active / Under Investigation",
+      "Age": "29",
+      "Status": "Missing since the night of 16–17 November. Presumed deceased.",
+      "Race": "White American (Italian-American)",
+      "Height": "5'10\"",
+      "Weight": "~165 lbs",
+      "Hair": "Dark, slicked back",
+      "Distinguishing marks": "Lean, wiry build. Gunshot wound to the back of one knee, sustained 16 November. Witnesses describe exceptional speed of movement."
+    }
   },
 
   {
@@ -101,154 +262,73 @@ window.DEAD_HAND_NPCS = [
   },
 
   {
-    name: "Rhys Calder",
-    tagline: "The call Payne makes when it is bad",
-    role: "Colour Sergeant, SAS · Payne’s friend",
-    portrait: "assets/img/npcs/Rhys Calder.jpg",
-    meta: ["Payne’s circle", "Ally"],
-    description:
-      "Colour Sergeant Rhys Calder of the SAS, Payne’s friend from harder years " +
-      "and the man who brought him the freelance work he now does for a British " +
-      "unit that does not appear in official reports.\n\n" +
-      "Steady, discreet and loyal, he is the voice Payne reaches for when a " +
-      "situation outgrows what one man can handle, and a bridge to resources " +
-      "that do not officially exist."
-  },
-
-  {
-    name: "Eleanor Marsh",
-    tagline: "Has decided Payne is a problem",
-    role: "Associate Deputy Director · CIA",
-    portrait: "assets/img/npcs/Eleanor Marsh.jpg",
-    meta: ["Payne’s circle", "Enemy"],
-    description:
-      "An Associate Deputy Director at the CIA, and a careful reader of files. " +
-      "She has read Payne’s, and concluded that a decorated American officer " +
-      "now working for a British unit on American soil has gone rogue.\n\n" +
-      "Marsh is patient, well connected and in no hurry. She is building a " +
-      "dossier, and means it to be complete before she acts on it."
-  },
-
-  {
-    name: "Dr. Francisco Ledher",
-    tagline: "Takes Adelina’s calls at any hour",
-    role: "Surgeon · Ferris-Whitlock Memorial",
-    portrait: "assets/img/npcs/Dr. Francisco Ledher.jpg",
-    meta: ["Adelina’s circle", "Ally"],
-    description:
-      "One of the most respected surgeons at Ferris-Whitlock Memorial, with the " +
-      "steady hands, long hours and quiet authority that such a reputation " +
-      "demands.\n\n" +
-      "He is also Adelina’s ally: a man who owes her, keeps her confidences and " +
-      "asks few questions in return. What binds them is business, and they " +
-      "keep it that way."
-  },
-
-  {
-    name: "Dr. Jacob Miller",
-    tagline: "Raven’s chief, and her quiet cover",
-    role: "Chief of ER · St. Jude’s",
-    portrait: "assets/img/placeholder.svg",
-    meta: ["St. Jude’s Memorial Hospital", "Raven’s circle"],
-    description:
-      "Chief of the Emergency Room at St. Jude’s, and the closest thing Raven " +
-      "has to a guardian on the inside. He covers for her, signs off on shifts " +
-      "and absences that do not quite line up, and asks fewer questions than he " +
-      "could.\n\n" +
-      "Whether that is trust, exhaustion or something he has chosen not to look " +
-      "at too closely, Miller is a good man in a hard job."
-  },
-
-  {
-    name: "Harold Voss",
-    tagline: "Taught her the law was worth defending",
-    role: "District Attorney · Vivienne’s mentor",
-    portrait: "assets/img/npcs/Harold Voss.jpg",
-    meta: ["Vivienne’s circle", "Ally"],
-    description:
-      "The District Attorney, and Vivienne’s boss, mentor and moral compass. He " +
-      "taught her that the law is only as good as the people willing to defend " +
-      "it when doing so is inconvenient, and he still believes it, which in this " +
-      "city is either courage or a liability.\n\n" +
-      "He is an ally and a steady hand, and one of the few people Vivienne " +
-      "trusts without reservation."
-  },
-
-  {
-    name: "Vicenzo Pellegrino",
-    tagline: "The neighbourhood trusts him with its dead",
-    role: "Funeral Director · Pellegrino’s Funeral Home",
-    portrait: "assets/img/npcs/Vicenzo Pellegrino.jpg",
-    meta: ["Court Street, Carroll Gardens"],
-    description:
-      "The proprietor of Pellegrino’s Funeral Home, a neo-Gothic brownstone on " +
-      "the Court Street corridor and one of the old Italian undertakers of " +
-      "Carroll Gardens. Families have trusted the Pellegrinos with their dead " +
-      "for generations, and Vincenzo carries the office with courtly, unhurried " +
-      "dignity.\n\n" +
-      "In a neighbourhood where the funeral trade has long kept company with " +
-      "other kinds of business, he is discreet about his clients, and about " +
-      "everyone else’s."
-  },
-
-  {
     name: "Cosimo Salerno",
-    tagline: "Everyone’s favourite at the social club",
-    role: "Old-guard regular · Carroll Gardens",
+    tagline: "Never lets anyone eat alone on a holiday",
+    role: "Social-club regular · Carroll Gardens",
     portrait: "assets/img/npcs/Cosimo Salerno.jpg",
-    meta: ["Carroll Gardens"],
+    meta: ["The Family & its holdings"],
     description:
-      "A fixture of the neighbourhood’s old-guard social club: courtly, " +
-      "generous with his time, and at home among the card tables and the bingo " +
-      "nights. He knows everyone’s grandparents and remembers every name.\n\n" +
-      "The regulars adore him. He is the one who checks on the widows, sits " +
-      "with the lonely, and makes sure no one at the club is forgotten."
-  },
-
-  {
-    name: "Guido Giovanni",
-    tagline: "A name on every board that matters",
-    role: "Businessman · The Giovanni family",
-    portrait: "assets/img/npcs/Guido Giovanni.jpg",
-    meta: ["The Giovanni family"],
-    description:
-      "A member of the old Giovanni family, whose name appears on property, " +
-      "holdings and charitable boards across this part of Brooklyn. He is " +
-      "seldom seen in public, and then only at the kind of dinner where money " +
-      "is raised politely: clean tailoring, perfect posture, and a calm that " +
-      "makes every room feel it has already lost the argument.\n\n" +
-      "Those who deal with him describe a patient administrator, courteous and " +
-      "precise, who never raises his voice and never seems to need to."
+      "Fixture of an old-guard Italian social club in Carroll Gardens for as " +
+      "long as anyone there can remember. Beloved by the regulars. Known for " +
+      "looking after the neighbourhood's widows and isolated elderly: he drives " +
+      "them to appointments, calls on them at home, and never lets anyone eat " +
+      "alone on a holiday.",
+    file: {
+      "File status": "Active / Under Investigation",
+      "Age": "Apparent early 70s",
+      "Status": "Whereabouts unknown. Sought for questioning in connection with a recent incident at his social club.",
+      "Race": "White American (Italian-American)",
+      "Height": "5'7\"",
+      "Weight": "~170 lbs",
+      "Hair": "White, thick, combed back; neat white moustache",
+      "Distinguishing marks": "Barrel-chested and genial. Always in a pressed cardigan or three-piece suit, with a gold crucifix on a fine chain. Remembers every name, birthday and anniversary in the neighbourhood."
+    }
   },
 
   {
     name: "Marisol Vega",
     tagline: "Builds structures for a discreet family office",
-    role: "Director of Corporate Structuring · Hecate Holdings",
+    role: "Director of Corporate Structuring",
     portrait: "assets/img/npcs/Marisol Vega.jpg",
-    meta: ["Hecate Holdings"],
+    meta: ["The Family & its holdings"],
     description:
-      "Director of Corporate Structuring at Hecate Holdings, a privately held " +
-      "property and investment firm. Her work is the architecture of " +
-      "companies: holding entities, trusts and the arrangements that let a " +
-      "discreet family office own a great deal without appearing to own " +
-      "anything.\n\n" +
-      "She is meticulous, well paid and proud of the elegance of what she " +
-      "builds. She reads every page, and has never needed to ask whose money " +
-      "it is."
+      "Director of Corporate Structuring at a Brooklyn holdings firm. Designs " +
+      "the company structures that allow a discreet family office to hold " +
+      "substantial assets without appearing to. Her work product is of " +
+      "significant interest to an ongoing inquiry.",
+    file: {
+      "File status": "Active / Person of Interest",
+      "Age": "41",
+      "Status": "Alive; not seen publicly since 21 November.",
+      "Race": "Latina American (Puerto Rican descent)",
+      "Height": "5'5\"",
+      "Weight": "~130 lbs",
+      "Hair": "Dark brown, worn in a sleek low chignon",
+      "Distinguishing marks": "Tailored corporate dress; tortoiseshell glasses. Precise, rapid speech. Visible tension in recent encounters, including a habit of checking her phone mid-sentence."
+    }
   },
 
   {
-    name: "Mara Reyes",
-    tagline: "No relation",
-    role: "Special Agent · FBI",
-    portrait: "assets/img/npcs/Mara Reyes.jpg",
-    meta: ["Federal"],
+    name: "Harold Voss",
+    tagline: "Taught her the law was worth defending",
+    role: "Kings County District Attorney’s Office",
+    portrait: "assets/img/npcs/Harold Voss.jpg",
+    meta: ["Law, justice & intelligence"],
     description:
-      "A Special Agent with the FBI in New York. Her cases rarely make the " +
-      "news, and her reports seem to travel further up the chain than her rank " +
-      "would suggest.\n\n" +
-      "She shares a surname with Raven, and nothing else."
+      "Senior figure in the Kings County prosecutorial apparatus. Oversees a " +
+      "number of sensitive, ongoing matters touching on organized crime in the " +
+      "Brooklyn area. Longtime mentor to at least one Assistant District " +
+      "Attorney with involvement in open files.",
+    file: {
+      "File status": "Restricted / Official",
+      "Age": "61",
+      "Status": "Alive.",
+      "Race": "White American",
+      "Height": "5'10\"",
+      "Weight": "~220 lbs",
+      "Hair": "White, close-cropped; heavy white eyebrows",
+      "Distinguishing marks": "Broad, heavyset frame; ruddy complexion. Half-moon reading glasses worn low on the nose. Tie habitually loosened, sleeves rolled. Carries a battered leather briefcase decades older than his current office."
+    }
   },
 
   {
@@ -267,74 +347,212 @@ window.DEAD_HAND_NPCS = [
   },
 
   {
-    name: "Gideon Crane",
-    tagline: "Judges people as he judges objects",
-    role: "Restorer of Liturgical Objects · Cobble Hill",
-    portrait: "assets/img/npcs/Gideon Crane.jpg",
-    meta: ["Cobble Hill"],
+    name: "Mara Reyes",
+    tagline: "No relation",
+    role: "Special Agent · FBI",
+    portrait: "assets/img/npcs/Mara Reyes.jpg",
+    meta: ["Law, justice & intelligence"],
     description:
-      "The owner of a small reliquary atelier in Cobble Hill that restores " +
-      "liturgical objects, reliquaries and church silver for parishes and " +
-      "private collectors across the North-East. Exacting, courteous and " +
-      "quietly formidable, he is well known to the clergy of Brooklyn and to " +
-      "few people outside it.\n\n" +
-      "He assesses people much as he assesses objects: by where they came from, " +
-      "and by what they can bear."
+      "Federal agent attached to a specialized FBI division. Deployed to the " +
+      "Carroll Gardens area following a recent multiple-homicide incident. Has " +
+      "established direct contact with several individuals connected to open " +
+      "matters. No relation to R. Reyes.",
+    file: {
+      "File status": "Restricted / Federal",
+      "Age": "44",
+      "Status": "Alive, active.",
+      "Race": "Latina American",
+      "Height": "5'6\"",
+      "Weight": "~135 lbs",
+      "Hair": "Dark, pulled back tightly",
+      "Distinguishing marks": "Athletic build. Direct manner; minimal patience for small talk. Standard federal field attire."
+    }
   },
 
   {
-    name: "Carol Summers",
-    tagline: "Wants to know what became of her mother",
-    role: "Ezekiel’s client",
-    portrait: "assets/img/npcs/Carol Summers.jpg",
-    meta: ["Ezekiel’s circle", "Civilian"],
+    name: "Eleanor Marsh",
+    tagline: "Building her case file by file",
+    role: "Associate Deputy Director · CIA",
+    portrait: "assets/img/npcs/Eleanor Marsh.jpg",
+    meta: ["Law, justice & intelligence"],
     description:
-      "Her mother, Peggy Gable, has gone missing, and the official answers do " +
-      "not add up. When the calls stopped being returned, Carol hired Ezekiel " +
-      "to find her.\n\n" +
-      "She is worried, persistent and entirely ordinary, and she wants one " +
-      "thing: to know what happened to her mother."
+      "Associate Deputy Director, Central Intelligence Agency. Building a " +
+      "methodical case concerning Major R. I. Payne, whom she believes to have " +
+      "gone rogue. Her inquiry advances slowly, file by file, but it has not " +
+      "stalled.",
+    file: {
+      "File status": "Restricted / Federal",
+      "Age": "53",
+      "Status": "Alive, active.",
+      "Race": "White American",
+      "Height": "5'7\"",
+      "Weight": "~140 lbs",
+      "Hair": "Ash-blonde going grey, cut in a precise chin-length bob",
+      "Distinguishing marks": "Rimless glasses; composed, watchful stillness. Dresses in understated charcoal and navy. Takes handwritten notes in a small leather-bound book rather than on a device."
+    }
   },
 
   {
-    name: "Peggy Gable",
-    tagline: "The mother Carol is looking for",
-    role: "Carol Simmons’s mother",
-    portrait: "assets/img/npcs/Peggy Gable.jpg",
-    meta: ["Ezekiel’s case", "Civilian"],
+    name: "Rhys Calder",
+    tagline: "The call Payne makes when it is bad",
+    role: "Colour Sergeant · 22 SAS",
+    portrait: "assets/img/npcs/Rhys Calder.jpg",
+    meta: ["Law, justice & intelligence"],
     description:
-      "Margaret Gable, known to everyone as Peggy: Carol Simmons’s mother, and " +
-      "a Brooklyn woman of the kind every block has, with family roots in the " +
-      "borough going back generations.\n\n" +
-      "In November she dropped out of sight, and nothing her daughter has been " +
-      "told about where she went holds together."
+      "Colour Sergeant, 22 SAS, with connections to British security services. " +
+      "A long-standing associate of Major R. I. Payne from shared overseas " +
+      "deployment. Maintains periodic contact with the subject; the nature of " +
+      "that relationship is only partially documented.",
+    file: {
+      "File status": "Restricted / Foreign Liaison",
+      "Age": "47",
+      "Status": "Alive, active.",
+      "Race": "White British",
+      "Height": "6'0\"",
+      "Weight": "~190 lbs",
+      "Hair": "Grey, close-cropped",
+      "Distinguishing marks": "Controlled, economical bearing consistent with special-forces service. Faint scarring across the knuckles of both hands. Clipped Welsh-inflected accent."
+    }
+  },
+
+  {
+    name: "Dr. Francisco Lehder",
+    tagline: "Takes Adelina’s calls at any hour",
+    role: "Senior Surgeon · Ferris-Whitlock Memorial",
+    portrait: "assets/img/npcs/Dr. Francisco Ledher.jpg",
+    meta: ["Cartel & street"],
+    description:
+      "Senior surgeon at Ferris-Whitlock Memorial, widely respected in his " +
+      "field. Maintains a personal association with A. Morte, to whom he is " +
+      "understood to be indebted. Known to extend discretion to those he " +
+      "considers his own and to ask few questions of them.",
+    file: {
+      "File status": "Unclassified / Monitored",
+      "Age": "51",
+      "Status": "Alive.",
+      "Race": "Hispanic (Mexican-born, of German descent)",
+      "Height": "6'0\"",
+      "Weight": "~175 lbs",
+      "Hair": "Dark, swept back, silvering at the temples; neatly kept goatee",
+      "Distinguishing marks": "Long, steady surgeon's hands; an expensive wristwatch worn under a starched cuff. Polished, courteous manner. Speaks English, Spanish and German."
+    }
+  },
+
+  {
+    name: "José Pérez",
+    tagline: "Calm until the violence starts",
+    role: "Suspected cartel operative",
+    portrait: "assets/img/placeholder.svg",
+    meta: ["Cartel & street"],
+    description:
+      "Suspected operative of a Mexican trafficking organization. Believed to " +
+      "have risen through its ranks from enforcement work on the strength of " +
+      "his effectiveness and a marked readiness for violence. Currently thought " +
+      "to coordinate the supply of product to New York street organizations. " +
+      "Known associate of A. Morte. Linked by informant reporting to recent " +
+      "moves toward the Red Hook waterfront, though no charges have been " +
+      "brought.",
+    file: {
+      "File status": "Active / Under Investigation — Priority",
+      "Age": "38",
+      "Status": "Alive, active.",
+      "Race": "Hispanic (Mexican national, Sinaloa-born)",
+      "Height": "5'9\"",
+      "Weight": "~180 lbs",
+      "Hair": "Black, cropped short; thin moustache",
+      "Distinguishing marks": "Old knife scar running from the left jaw to the collarbone. Santa Muerte tattoo on the inner right forearm. Dresses well in plain, expensive clothes. Witnesses consistently describe a flat, unhurried calm that sharpens abruptly when violence begins."
+    }
+  },
+
+  {
+    name: "Hector Cruz",
+    tagline: "Never lets his people go",
+    role: "Senior figure · Queens street organization",
+    portrait: "assets/img/placeholder.svg",
+    meta: ["Cartel & street"],
+    description:
+      "Senior figure in a Queens-based street organization, with a long record " +
+      "of suspected involvement in extortion and narcotics distribution. Known " +
+      "for keeping a firm hold on his people and for pursuing those who leave. " +
+      "His crew's activity has recently extended into Red Hook and Carroll " +
+      "Gardens, and intelligence suggests it has begun working for an outside " +
+      "organization with interests along the Red Hook waterfront.",
+    file: {
+      "File status": "Active / Under Investigation",
+      "Age": "44",
+      "Status": "Alive, active.",
+      "Race": "Hispanic American (Puerto Rican descent)",
+      "Height": "5'10\"",
+      "Weight": "~195 lbs",
+      "Hair": "Black, close-faded; neatly edged beard",
+      "Distinguishing marks": "Five-point crown tattoo on the back of the right hand. Gold rosary worn outside the shirt. Soft-spoken and unhurried, and never raises his voice."
+    }
   },
 
   {
     name: "Marcus Webb",
     tagline: "A tether to the ordinary world",
-    role: "Jack’s teammate",
+    role: "College athlete · Jack’s teammate",
     portrait: "assets/img/placeholder.svg",
-    meta: ["Jack’s circle", "Civilian"],
+    meta: ["Associate"],
     description:
-      "Jack’s teammate and closest friend on the squad: an ordinary young man " +
-      "with an ordinary life.\n\n" +
-      "Marcus is a reminder of everything Jack wants to protect: normal, " +
-      "uncomplicated, and worth keeping that way."
+      "College athlete and teammate of J. Zeppelin. Civilian; no connection to " +
+      "any open matter established.",
+    file: {
+      "File status": "Closed / Peripheral",
+      "Age": "21",
+      "Status": "Alive.",
+      "Race": "Black American",
+      "Height": "6'2\"",
+      "Weight": "~210 lbs",
+      "Hair": "Short",
+      "Distinguishing marks": "Athletic build and bearing consistent with collegiate football."
+    }
   },
 
   {
-    name: "Mathew",
+    name: "Matthew",
     tagline: "The coach who shaped him",
-    role: "College football coach · Jack’s mentor",
+    role: "College athletics coach · Jack’s mentor",
     portrait: "assets/img/npcs/Mathew.jpg",
-    meta: ["Jack’s circle", "Touchstone"],
+    meta: ["Associate"],
     description:
-      "Jack’s college football coach: the man who recruited him and the mentor " +
-      "who shaped him, on the field and off it. Matthew scouts players the way " +
-      "he coaches them, for character first.\n\n" +
-      "He gave Jack the bracelet Jack never takes off, and he is the person " +
-      "Jack calls when he does not know what to do next."
+      "College athletics coach and former semi-professional athlete. Mentor " +
+      "figure to J. Zeppelin, with an evident interest in the player's welfare " +
+      "that extends beyond the field.",
+    file: {
+      "File status": "Closed / Peripheral",
+      "Age": "56",
+      "Status": "Alive.",
+      "Race": "Native American (Lenape descent)",
+      "Height": "5'11\"",
+      "Weight": "~195 lbs",
+      "Hair": "Black streaked with grey, worn long",
+      "Distinguishing marks": "Weathered, solid build of a former athlete. Quiet, deliberate speech. Wrist bare where others might expect a watch or band."
+    }
+  },
+
+  {
+    name: "Gideon Crane",
+    tagline: "Judges people as he judges objects",
+    role: "Proprietor · Reliquary atelier, Cobble Hill",
+    portrait: "assets/img/npcs/Gideon Crane.jpg",
+    meta: ["Associate"],
+    description:
+      "Proprietor of a reliquary and liturgical-object restoration atelier in " +
+      "Cobble Hill. Formerly a conservator for archdiocesan collections. " +
+      "Affiliated with a Catholic lay organization. Recent contact with private " +
+      "investigator E. Delacroix.",
+    file: {
+      "File status": "Unclassified / Monitored",
+      "Age": "58",
+      "Status": "Alive.",
+      "Race": "White American",
+      "Height": "6'1\"",
+      "Weight": "~165 lbs",
+      "Hair": "White, short; close-trimmed white beard",
+      "Distinguishing marks": "Lean, ascetic frame; jeweller's loupe worn on a chain. Fine scarring and solvent-stained fingertips consistent with conservation work."
+    }
   }
 
 ];
@@ -342,6 +560,10 @@ window.DEAD_HAND_NPCS = [
 /* ---------------------------------------------------------------------
    FIELD REFERENCE
      name / tagline / role / portrait / meta / description
+     file      OPTIONAL subject file from the NPC dossier: an object of
+               label -> value ("File status", "Age", "Status", "Race",
+               "Height", "Weight", "Hair", "Distinguishing marks"),
+               shown as a table under the description.
      stats     OPTIONAL object of label -> value (renders a stat block).
                Left off here on purpose — this page is player-facing.
      statNote  OPTIONAL italic note under a stat block.

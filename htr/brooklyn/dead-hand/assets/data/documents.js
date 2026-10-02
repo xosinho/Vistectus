@@ -16,7 +16,7 @@ window.DEAD_HAND_DOCUMENTS = [
 
   {
     title: "Registro delle Provenienze, f. 47 v.",
-    type: "Ledgers and registers",
+    type: "Documents",
     when: "",
     description: "A leaf from an archive ledger of provenances, marked riservato.",
     file: "assets/resources/Documents/Purity Ledger.html",
@@ -25,7 +25,7 @@ window.DEAD_HAND_DOCUMENTS = [
 
   {
     title: "Register of Works",
-    type: "Ledgers and registers",
+    type: "Documents",
     when: "",
     description: "A register of works for the current cycle.",
     file: "assets/resources/Documents/Register_of_Works.html"
