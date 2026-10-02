@@ -118,7 +118,7 @@
     ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
   var CHRONICLE = "dead-hand";
   var all = items.slice();
-  var hidden = {}, isST = false;
+  var hidden = {}, isST = false, signedIn = false;
   function keyOf(x) { return kind === "maps" ? x.image : x.file; }
 
   function withTimeout(p, ms) {
@@ -132,6 +132,7 @@
       hidden = {};
       (r.data || []).forEach(function (row) { hidden[row.item] = true; });
       var session = (await db.auth.getSession()).data.session;
+      signedIn = !!session;
       if (session) {
         var st = await db.rpc("is_storyteller");
         isST = !st.error && st.data === true;
@@ -166,6 +167,20 @@
   /* ------------------------------------------------------------ the list */
   function render() {
     root.textContent = "";
+    renderList();
+    // Signing in happens on the Storyteller page; the session carries over.
+    if (db && !signedIn) {
+      var p = el("p", "archive-signin");
+      p.appendChild(document.createTextNode("Storyteller? "));
+      var a = el("a", null, "Sign in");
+      a.href = "storyteller.html";
+      p.appendChild(a);
+      p.appendChild(document.createTextNode(" to hide or show items, then come back to this page."));
+      root.appendChild(p);
+    }
+  }
+
+  function renderList() {
     items = all.filter(function (x) { return isST || !hidden[keyOf(x)]; });   // show() steps through these
 
     if (isST) {

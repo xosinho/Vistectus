@@ -142,6 +142,14 @@
       lightbox.setAttribute("aria-modal", "true");
       lightbox.setAttribute("aria-label", "Portrait, full size");
       lightbox.innerHTML = '<button class="lightbox__close" aria-label="Close">&times;</button><img alt="">';
+      // The layout that makes this a pop-up is set here as well as in
+      // style.css, so a browser still holding an older style.css shows a
+      // pop-up rather than an image at the foot of the page.
+      lightbox.style.cssText = "position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;" +
+        "padding:1.5rem;background:rgba(4,3,8,.92);cursor:zoom-out;display:none;";
+      lightbox.querySelector("img").style.cssText = "max-width:100%;max-height:calc(100vh - 3rem);object-fit:contain;cursor:default;";
+      lightbox.querySelector(".lightbox__close").style.cssText =
+        "position:absolute;top:.8rem;right:1rem;background:none;border:0;cursor:pointer;color:#fff;font-size:2rem;line-height:1;";
       document.body.appendChild(lightbox);
       lightbox.addEventListener("click", function (e) {
         if (e.target === lightbox || e.target.classList.contains("lightbox__close")) closeLightbox();
@@ -151,12 +159,14 @@
     img.src = src;
     img.alt = alt || "";
     lightbox.classList.add("open");
+    lightbox.style.display = "flex";
     lightbox.querySelector(".lightbox__close").focus();
   }
   // Returns whether there was a portrait open to close.
   function closeLightbox() {
     if (!lightbox || !lightbox.classList.contains("open")) return false;
     lightbox.classList.remove("open");
+    lightbox.style.display = "none";
     var zoom = panel && panel.querySelector(".detail__zoom");
     if (zoom) zoom.focus();
     return true;

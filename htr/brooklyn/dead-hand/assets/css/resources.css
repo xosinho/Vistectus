@@ -80,3 +80,5 @@
   max-width: 72rem; margin: 1rem auto 0; padding: .6rem 1rem;
   color: var(--ink-soft); font-size: .92rem; border: 1px dashed var(--line);
 }
+.archive-signin { max-width: 72rem; margin: 2rem auto 0; padding: 0 1rem; color: var(--ink-dim); font-size: .85rem; }
+.archive-signin a { color: var(--ink-soft); }
