@@ -8,7 +8,7 @@
   <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
 
   <!-- Three folders up to the hub stylesheet, one up for the world flavour. -->
-  <link rel="stylesheet" href="../../../style.css?v=20261002">
+  <link rel="stylesheet" href="../../../style.css?v=20261003">
   <link rel="stylesheet" href="../world.css">
 </head>
 
@@ -77,10 +77,12 @@
     </p>
   </div>
 </footer>
-<script src="assets/js/render.js?v=20261002"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../../builders/config.js"></script>
+<script src="assets/js/render.js?v=20261003"></script>
 <script src="assets/data/npcs.js?v=20261002b"></script>
 <script>
-  DeadHand.renderRoster("npcs-roster", window.DEAD_HAND_NPCS, "npc");
+  DeadHand.renderRoster("npcs-roster", window.DEAD_HAND_NPCS, "npc", { hide: "npcs" });
 </script>
 <script src="assets/js/site.js"></script>
 </body>

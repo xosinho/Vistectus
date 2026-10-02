@@ -933,3 +933,20 @@ button.btn[disabled] { opacity: .55; cursor: progress; transform: none; }
 @media (max-width: 900px) {
   .dash { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ---- Roster: the Storyteller's hide / show (People page) ------------ */
+.roster-item { display: flex; flex-direction: column; gap: .4rem; }
+.roster-item.is-hidden .roster-card { opacity: .5; border-style: dashed; }
+.roster-hidden {
+  align-self: flex-start;
+  font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--accent); border: 1px dashed var(--accent); padding: .1rem .4rem;
+}
+.roster-toggle {
+  align-self: flex-start; cursor: pointer;
+  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase;
+  padding: .3rem .6rem; background: transparent; color: var(--ink-soft); border: 1px solid var(--line);
+}
+.roster-toggle:hover { color: var(--accent); border-color: var(--accent); }
+.roster-signin { margin: 2rem 0 0; color: var(--ink-dim); font-size: .85rem; }
+.roster-signin a { color: var(--ink-soft); }

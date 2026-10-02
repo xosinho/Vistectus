@@ -219,9 +219,75 @@
   }
 
   /* ------------------------------------------------------------ public API */
-  function renderRoster(containerId, data, type) {
+  /* ------------------------------------------ hidden by the Storyteller
+     renderRoster(..., { hide: "npcs" }) lets a Storyteller hide entries.
+     Which ones are hidden is kept in the archive_hidden table of the
+     site's Supabase project, the same one Documents and Maps use
+     (setup: assets/sheets/sql/archive-hidden.sql). Players never see a
+     hidden entry; a signed-in Storyteller sees all of them, hidden ones
+     marked, with a button on each. If the list cannot be reached,
+     everyone is shown. Hiding takes the entry off the page; it does not
+     remove it from the site's files. */
+  var CHRONICLE = "dead-hand";
+  function hiddenStore(kind) {
+    var cfg = window.BUILDERS_CONFIG || {};
+    var db = (cfg.supabaseUrl && cfg.supabaseAnonKey && window.supabase)
+      ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
+    var store = { db: db, kind: kind, hidden: {}, isST: false, signedIn: false };
+    if (!db) return Promise.resolve(store);
+    var timeout = new Promise(function (_, rej) { setTimeout(function () { rej(new Error("timeout")); }, 6000); });
+    return Promise.race([
+      (async function () {
+        var r = await db.from("archive_hidden").select("item").eq("chronicle", CHRONICLE).eq("kind", kind);
+        if (r.error) throw r.error;
+        (r.data || []).forEach(function (row) { store.hidden[row.item] = true; });
+        var session = (await db.auth.getSession()).data.session;
+        store.signedIn = !!session;
+        if (session) {
+          var st = await db.rpc("is_storyteller");
+          store.isST = !st.error && st.data === true;
+        }
+        return store;
+      })(),
+      timeout
+    ]).catch(function (e) {
+      console.error("Hidden list unavailable; showing everyone.", e);
+      return store;
+    });
+  }
+
+  function renderRoster(containerId, data, type, opts) {
     var el = document.getElementById(containerId);
     if (!el) return;
+    if (opts && opts.hide && data && data.length) {
+      el.className = "";
+      el.innerHTML = '<div class="empty">Opening the files…</div>';
+      hiddenStore(opts.hide).then(function (store) { drawRoster(el, data, type, store); });
+      return;
+    }
+    drawRoster(el, data, type, null);
+  }
+
+  function drawRoster(el, data, type, store) {
+    var hidden = store ? store.hidden : {};
+    var isST = !!(store && store.isST);
+    var shown = (data || []).map(function (entry, i) { return { entry: entry, i: i }; })
+      .filter(function (x) { return isST || !hidden[x.entry.name]; });
+
+    // A quiet pointer to signing in, for the Storyteller.
+    var hint = el.nextElementSibling && el.nextElementSibling.classList.contains("roster-signin") ? el.nextElementSibling : null;
+    if (store && store.db && !store.signedIn && !hint) {
+      hint = document.createElement("p");
+      hint.className = "roster-signin";
+      hint.innerHTML = 'Storyteller? <a href="storyteller.html">Sign in</a> to hide or show people, then come back to this page.';
+      el.parentNode.insertBefore(hint, el.nextSibling);
+    }
+
+    if (data && data.length && !shown.length) {
+      el.className = "";
+      el.innerHTML = '<div class="empty">No one here yet.</div>';
+      return;
+    }
     if (!data || !data.length) {
       el.className = "";
       el.innerHTML =
@@ -231,10 +297,37 @@
       return;
     }
     el.className = "roster";
-    el.innerHTML = data.map(cardHtml).join("");
+    el.innerHTML = shown.map(function (x) {
+      var card = cardHtml(x.entry, x.i);
+      if (!isST) return card;
+      var isHidden = !!hidden[x.entry.name];
+      return '<div class="roster-item' + (isHidden ? " is-hidden" : "") + '">' + card +
+        (isHidden ? '<span class="roster-hidden">Hidden from players</span>' : "") +
+        '<button type="button" class="roster-toggle" data-index="' + x.i + '">' +
+          (isHidden ? "Show to players" : "Hide from players") + "</button></div>";
+    }).join("");
     el.querySelectorAll(".roster-card").forEach(function (btn) {
       btn.addEventListener("click", function () {
         openModal(data[+btn.getAttribute("data-index")], { type: type });
+      });
+    });
+    el.querySelectorAll(".roster-toggle").forEach(function (btn) {
+      btn.addEventListener("click", async function () {
+        var name = data[+btn.getAttribute("data-index")].name;
+        var hide = !hidden[name];
+        btn.disabled = true;
+        try {
+          var r = hide
+            ? await store.db.from("archive_hidden").insert({ chronicle: CHRONICLE, kind: store.kind, item: name })
+            : await store.db.from("archive_hidden").delete().eq("chronicle", CHRONICLE).eq("kind", store.kind).eq("item", name);
+          if (r.error) throw r.error;
+          if (hide) hidden[name] = true; else delete hidden[name];
+          drawRoster(el, data, type, store);
+        } catch (e) {
+          console.error(e);
+          window.alert("Could not change that: " + ((e && e.message) || e));
+          btn.disabled = false;
+        }
       });
     });
   }

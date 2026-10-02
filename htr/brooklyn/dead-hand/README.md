@@ -155,7 +155,7 @@ The Resources page leads to three archives:
 
 All three are public: only publish what the players have been given.
 
-**Hiding a document or map (Storyteller):** signed in as Storyteller
+**Hiding a document, map or NPC (Storyteller):** the People page works the same way, hiding a whole NPC entry.  signed in as Storyteller
 (from the Storyteller tab), each document and map shows a **Hide from
 players** button; hidden ones stay visible to you, marked. One-time
 setup: run `assets/sheets/sql/archive-hidden.sql` in Supabase. Hiding
