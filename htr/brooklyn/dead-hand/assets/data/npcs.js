@@ -137,7 +137,7 @@ window.DEAD_HAND_NPCS = [
     name: "Dr. Jacob Miller",
     tagline: "Raven’s chief, and her quiet cover",
     role: "Chief of Emergency Medicine · St. Jude’s",
-    portrait: "assets/img/placeholder.svg",
+    portrait: "assets/img/npcs/Dr. Jacob Miller.jpg",
     meta: ["St. Jude’s Hospital"],
     description:
       "Chief of Emergency Medicine, St. Jude's Hospital. Professional mentor to " +
@@ -249,16 +249,34 @@ window.DEAD_HAND_NPCS = [
 
   {
     name: "Aldo & Ciro Moretti",
-    tagline: "More of the Moretti family",
-    role: "Moretti family · Carroll Gardens",
+    tagline: "Uncle and nephew in the embalming suite",
+    role: "Morticians · Pellegrino & Sons Funeral Home",
     portrait: "assets/img/npcs/Aldo and Ciro Moretti.jpg",
-    meta: ["Waterfront muscle"],
+    meta: ["The Family & its holdings"],
     description:
-      "Two more members of the Moretti family, seen with Rico and Marco on the " +
-      "waterfront and around Carroll Gardens. Neither has Rico’s reputation, " +
-      "and neither seems to want one.\n\n" +
-      "The Morettis keep their business, whatever it is, among their own, and " +
-      "Aldo and Ciro are part of it."
+      "Uncle and nephew, both employed as morticians at Pellegrino & Sons " +
+      "Funeral Home. They are relatives of Rico and Marco Moretti and " +
+      "associates of the same organized-crime concern. Aldo had worked the " +
+      "embalming suite for decades; Ciro joined under his uncle. Both are " +
+      "believed to have had direct knowledge of the funeral home's handling of " +
+      "remains. Their deaths, together with that of the owner and the later " +
+      "destruction of the premises, leave few living witnesses to its " +
+      "operations.",
+    file: {
+      "File status": "Active / Under Investigation",
+      "Age": "Aldo, 55 · Ciro, 28",
+      "Status": "Both deceased. Gunshot wounds, sustained on the premises of Pellegrino & Sons Funeral Home during the execution of a search warrant on the night of 16–17 November. Circumstances under investigation.",
+      "Aldo · Race": "White American (Italian-American)",
+      "Aldo · Height": "5'8\"",
+      "Aldo · Weight": "~185 lbs",
+      "Aldo · Hair": "Grey, thinning, combed flat",
+      "Aldo · Distinguishing marks": "Stooped, heavy-shouldered build. Deep-set, exhausted eyes. Chemical burns and discoloration on both hands from long work with embalming fluids. Usually in a stained work apron over shirtsleeves.",
+      "Ciro · Race": "White American (Italian-American)",
+      "Ciro · Height": "5'11\"",
+      "Ciro · Weight": "~160 lbs",
+      "Ciro · Hair": "Dark, kept short at the sides",
+      "Ciro · Distinguishing marks": "Lean build, with a nervous habit of glancing toward doors. Small tattoo of a rosary bead strand on the left wrist. Carried a funeral-home staff ID."
+    }
   },
 
   {
@@ -333,17 +351,28 @@ window.DEAD_HAND_NPCS = [
 
   {
     name: "Silas Reed",
-    tagline: "Runs a quiet house",
+    tagline: "Left a note, and a number of open files",
     role: "Captain · 76th Precinct, NYPD",
-    portrait: "assets/img/placeholder.svg",
-    meta: ["NYPD"],
+    portrait: "assets/img/npcs/Silas Reed.jpg",
+    meta: ["Law, justice & intelligence"],
     description:
-      "Captain of the NYPD’s 76th Precinct on Union Street, which covers " +
-      "Carroll Gardens, Red Hook, Cobble Hill and the Columbia Street " +
-      "Waterfront.\n\n" +
-      "A long-serving commander with a reputation for running a quiet house: " +
-      "crime figures that behave, evidence rooms that balance, and paperwork " +
-      "that is always in order."
+      "Commanding officer, 76th Precinct, with oversight of evidence handling, " +
+      "property custody and scene logistics. His name appears in the records of " +
+      "several matters in which evidence was compromised or chains of custody " +
+      "broke down. The note recovered at his death confesses to coercion by a " +
+      "rival crime family and to the framing of others; its contents have not " +
+      "been verified. His death leaves a number of open files without their " +
+      "central witness.",
+    file: {
+      "File status": "Closed / Internal Affairs Review Pending",
+      "Age": "57",
+      "Status": "Deceased — single gunshot wound beneath the jaw; ruled an apparent suicide. A handwritten note was recovered at the scene. Recent.",
+      "Race": "White American (Irish-American)",
+      "Height": "6'0\"",
+      "Weight": "~215 lbs",
+      "Hair": "Iron-grey, regulation crew cut; heavy grey moustache",
+      "Distinguishing marks": "Broad-shouldered, thickening at the middle. Florid complexion. Class ring worn on the right hand. Kept a commanding officer's bearing through more than thirty years of service."
+    }
   },
 
   {
@@ -442,7 +471,7 @@ window.DEAD_HAND_NPCS = [
     name: "José Pérez",
     tagline: "Calm until the violence starts",
     role: "Suspected cartel operative",
-    portrait: "assets/img/placeholder.svg",
+    portrait: "assets/img/npcs/Jose Perez.jpg",
     meta: ["Cartel & street"],
     description:
       "Suspected operative of a Mexican trafficking organization. Believed to " +
@@ -468,7 +497,7 @@ window.DEAD_HAND_NPCS = [
     name: "Hector Cruz",
     tagline: "Never lets his people go",
     role: "Senior figure · Queens street organization",
-    portrait: "assets/img/placeholder.svg",
+    portrait: "assets/img/npcs/Hector Cruz.jpg",
     meta: ["Cartel & street"],
     description:
       "Senior figure in a Queens-based street organization, with a long record " +
@@ -493,7 +522,7 @@ window.DEAD_HAND_NPCS = [
     name: "Marcus Webb",
     tagline: "A tether to the ordinary world",
     role: "College athlete · Jack’s teammate",
-    portrait: "assets/img/placeholder.svg",
+    portrait: "assets/img/npcs/Marcus Webb.jpg",
     meta: ["Associate"],
     description:
       "College athlete and teammate of J. Zeppelin. Civilian; no connection to " +
