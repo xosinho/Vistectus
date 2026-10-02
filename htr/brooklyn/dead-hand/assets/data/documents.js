@@ -29,6 +29,30 @@ window.DEAD_HAND_DOCUMENTS = [
     when: "",
     description: "A register of works for the current cycle.",
     file: "assets/resources/Documents/Register_of_Works.html"
+  },
+
+  {
+    title: "I. G. — Private Book",
+    type: "Diaries",
+    when: "",
+    description: "A private notebook kept by Ilaria Grimani, recording her observations of the Brooklyn house and the Red Hook warehouse activity.",
+    file: "assets/resources/Documents/DeadHand_Grimani_Diary.html"
+  },
+
+  {
+    title: "Grimani — Letter to the Seat",
+    type: "Letters",
+    when: "",
+    description: "A warning letter from Ilaria Grimani to the Venetian Seat, setting out her disturbing suspicions about the Brooklyn operation.",
+    file: "assets/resources/Documents/DeadHand_Grimani_Letter.html"
+  },
+
+  {
+    title: "E. Thorne — Observations",
+    type: "Notes",
+    when: "",
+    description: "A notebook of Elias Thorne's observations from the Brooklyn basement, documenting the icy cold spot and the signs that something has been sleeping there.",
+    file: "assets/resources/Documents/DeadHand_Thorne_Notes.html"
   }
 
 ];
