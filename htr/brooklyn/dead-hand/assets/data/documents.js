@@ -53,6 +53,14 @@ window.DEAD_HAND_DOCUMENTS = [
     when: "",
     description: "A notebook of Elias Thorne's observations from the Brooklyn basement, documenting the icy cold spot and the signs that something has been sleeping there.",
     file: "assets/resources/Documents/DeadHand_Thorne_Notes.html"
+  },
+
+  {
+    title: "Obol of the Silent Toll",
+    type: "Relics",
+    when: "",
+    description: "A brass coin bearing a silent toll mark, recovered from the lower levels and clearly not of ordinary provenance.",
+    file: "assets/resources/Documents/Obol of the Silent Toll.jpg"
   }
 
 ];
