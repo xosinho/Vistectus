@@ -39,7 +39,13 @@
   var db = (cfg.supabaseUrl && cfg.supabaseAnonKey && window.supabase)
     ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
 
-  var slug = (new URLSearchParams(window.location.search).get("c") || "").toLowerCase();
+  /* sheet.html?c=<name> is a hunter's sheet. sheet.html?npc=<name> is an
+     NPC sheet: Storyteller only. It is read from the npc_sheets table,
+     which the database lets no one else read, and never from a file on
+     the site. It has no XP: the Storyteller edits it directly. */
+  var params = new URLSearchParams(window.location.search);
+  var NPC = params.has("npc");
+  var slug = ((NPC ? params.get("npc") : params.get("c")) || "").toLowerCase();
 
   var S = {
     sheet: null,          // {slug, name, data, play}
@@ -53,6 +59,19 @@
     newKind: "specialty",
     saveTimer: null, saving: false, saveFailed: false
   };
+
+  if (NPC) {
+    var back = document.querySelector('.sheet-bar a[href="players.html"]');
+    if (back) { back.href = "storyteller.html"; back.innerHTML = "&larr; Storyteller"; }
+    var crumb = document.querySelector('.crumbbar a[href="players.html"]');
+    if (crumb) { crumb.href = "storyteller.html"; crumb.textContent = "Storyteller"; }
+    document.querySelectorAll(".tabs a").forEach(function (a) {
+      if (a.getAttribute("href") === "storyteller.html") a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+    var kicker = document.querySelector(".hero .kicker");
+    if (kicker) kicker.textContent = "NPC sheet · Storyteller only";
+  }
 
   /* ------------------------------------------------------------ helpers */
   function $(id) { return document.getElementById(id); }
@@ -114,7 +133,7 @@
   /* What is being shown: the Storyteller's working copy while editing. */
   function view() { return S.edit || S.sheet; }
   function canPlay() { return S.online && (S.role === "owner" || S.role === "storyteller"); }
-  function canSpend() { return canPlay(); }
+  function canSpend() { return !NPC && canPlay(); }
   function isST() { return S.online && S.role === "storyteller"; }
 
   /* ---------------------------------------------------------------- XP */
@@ -314,8 +333,8 @@
     var v = view(), d = v.data, p = v.play, x = xp();
     var h = '<section class="page" aria-label="Character sheet, page two">';
     h += '<div class="page2-top"><strong style="font-family:var(--sheet-head);font-size:1.3rem">' + esc(d.name) + "</strong>" +
-      '<div class="xp-figures"><div>Total Experience <span>' + (S.online ? x.total : "") + "</span></div>" +
-      "<div>Spent Experience <span>" + (S.online ? x.spent : "") + "</span></div></div></div>";
+      (NPC ? "" : '<div class="xp-figures"><div>Total Experience <span>' + (S.online ? x.total : "") + "</span></div>" +
+      "<div>Spent Experience <span>" + (S.online ? x.spent : "") + "</span></div></div>") + "</div>";
 
     h += '<div class="boxes3"><div><h4>Chronicle Tenets</h4>' + area("data", "tenets", 7, "Chronicle Tenets") + "</div>" +
       "<div><h4>Touchstones</h4>" + area("play", "touchstones", 7, "Touchstones") + "</div>" +
@@ -374,7 +393,7 @@
 
   /* -------------------------------------------------- experience panel */
   function xpPanel() {
-    if (!S.online) return "";
+    if (!S.online || NPC) return "";
     var x = xp(), d = S.sheet.data;
     var h = '<section class="xp-panel" aria-labelledby="xpTitle"><h2 id="xpTitle">Experience</h2>' +
       '<div class="xp-stats">' +
@@ -466,10 +485,10 @@
     if (!S.sheet) return;
     $("sheet").innerHTML = page1() + page2();
     $("xp").innerHTML = xpPanel();
-    var name = view().data.name || "Character sheet";
+    var name = view().data.name || (NPC ? "NPC sheet" : "Character sheet");
     $("sheetTitle").textContent = name;
     $("crumbName").textContent = name;
-    document.title = name + " · Character sheet · Dead Hand · VisTectus";
+    document.title = name + (NPC ? " · NPC sheet" : " · Character sheet") + " · Dead Hand · VisTectus";
 
     $("btnSpend").hidden = !canSpend() || !!S.edit;
     $("btnSpend").textContent = S.spend ? "Hide prices" : "Spend XP";
@@ -485,6 +504,7 @@
   function roleLine() {
     if (!S.online) return "";
     if (S.edit) return "Editing the whole sheet: nothing is saved until you press Save sheet.";
+    if (NPC) return "Storyteller only: players cannot see this sheet. Damage and notes save as you go.";
     if (S.role === "storyteller") return "Storyteller: you can change anything on this sheet.";
     if (S.role === "owner") return "Your hunter: damage, notes and equipment save as you go.";
     return S.session ? "You are viewing another hunter's sheet." : "";
@@ -492,6 +512,7 @@
 
   /* ------------------------------------------------------------ loading */
   async function fetchOnline() {
+    if (NPC) return fetchNpc();
     var r = await Promise.all([
       db.from("character_sheets").select("slug,name,data,play").eq("slug", slug).maybeSingle(),
       db.from("xp_costs").select("kind,label,cost,per_level,sort").order("sort", { ascending: true }),
@@ -516,6 +537,39 @@
     return true;
   }
 
+  // NPC sheets: signed in, a Storyteller, and only then the sheet itself.
+  async function fetchNpc() {
+    S.session = (await db.auth.getSession()).data.session;
+    S.online = false; S.role = "viewer";
+    if (!S.session) return "signin";
+    var st = await db.rpc("is_storyteller");
+    if (st.error || st.data !== true) return "denied";
+    var r = await db.from("npc_sheets").select("slug,name,data,play").eq("slug", slug).maybeSingle();
+    if (r.error) throw r.error;
+    if (!r.data) return false;
+    S.sheet = normalise(r.data);
+    S.costList = []; S.costs = {}; S.requests = []; S.awards = [];
+    S.online = true; S.role = "storyteller";
+    return true;
+  }
+
+  function storytellerOnly(why) {
+    setStatus("");
+    S.sheet = null;
+    $("sheetTitle").textContent = "NPC sheet";
+    $("crumbName").textContent = "NPC sheet";
+    $("xp").innerHTML = "";
+    $("btnPdf").hidden = true;
+    $("btnAccount").hidden = !db || !S.session;
+    $("btnAccount").textContent = "Sign out";
+    var msg = {
+      signin: 'NPC sheets are for the Storyteller. <a href="storyteller.html">Sign in on the Storyteller page</a>, then open the sheet from there.',
+      denied: "NPC sheets are for the Storyteller, and this account is not one.",
+      error: "The NPC sheets could not be reached just now. Try again in a moment."
+    }[why] || 'There is no NPC sheet at this address. Open one from the <a href="storyteller.html">Storyteller page</a>.';
+    $("sheet").innerHTML = '<div class="sheet-notice">' + msg + "</div>";
+  }
+
   async function fetchPublished() {
     var res = await fetch("assets/sheets/data/" + slug + ".json", { cache: "no-cache" });
     if (!res.ok) return false;
@@ -526,8 +580,18 @@
   }
 
   async function load() {
-    if (!/^[a-z0-9-]{1,40}$/.test(slug)) return notFound();
+    if (!/^[a-z0-9-]{1,40}$/.test(slug)) return NPC ? storytellerOnly(false) : notFound();
     setStatus("Opening the sheet…");
+    if (NPC) {
+      var got = "error";
+      if (db) { try { got = await fetchNpc(); } catch (e) { console.error(e); got = "error"; } }
+      if (got !== true) return storytellerOnly(got);
+      $("sheetNotice").hidden = true;
+      $("btnPdf").hidden = false;
+      setStatus("");
+      render();
+      return;
+    }
     var ok = false, reason = "";
     if (db) {
       try { ok = await fetchOnline(); if (!ok) reason = "This sheet is not online yet."; }
@@ -551,6 +615,7 @@
   }
 
   async function reload() {
+    if (NPC) return load();
     try { await fetchOnline(); }
     catch (e) { console.error(e); toast("Could not refresh the sheet: " + errText(e)); }
     render();
@@ -572,7 +637,9 @@
   }
   async function savePlay() {
     try {
-      var r = await db.rpc("save_play", { p_slug: slug, p_play: S.sheet.play });
+      var r = NPC
+        ? await db.from("npc_sheets").update({ play: S.sheet.play, updated_at: new Date().toISOString() }).eq("slug", slug)
+        : await db.rpc("save_play", { p_slug: slug, p_play: S.sheet.play });
       if (r.error) throw r.error;
       S.saving = false;
       setStatus("Saved.");
@@ -733,7 +800,10 @@
     e.data.advantages = e.data.advantages.filter(function (x) { return x.name.trim() || x.dots; });
     setStatus("Saving…");
     try {
-      var r = await db.rpc("save_sheet", { p_slug: slug, p_data: e.data, p_play: e.play });
+      var r = NPC
+        ? await db.from("npc_sheets").update({ name: (e.data.name || "").trim() || S.sheet.name, data: e.data, play: e.play,
+            updated_at: new Date().toISOString() }).eq("slug", slug)
+        : await db.rpc("save_sheet", { p_slug: slug, p_data: e.data, p_play: e.play });
       if (r.error) throw r.error;
       S.edit = null;
       toast("Sheet saved.");
@@ -888,7 +958,7 @@
         text("edge " + (r * 3 + 2), perks[0] || "");
         text("edge " + (r * 3 + 3), perks.slice(1).concat(e.notes ? [e.notes] : []).join("  /  "));
       });
-      if (S.online) { text("Total XP", String(x.total)); text("Spent XP", String(x.spent)); }
+      if (S.online && !NPC) { text("Total XP", String(x.total)); text("Spent XP", String(x.spent)); }
       text("Chronicle Tenets", d.tenets); text("Touchstones", p.touchstones); text("Creed Fields", d.creedFields);
       d.advantages.slice(0, MAX_ROWS).forEach(function (a, r) {
         text("adflaw" + (r + 2), a.name);

@@ -130,8 +130,70 @@
       });
       h += "</table>";
     }
-    root.innerHTML = h + "</section>";
+    root.innerHTML = h + "</section>" + '<div id="npcSheets"></div>';
     wireSignOut();
+    npcSheets();
+  }
+
+  /* ------------------------------------------------- NPC stat sheets
+     Same layout as the hunters' sheets, without XP. They live only in
+     the npc_sheets table, which the database lets no one but a
+     Storyteller read or change (setup: assets/sheets/sql/npc-sheets.sql). */
+  function slugify(s) {
+    return String(s || "").normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 34) || "npc";
+  }
+
+  async function npcSheets() {
+    var box = document.getElementById("npcSheets");
+    var r = await db.from("npc_sheets").select("slug,name,updated_at").eq("chronicle", "dead-hand").order("name", { ascending: true });
+    var h = '<section class="xp-panel"><h2>NPC stat sheets</h2>' +
+      '<p class="xp-hint">Laid out like the hunters’ sheets, without experience: change anything with <strong>Edit sheet</strong>. Only Storytellers can open these; players and visitors are refused by the database itself.</p>';
+    if (r.error) {
+      box.innerHTML = h + '<div class="sheet-notice">The NPC sheets are not set up yet: run <code>assets/sheets/sql/npc-sheets.sql</code> in Supabase. (' + esc(errText(r.error)) + ")</div></section>";
+      return;
+    }
+    var rows = r.data || [];
+    if (!rows.length) h += '<p class="empty-line">No NPC sheets yet.</p>';
+    else {
+      h += '<table class="xp-table"><tr><th>NPC</th><th>Last changed</th><th></th></tr>';
+      rows.forEach(function (n) {
+        h += "<tr><td>" + esc(n.name) + "</td><td>" + esc(fmtDate(n.updated_at)) + '</td><td class="acts">' +
+          '<a class="btn" href="sheet.html?npc=' + encodeURIComponent(n.slug) + '">Open sheet</a> ' +
+          '<button type="button" class="btn btn--ghost" data-delnpc="' + esc(n.slug) + '" data-name="' + esc(n.name) + '">Delete</button></td></tr>';
+      });
+      h += "</table>";
+    }
+    var names = (window.DEAD_HAND_NPCS || []).map(function (n) { return n.name; });
+    h += '<h3>New NPC sheet</h3><form class="xp-form" id="npcNew">' +
+      '<label style="flex:1">Name<input id="npcName" list="npcNames" maxlength="120" required placeholder="e.g. Guido Giovanni" style="width:100%"></label>' +
+      '<datalist id="npcNames">' + names.map(function (n) { return '<option value="' + esc(n) + '">'; }).join("") + "</datalist>" +
+      '<button class="btn" type="submit">Create sheet</button></form>' +
+      '<p class="sheet-status" id="npcMsg" role="status" aria-live="polite" style="margin-top:.6rem"></p></section>';
+    box.innerHTML = h;
+
+    document.getElementById("npcNew").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      var name = document.getElementById("npcName").value.trim();
+      if (!name) return;
+      var taken = {};
+      rows.forEach(function (n) { taken[n.slug] = true; });
+      var base = slugify(name), slug = base, i = 2;
+      while (taken[slug]) slug = base + "-" + (i++);
+      var msg = document.getElementById("npcMsg");
+      msg.textContent = "Creating…";
+      var ins = await db.from("npc_sheets").insert({ slug: slug, chronicle: "dead-hand", name: name, data: { name: name }, play: {} });
+      if (ins.error) { msg.textContent = "Could not create it: " + errText(ins.error); return; }
+      window.location.href = "sheet.html?npc=" + encodeURIComponent(slug);
+    });
+    box.querySelectorAll("[data-delnpc]").forEach(function (b) {
+      b.addEventListener("click", async function () {
+        if (!window.confirm('Delete the NPC sheet for "' + b.getAttribute("data-name") + '"? This cannot be undone.')) return;
+        var d = await db.from("npc_sheets").delete().eq("slug", b.getAttribute("data-delnpc"));
+        if (d.error) { window.alert("Could not delete it: " + errText(d.error)); return; }
+        npcSheets();
+      });
+    });
   }
 
   async function render() {

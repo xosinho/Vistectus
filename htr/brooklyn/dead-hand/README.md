@@ -179,6 +179,22 @@ so do not upload anything that must stay secret until you reveal it.
 Never put the seed file, or a setups file exported from the board, in
 this repository: both contain your notes.
 
+## NPC stat sheets (Storyteller only)
+
+The Storyteller page has an **NPC stat sheets** section: create a sheet
+for any NPC (the names from the People page are suggested), open it, and
+change anything with **Edit sheet**. Damage and notes save as you go.
+The layout is the hunters' sheet without experience, and **Download PDF**
+works as it does for hunters.
+
+They live only in the `npc_sheets` table, which the database lets no
+one but a Storyteller read, create, change or delete; visitors are
+refused outright and players get nothing back. Nothing about them is in
+the website's files. Each opens at `sheet.html?npc=<name>`, which shows
+non-Storytellers a "Storytellers only" message and nothing else.
+
+One-time setup: run `assets/sheets/sql/npc-sheets.sql` in Supabase.
+
 ## The RICO Case board
 
 `rico-case/` is the case board, opened from the **RICO Case** button in
