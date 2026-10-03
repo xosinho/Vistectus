@@ -130,7 +130,8 @@
     p.health = ten(p.health, 10).map(mark);
     p.willpower = ten(p.willpower, 10).map(mark);
     p.equipment = ten(p.equipment, 14).map(String);
-    p.despair = !!p.despair;
+    // Despair runs 0-5. Sheets saved when it was a single box held true/false.
+    p.despair = p.despair === true ? 1 : num(p.despair, 5);
     ["ambition", "desire", "touchstones", "notes", "age", "dob", "appearance", "features", "history"].forEach(function (k) { p[k] = String(p[k] || ""); });
     return sheet;
   }
@@ -236,6 +237,17 @@
     return h + "</span>";
   }
 
+  function despairBoxes(level) {
+    var h = '<span class="boxes" role="group" aria-label="Despair, ' + level + ' of 5">';
+    for (var i = 1; i <= 5; i++) {
+      var cls = "box despair" + (i <= level ? " on" : "");
+      h += canPlay()
+        ? '<button type="button" class="' + cls + '" data-action="despair" data-n="' + i + '" aria-label="Set Despair to ' + (level === i ? i - 1 : i) + '"></button>'
+        : '<span class="' + cls + '"></span>';
+    }
+    return h + "</span>";
+  }
+
   /* ------------------------------------------------------------ page 1 */
   function page1() {
     var v = view(), d = v.data, p = v.play;
@@ -265,9 +277,8 @@
     h += '<div class="trackers">' +
       '<div class="tracker"><h4>Health</h4>' + boxes("health", p.health, hMax) + trackerNote("healthMax", hMax, "Stamina + 3", hSum) + "</div>" +
       '<div class="tracker"><h4>Willpower</h4>' + boxes("willpower", p.willpower, wMax) + trackerNote("willpowerMax", wMax, "Composure + Resolve", wSum) + "</div>" +
-      '<div class="tracker"><h4>Despair</h4>' +
-        (canPlay() ? '<button type="button" class="box" data-action="despair" aria-pressed="' + p.despair + '" aria-label="Despair">' + (p.despair ? "X" : "") + "</button>"
-                   : '<span class="box">' + (p.despair ? "X" : "") + "</span>") + "</div></div>";
+      '<div class="tracker"><h4>Despair</h4>' + despairBoxes(p.despair) +
+        '<span class="tracker-note">' + p.despair + " of 5</span></div></div>";
     if (canPlay()) h += '<p class="tracker-note" style="text-align:center">Click a box to mark it: once for superficial ( / ), twice for aggravated ( X ), a third time to clear.</p>';
 
     h += "<h3>Skills</h3><div class=\"cols3 skills\">";
@@ -691,7 +702,9 @@
       v.play[track][i] = cur === "" ? "/" : (cur === "/" ? "X" : "");
       render(); savePlaySoon();
     } else if (a === "despair" && canPlay()) {
-      v.play.despair = !v.play.despair;
+      // Fill up to the box clicked; clicking the last filled box steps back one.
+      var n = +b.getAttribute("data-n");
+      v.play.despair = v.play.despair === n ? n - 1 : n;
       render(); savePlaySoon();
     } else if (a === "dot" && S.edit) {
       var kind = b.getAttribute("data-kind"), key = b.getAttribute("data-key"), n = +b.getAttribute("data-n");
@@ -965,7 +978,7 @@
       ATTRS.forEach(function (g) { g[1].forEach(function (k) { tick(k, d.attributes[k]); }); });
       ALL_SKILLS.forEach(function (k) { tick(k, d.skills[k]); });
       for (var i = 0; i < 10; i++) { text("health" + (i + 1), p.health[i]); text("will" + (i + 1), p.willpower[i]); }
-      tick("despair", p.despair ? 1 : 0);
+      tick("despair", p.despair > 0 ? 1 : 0);   // the printed sheet has a single box
       d.edges.slice(0, MAX_ROWS).forEach(function (e, r) {
         var perks = e.perks.map(function (k) { return "Perk: " + k; });
         text("edge " + (r * 3 + 1), e.name);

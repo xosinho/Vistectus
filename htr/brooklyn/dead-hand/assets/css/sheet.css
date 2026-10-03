@@ -230,3 +230,6 @@ button.box:hover { box-shadow: 0 0 0 2px rgba(224,113,43,.45); }
 .spec-list .spec-missing { color: var(--paper-soft); font-style: italic; }
 .spec-list .spec-waiting { color: #7a3a0c; }
 .spec-none { margin: 0; color: var(--paper-soft); font-style: italic; }
+
+/* Despair: five boxes, filled up to the current level */
+.box.despair.on { background: var(--paper-ink); }
