@@ -230,12 +230,19 @@
      remove it from the site's files. */
   var CHRONICLE = "dead-hand";
   function hiddenStore(kind) {
+    // Local direct-file browsing should still show roster entries immediately.
+    // The hidden-item lookup depends on a remote Supabase session and is not
+    // required just to read the page from disk.
+    if (window.location && window.location.protocol === "file:") {
+      return Promise.resolve({ db: null, kind: kind, hidden: {}, isST: false, signedIn: false });
+    }
+
     var cfg = window.BUILDERS_CONFIG || {};
     var db = (cfg.supabaseUrl && cfg.supabaseAnonKey && window.supabase)
       ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
     var store = { db: db, kind: kind, hidden: {}, isST: false, signedIn: false };
     if (!db) return Promise.resolve(store);
-    var timeout = new Promise(function (_, rej) { setTimeout(function () { rej(new Error("timeout")); }, 6000); });
+    var timeout = new Promise(function (_, rej) { setTimeout(function () { rej(new Error("timeout")); }, 1500); });
     return Promise.race([
       (async function () {
         var r = await db.from("archive_hidden").select("item").eq("chronicle", CHRONICLE).eq("kind", kind);

@@ -327,6 +327,57 @@ window.DEAD_HAND_NPCS = [
   },
 
   {
+    name: "Ilaria Grimani",
+    tagline: "Asks every question twice",
+    role: "Compliance auditor · Venetian family holding company",
+    portrait: "assets/img/npcs/Ilaria Grimani.jpg",
+    meta: ["The Family & its holdings"],
+    description:
+      "Compliance auditor for a Venetian family holding company, conducting " +
+      "periodic inspections of its American operations. Reported to distrust " +
+      "the work of others and to verify records, figures and assessments " +
+      "personally rather than accept them as filed. Her visits are dreaded by " +
+      "local staff. No criminal record.",
+    file: {
+      "File status": "Active / Person of Interest",
+      "Age": "Apparent early 40s (documentary age unverified)",
+      "Status": "Alive; travels intermittently between Venice and New York.",
+      "Race": "White (Italian national, Venetian)",
+      "Height": "5'8\"",
+      "Weight": "~130 lbs",
+      "Hair": "Black, severe chin-length cut",
+      "Distinguishing marks": "Pale, angular face. Dark, tailored suits without jewellery, apart from a thin gold signet ring on the left hand. Carries a slim leather document case that never leaves her hand. Witnesses describe a cold, exacting courtesy and an unsettling habit of asking the same question twice to compare the answers."
+    }
+  },
+
+  {
+    name: "Fra Anselmo de Luca",
+    tagline: "Lamplight in the mausoleum",
+    role: "Archive custodian · Brooklyn Cemetery",
+    portrait: "assets/img/npcs/Anselmo De Luca.jpg",
+    meta: ["The Family & its holdings"],
+    description:
+      "Custodian of a private ecclesiastical archive, maintaining provenance " +
+      "and genealogical records on behalf of an old Italian family foundation. " +
+      "The archive is housed in a family mausoleum in Brooklyn Cemetery, under " +
+      "a long-standing arrangement with the foundation. The office is " +
+      "hereditary within his religious order, and his predecessor in it bore " +
+      "the same family name. Cemetery staff report lamplight in the mausoleum " +
+      "at night, but rarely see him enter or leave the grounds. Regarded as " +
+      "reclusive, scholarly and unfailingly polite. No criminal record.",
+    file: {
+      "File status": "Unclassified / Monitored",
+      "Age": "Apparent mid-60s (documentary age unverified)",
+      "Status": "Alive; resident in Brooklyn.",
+      "Race": "White (Italian national origin)",
+      "Height": "5'9\"",
+      "Weight": "~150 lbs",
+      "Hair": "Grey, tonsure-short; clean-shaven",
+      "Distinguishing marks": "Slight and slightly stooped, with ink-stained fingers. Wears a plain black friar's habit or sober clerical black. Moves with a deliberate, unhurried economy. Speaks a formal, old-fashioned Italian and careful English, and is known to work through the night."
+    }
+  },
+
+  {
     name: "Harold Voss",
     tagline: "Taught her the law was worth defending",
     role: "Kings County District Attorney’s Office",
@@ -376,6 +427,54 @@ window.DEAD_HAND_NPCS = [
   },
 
   {
+    name: "Arthur Devlin",
+    tagline: "Rarely puts anything in writing",
+    role: "City Council Member · Carroll Gardens & Red Hook",
+    portrait: "assets/img/npcs/Arthur Devlin.jpg",
+    meta: ["Public office"],
+    description:
+      "New York City Council member representing a district that includes " +
+      "Carroll Gardens and Red Hook. Sits on the Council's land-use and zoning " +
+      "committees. Has significant influence over local permitting, demolition " +
+      "and development approvals. Named in documents relevant to an ongoing " +
+      "inquiry.",
+    file: {
+      "File status": "Active / Under Investigation",
+      "Age": "58",
+      "Status": "Alive.",
+      "Race": "White American (Irish-American)",
+      "Height": "5'11\"",
+      "Weight": "~210 lbs",
+      "Hair": "Silver, thick, carefully styled",
+      "Distinguishing marks": "Broad, back-slapping build. Ruddy and always smiling. Wears a flag pin and a parish medal. Never forgets a voter's name, and rarely puts anything in writing."
+    }
+  },
+
+  {
+    name: "Dr. Aaron Feldman",
+    tagline: "Signs the certificates",
+    role: "Senior Medical Examiner · Brooklyn",
+    portrait: "assets/img/npcs/Aaron Feldman.jpg",
+    meta: ["Public office"],
+    description:
+      "Senior medical examiner with the city's Office of Chief Medical " +
+      "Examiner, assigned to Brooklyn. Responsible for determining cause of " +
+      "death and certifying deaths in the borough. Has certified a number of " +
+      "deaths now being reviewed. Named in documents relevant to an ongoing " +
+      "inquiry.",
+    file: {
+      "File status": "Active / Under Investigation",
+      "Age": "63",
+      "Status": "Alive.",
+      "Race": "White American",
+      "Height": "5'8\"",
+      "Weight": "~160 lbs",
+      "Hair": "Grey, thinning; neat grey beard",
+      "Distinguishing marks": "Slight, tidy and fastidious. Half-moon glasses and a faint smell of formalin. Speaks in a precise, clinical monotone and is visibly uncomfortable outside a lab."
+    }
+  },
+
+  {
     name: "Mara Reyes",
     tagline: "No relation",
     role: "Special Agent · FBI",
@@ -395,6 +494,54 @@ window.DEAD_HAND_NPCS = [
       "Weight": "~135 lbs",
       "Hair": "Dark, pulled back tightly",
       "Distinguishing marks": "Athletic build. Direct manner; minimal patience for small talk. Standard federal field attire."
+    }
+  },
+
+  {
+    name: "Helena Varga",
+    tagline: "Long silences no one fills",
+    role: "Assistant Director · FBI Headquarters",
+    portrait: "assets/img/npcs/Helena Varga.jpg",
+    meta: ["Law, justice & intelligence"],
+    description:
+      "Assistant Director at FBI Headquarters, heading a small, specialised " +
+      "division. Sets national priorities for that division and represents it " +
+      "in inter-agency forums. Regarded within the Bureau as formidable, " +
+      "discreet and politically durable. No public profile.",
+    file: {
+      "File status": "Restricted / Federal — Senior",
+      "Age": "59",
+      "Status": "Alive, active.",
+      "Race": "White American (Hungarian-American)",
+      "Height": "5'6\"",
+      "Weight": "~140 lbs",
+      "Hair": "Steel-grey, cropped very short",
+      "Distinguishing marks": "Compact, upright posture. Pale, direct eyes. Favours dark trouser suits and a man's wristwatch, her late father's. Known for long silences in meetings, which subordinates learn not to fill."
+    }
+  },
+
+  {
+    name: "Thomas Whitcombe",
+    tagline: "Approves operations slowly, and personally",
+    role: "Section Chief · FBI, New York",
+    portrait: "assets/img/npcs/Thomas Whitcombe.jpg",
+    meta: ["Law, justice & intelligence"],
+    description:
+      "Section Chief within a specialised FBI division, based at the New York " +
+      "field office. Oversees a small number of field cells handling unusual " +
+      "and sensitive investigations across the north-eastern United States. " +
+      "Known as a careful, procedure-bound administrator who approves " +
+      "operations slowly and personally. Direct supervisor of Special Agent M. " +
+      "Reyes.",
+    file: {
+      "File status": "Restricted / Federal",
+      "Age": "54",
+      "Status": "Alive, active.",
+      "Race": "White American",
+      "Height": "6'1\"",
+      "Weight": "~195 lbs",
+      "Hair": "Sandy grey, receding, cut short",
+      "Distinguishing marks": "Rangy former college rower, slightly stooped from a desk career. Rimless reading glasses pushed up on his forehead. Always in shirtsleeves after nine in the morning. Speaks quietly and expects to be asked to repeat himself."
     }
   },
 
