@@ -72,6 +72,48 @@ window.DEAD_HAND_MAPS = [
   },
 
   {
+    title: "Hecate Holdings Basement",
+    when: "",
+    description: "The lower holding-space beneath the Hecate front office, with utility access and concealed circulation routes marked.",
+    image: "assets/resources/Maps/Hecate Holdings Basement.jpg"
+  },
+
+  {
+    title: "Mausoleum Altar Entry",
+    when: "",
+    description: "The altar approach and entry sequence into the mausoleum, showing the layout that leads to the private archive chamber.",
+    image: "assets/resources/Maps/Mausoleum Altar Entry.jpg"
+  },
+
+  {
+    title: "Mausoleum Anselmo's Study",
+    when: "",
+    description: "The study space used by Anselmo de Luca, including seating, storage and the concealed access to the archive works.",
+    image: "assets/resources/Maps/Mausoleum Anselmos Study.jpg"
+  },
+
+  {
+    title: "Mausoleum Chapel",
+    when: "",
+    description: "The chapel and burial chamber arrangement beyond the public entry, showing the restricted rooms and their relationship to the vault.",
+    image: "assets/resources/Maps/Mausoleum Chapel.jpg"
+  },
+
+  {
+    title: "Mausoleum Entrance",
+    when: "",
+    description: "The main entry to the family mausoleum and the approach from the cemetery grounds, with key routes and door points marked.",
+    image: "assets/resources/Maps/Mausoleum entrance.jpg"
+  },
+
+  {
+    title: "Mausoleum Tunnel View",
+    when: "",
+    description: "The tunnel route beneath the mausoleum grounds, showing the connecting path between the cemetery, archive and lower storage spaces.",
+    image: "assets/resources/Maps/Mausoleum Tunnel View.jpg"
+  },
+
+  {
     title: "Moretti Safehouse",
     when: "",
     description: "The safehouse layout used by the Moretti operation, showing access, staging and a likely secondary exit.",

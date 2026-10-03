@@ -120,6 +120,12 @@
       return { name: String(a.name || ""), dots: num(a.dots, 5) };
     });
     ["name", "concept", "creed", "cell", "drive", "redemption", "tenets", "creedFields"].forEach(function (k) { d[k] = String(d[k] || ""); });
+    // Optional Storyteller overrides for the number of Health and
+    // Willpower boxes (a Discipline, a Merit...). Empty: the usual sums.
+    ["healthMax", "willpowerMax"].forEach(function (k) {
+      var n = parseInt(d[k], 10);
+      d[k] = (n >= 1 && n <= 10) ? n : "";
+    });
     function ten(a, n) { a = Array.isArray(a) ? a.slice(0, n) : []; while (a.length < n) a.push(""); return a; }
     p.health = ten(p.health, 10).map(mark);
     p.willpower = ten(p.willpower, 10).map(mark);
@@ -247,10 +253,18 @@
     });
     h += "</div>";
 
-    var hMax = Math.min(10, d.attributes.stamina + 3), wMax = Math.min(10, d.attributes.composure + d.attributes.resolve);
+    var hSum = Math.min(10, d.attributes.stamina + 3), wSum = Math.min(10, d.attributes.composure + d.attributes.resolve);
+    var hMax = d.healthMax || hSum, wMax = d.willpowerMax || wSum;
+    function trackerNote(key, max, sumText, sum) {
+      if (S.edit) {
+        return '<span class="tracker-note">Boxes <input class="num" type="number" min="1" max="10" data-src="data" data-key="' + key +
+          '" value="' + (d[key] || "") + '" placeholder="' + sum + '" aria-label="Number of boxes; empty for ' + sumText + '"> (empty: ' + sumText + ")</span>";
+      }
+      return '<span class="tracker-note">' + (d[key] ? "Set by the Storyteller: " + max : sumText + " = " + max) + "</span>";
+    }
     h += '<div class="trackers">' +
-      '<div class="tracker"><h4>Health</h4>' + boxes("health", p.health, hMax) + '<span class="tracker-note">Stamina + 3 = ' + hMax + "</span></div>" +
-      '<div class="tracker"><h4>Willpower</h4>' + boxes("willpower", p.willpower, wMax) + '<span class="tracker-note">Composure + Resolve = ' + wMax + "</span></div>" +
+      '<div class="tracker"><h4>Health</h4>' + boxes("health", p.health, hMax) + trackerNote("healthMax", hMax, "Stamina + 3", hSum) + "</div>" +
+      '<div class="tracker"><h4>Willpower</h4>' + boxes("willpower", p.willpower, wMax) + trackerNote("willpowerMax", wMax, "Composure + Resolve", wSum) + "</div>" +
       '<div class="tracker"><h4>Despair</h4>' +
         (canPlay() ? '<button type="button" class="box" data-action="despair" aria-pressed="' + p.despair + '" aria-label="Despair">' + (p.despair ? "X" : "") + "</button>"
                    : '<span class="box">' + (p.despair ? "X" : "") + "</span>") + "</div></div>";
