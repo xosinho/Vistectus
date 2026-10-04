@@ -179,6 +179,29 @@ so do not upload anything that must stay secret until you reveal it.
 Never put the seed file, or a setups file exported from the board, in
 this repository: both contain your notes.
 
+## Rules reference: Creeds, Drives, Edges, Advantages
+
+The `rules_*` tables in Supabase hold the Hunter: The Reckoning rules
+reference, compiled from the Hunter: The Reckoning Wiki (CC BY-SA 3.0):
+5 Creeds, 9 Drives, 17 Edges plus 10 lineage variants with their 98
+Perks and dice pools, and 69 Advantages & Flaws. Names, dice pools and
+dots are as on the wiki; descriptions are short summaries linking to it.
+
+On every character and NPC sheet:
+- each Edge shows its **dice pool**, requirements and description, and
+  each Perk its effect (also in the PDF: the pool is added to the row);
+- **Edit sheet** turns Creed and Drive into dropdowns ("Other…" for
+  anything else, such as an NPC's clan), gives each Edge and Advantage
+  row a "Pick from the list" dropdown, and Perks become tick-boxes;
+- **Buy something new** (XP) offers Edges, Perks and Advantages from
+  dropdowns, leaving out what the hunter already has.
+
+Existing Edges are recognised by name ("GLOBAL ACCESS (Int + Technology)"
+finds Global Access). One that is not on the wiki keeps working as text.
+Anyone can read the tables; only Storytellers can change them, in the
+Supabase Table Editor. Setup: run `assets/sheets/sql/rules.sql` once;
+running it again resets the tables to the file's data.
+
 ## NPC stat sheets (Storyteller only)
 
 The Storyteller page has an **NPC stat sheets** section: create a sheet

@@ -114,7 +114,9 @@
     ALL_SKILLS.forEach(function (k) { d.skills[k] = num(d.skills[k], 5); });
     d.specialties = Array.isArray(d.specialties) ? d.specialties : [];
     d.edges = (Array.isArray(d.edges) ? d.edges : []).map(function (e) {
-      return { name: String(e.name || ""), perks: Array.isArray(e.perks) ? e.perks.map(String) : [], notes: String(e.notes || "") };
+      var row = { name: String(e.name || ""), perks: Array.isArray(e.perks) ? e.perks.map(String) : [], notes: String(e.notes || "") };
+      if (e.key) row.key = String(e.key);   // the rules Edge it was picked from
+      return row;
     });
     d.advantages = (Array.isArray(d.advantages) ? d.advantages : []).map(function (a) {
       return { name: String(a.name || ""), dots: num(a.dots, 5) };
@@ -207,8 +209,78 @@
       dots(kind, key, level, S.edit ? 0 : pendingFor(kind, key), editable) + "</span></div>";
   }
 
+  /* -------------------------------------------------------- rules data
+     Creeds, Drives, Edges & Perks and Advantages & Flaws, from the
+     rules_* tables in Supabase (assets/sheets/sql/rules.sql, compiled
+     from the Hunter: The Reckoning Wiki). They feed the dropdowns and
+     the Edge descriptions and dice pools. Without them the sheet works
+     as before, with plain text boxes. */
+  var R = { loaded: false, creeds: [], drives: [], edges: [], perks: {}, advantages: [] };
+
+  async function loadRules() {
+    if (R.loaded || !db) return;
+    try {
+      var got = await Promise.all(["rules_creeds", "rules_drives", "rules_edges", "rules_perks", "rules_advantages"].map(function (t) {
+        return db.from(t).select("*").order("sort", { ascending: true });
+      }));
+      got.forEach(function (x) { if (x.error) throw x.error; });
+      R.creeds = got[0].data || []; R.drives = got[1].data || []; R.edges = got[2].data || [];
+      R.advantages = got[4].data || [];
+      R.perks = {};
+      (got[3].data || []).forEach(function (p) { (R.perks[p.edge_key] = R.perks[p.edge_key] || []).push(p); });
+      R.loaded = R.edges.length > 0;
+    } catch (e) { console.error("Rules unavailable; plain text boxes instead.", e); }
+  }
+
+  function normName(s) {
+    return String(s || "").toLowerCase().replace(/artefact/g, "artifact").replace(/[’']/g, "")
+      .replace(/[^a-z0-9]+/g, " ").replace(/^the /, "").trim();
+  }
+  // "GLOBAL ACCESS (Int + Technology)", "ARTEFACT - Fetish of Lwa": the part that names the Edge.
+  function baseName(s) {
+    return normName(String(s || "").replace(/\(.*?\)/g, " ").split(/\s+[-–—]\s+|:/)[0]);
+  }
+  function findEdge(row) {
+    if (!R.loaded || !row) return null;
+    var full = normName(String(row.name || "").replace(/\(.*?\)/g, " ")), base = baseName(row.name);
+    return R.edges.filter(function (e) { return row.key && e.key === row.key; })[0] ||
+      R.edges.filter(function (e) { return normName(e.name) === full; })[0] ||
+      R.edges.filter(function (e) { return !e.variant_of && normName(e.name) === base; })[0] || null;
+  }
+  // A variant has its own Perks and its base Edge's.
+  function perksOf(rule) {
+    if (!rule) return [];
+    return (R.perks[rule.key] || []).concat(rule.variant_of ? (R.perks[rule.variant_of] || []) : []);
+  }
+  function findPerk(rule, text) {
+    var t = baseName(text);
+    return perksOf(rule).filter(function (p) {
+      var n = normName(p.name);
+      return n === t || t.indexOf(n + " ") === 0;
+    })[0] || null;
+  }
+  function findAdvantage(name) {
+    var b = baseName(String(name || "").replace(/\(flaw\)/i, ""));
+    return R.advantages.filter(function (a) { return normName(a.name) === b; })[0] || null;
+  }
+
+  // A dropdown of choices that keeps any value already on the sheet;
+  // "Other…" asks for one that is not in the list.
+  function pickField(name, key, options) {
+    var v = view().data[key] || "";
+    var known = options.some(function (o) { return o === v; });
+    return '<div class="field"><b>' + esc(name) + '</b><select data-pick="' + key + '" aria-label="' + esc(name) + '">' +
+      '<option value=""' + (v ? "" : " selected") + ">—</option>" +
+      (v && !known ? '<option selected value="' + esc(v) + '">' + esc(v) + "</option>" : "") +
+      options.map(function (o) { return '<option' + (o === v ? " selected" : "") + ' value="' + esc(o) + '">' + esc(o) + "</option>"; }).join("") +
+      '<option value="__other">Other…</option></select></div>';
+  }
+
   // A line of text: an input when this visitor may change it.
   function field(name, src, key, cls) {
+    if (S.edit && src === "data" && R.loaded && (key === "creed" || key === "drive")) {
+      return pickField(name, key, (key === "creed" ? R.creeds : R.drives).map(function (x) { return x.name; }));
+    }
     var v = view()[src][key];
     var editable = src === "play" ? canPlay() : !!S.edit;
     return '<div class="field ' + (cls || "") + '"><b>' + esc(name) + "</b>" +
@@ -333,23 +405,74 @@
     return h + '</table><p><button type="button" class="mini" data-action="add-row" data-list="specialties">+ Specialty</button></p>';
   }
 
+  // Dropdown of every Edge, grouped by category; variants say their lineage.
+  function edgeOptions(selectedKey, exclude) {
+    var cats = ["Asset", "Aptitude", "Endowment"];
+    return cats.map(function (c) {
+      var opts = R.edges.filter(function (e) { return e.category === c && !(exclude && exclude[e.key]); });
+      if (!opts.length) return "";
+      return '<optgroup label="' + c + 's">' + opts.map(function (e) {
+        return '<option value="' + esc(e.key) + '"' + (e.key === selectedKey ? " selected" : "") + ">" +
+          esc(e.name) + (e.lineage ? " (" + esc(e.lineage) + ")" : "") + "</option>";
+      }).join("") + "</optgroup>";
+    }).join("");
+  }
+
+  // Advantages grouped Merits / Backgrounds / Flaws, with their dots.
+  function advantageOptions(onlyBuyable, exclude) {
+    return ["Merit", "Background", "Flaw"].filter(function (t) { return !onlyBuyable || t !== "Flaw"; }).map(function (t) {
+      var opts = R.advantages.filter(function (a) { return a.type === t && !(exclude && exclude[a.key]); });
+      return '<optgroup label="' + t + 's">' + opts.map(function (a) {
+        return '<option value="' + esc(a.key) + '" title="' + esc(a.summary) + '">' + esc(a.name) + " " + esc(a.dots) + "</option>";
+      }).join("") + "</optgroup>";
+    }).join("");
+  }
+
+  // What the rules say about an Edge: its dice pool, needs and summary.
+  function edgeRulesHtml(rule) {
+    if (!rule) return "";
+    return '<div class="edge-pool">Dice pool: ' + esc(rule.dice_pool || "—") + "</div>" +
+      (rule.requirements ? '<div class="edge-req">Needs: ' + esc(rule.requirements) + "</div>" : "") +
+      '<div class="edge-desc">' + esc(rule.summary) +
+      (rule.url ? ' <a href="' + esc(rule.url) + '" target="_blank" rel="noopener">Wiki</a>' : "") + "</div>";
+  }
+
   function edgesTable(d) {
-    var h = '<table class="grid-table"><tr><th style="width:32%">Edge</th><th style="width:34%">Perks</th><th>Notes</th>' + (S.edit ? "<th></th>" : "") + "</tr>";
+    var h = '<table class="grid-table"><tr><th style="width:38%">Edge</th><th style="width:36%">Perks</th><th>Notes</th>' + (S.edit ? "<th></th>" : "") + "</tr>";
     if (!d.edges.length && !S.edit) h += '<tr><td class="empty" colspan="3">No Edges yet.</td></tr>';
     d.edges.forEach(function (e, i) {
+      var rule = findEdge(e);
       if (S.edit) {
-        h += '<tr><td><input data-list="edges" data-i="' + i + '" data-field="name" value="' + esc(e.name) + '" aria-label="Edge"></td>' +
-          '<td><input data-list="edges" data-i="' + i + '" data-field="perks" value="' + esc(e.perks.join("; ")) + '" aria-label="Perks, separated by semicolons" placeholder="Perks; separated; by semicolons"></td>' +
+        var perkCell;
+        if (rule) {
+          var custom = e.perks.filter(function (p) { return !findPerk(rule, p); });
+          perkCell = '<div class="perk-checks">' + perksOf(rule).map(function (p) {
+            var on = e.perks.some(function (x) { var m = findPerk(rule, x); return m && m.key === p.key; });
+            return '<label title="' + esc(p.summary) + '"><input type="checkbox" data-perk-check data-i="' + i + '" value="' + esc(p.key) + '"' +
+              (on ? " checked" : "") + "> " + esc(p.name) + "</label>";
+          }).join("") + "</div>" +
+            '<input data-perks-other data-i="' + i + '" value="' + esc(custom.join("; ")) + '" placeholder="Other perks; separated; by semicolons" aria-label="Other perks">';
+        } else {
+          perkCell = '<input data-list="edges" data-i="' + i + '" data-field="perks" value="' + esc(e.perks.join("; ")) + '" aria-label="Perks, separated by semicolons" placeholder="Perks; separated; by semicolons">';
+        }
+        h += '<tr><td><input data-list="edges" data-i="' + i + '" data-field="name" value="' + esc(e.name) + '" aria-label="Edge">' +
+          (R.loaded ? '<select class="pick" data-pick-edge data-i="' + i + '" aria-label="Pick the Edge from the list"><option value="">Pick from the list…</option>' +
+            edgeOptions(rule && rule.key) + "</select>" : "") + edgeRulesHtml(rule) + "</td>" +
+          "<td>" + perkCell + "</td>" +
           '<td><input data-list="edges" data-i="' + i + '" data-field="notes" value="' + esc(e.notes) + '" aria-label="Notes"></td>' +
           '<td><button type="button" class="mini" data-action="del-row" data-list="edges" data-i="' + i + '">Remove</button></td></tr>';
       } else {
-        h += "<tr><td><b>" + esc(e.name) + "</b></td><td>" +
-          (e.perks.length ? "<ul>" + e.perks.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "") +
+        h += "<tr><td><b>" + esc(e.name) + "</b>" + edgeRulesHtml(rule) + "</td><td>" +
+          (e.perks.length ? "<ul>" + e.perks.map(function (x) {
+            var p = findPerk(rule, x);
+            return "<li>" + esc(x) + (p ? '<small class="perk-sum">' + esc(p.summary) + "</small>" : "") + "</li>";
+          }).join("") + "</ul>" : "") +
           "</td><td>" + esc(e.notes) + "</td></tr>";
       }
     });
     h += "</table>";
     if (S.edit && d.edges.length < MAX_ROWS) h += '<p><button type="button" class="mini" data-action="add-row" data-list="edges">+ Edge</button></p>';
+    if (R.loaded) h += '<p class="rules-credit">Edge and Perk details summarised from the <a href="https://htr.paradoxwikis.com/Hunter_The_Reckoning_Wiki" target="_blank" rel="noopener">Hunter: The Reckoning Wiki</a> (CC BY-SA 3.0).</p>';
     return h;
   }
 
@@ -369,11 +492,14 @@
     if (!d.advantages.length && !S.edit) h += '<div class="adv-row"><span class="empty-line">None yet.</span></div>';
     d.advantages.forEach(function (a, i) {
       if (S.edit) {
-        h += '<div class="adv-row"><input data-list="advantages" data-i="' + i + '" data-field="name" value="' + esc(a.name) + '" aria-label="Advantage or Flaw">' +
-          '<span class="trait-end">' + dots("advantage", String(i), a.dots, 0, true) +
+        h += '<div class="adv-row"><span class="adv-edit"><input data-list="advantages" data-i="' + i + '" data-field="name" value="' + esc(a.name) + '" aria-label="Advantage or Flaw">' +
+          (R.loaded ? '<select class="pick" data-pick-adv data-i="' + i + '" aria-label="Pick from the list"><option value="">Pick from the list…</option>' + advantageOptions() + "</select>" : "") +
+          '</span><span class="trait-end">' + dots("advantage", String(i), a.dots, 0, true) +
           '<button type="button" class="mini" data-action="del-row" data-list="advantages" data-i="' + i + '" aria-label="Remove">✕</button></span></div>';
       } else {
-        h += '<div class="adv-row"><span class="trait-name">' + esc(a.name) + '</span><span class="trait-end">' +
+        var rule = findAdvantage(a.name);
+        h += '<div class="adv-row"' + (rule ? ' title="' + esc(rule.type + " · " + rule.dots + " · " + rule.summary) + '"' : "") +
+          '><span class="trait-name">' + esc(a.name) + '</span><span class="trait-end">' +
           (/\(flaw\)/i.test(a.name) ? "" : buyChip("advantage", a.name, a.dots)) +
           dots("advantage", a.name, a.dots, pendingFor("advantage", a.name), false) + "</span></div>";
       }
@@ -494,8 +620,28 @@
         '<label>Specialty<input name="detail" maxlength="80" required placeholder="e.g. Paper trails"></label>';
     } else if (k === "perk") {
       if (!d.edges.length) return h + '</form><p class="xp-hint">A Perk belongs to an Edge, and this sheet has none yet.</p>';
-      h += '<label>Edge<select name="trait">' + d.edges.map(function (e) { return '<option value="' + esc(e.name) + '">' + esc(e.name) + "</option>"; }).join("") + "</select></label>" +
-        '<label>Perk<input name="detail" maxlength="80" required></label>';
+      var edgeName = d.edges.some(function (e) { return e.name === S.newPerkEdge; }) ? S.newPerkEdge : d.edges[0].name;
+      var row = d.edges.filter(function (e) { return e.name === edgeName; })[0], rule = findEdge(row);
+      var left = perksOf(rule).filter(function (p) {
+        return !row.perks.some(function (x) { var m = findPerk(rule, x); return m && m.key === p.key; });
+      });
+      h += '<label>Edge<select name="trait" id="newPerkEdge">' + d.edges.map(function (e) {
+        return '<option value="' + esc(e.name) + '"' + (e.name === edgeName ? " selected" : "") + ">" + esc(e.name) + "</option>";
+      }).join("") + "</select></label>";
+      h += rule && left.length
+        ? '<label>Perk<select name="detail">' + left.map(function (p) {
+            return '<option value="' + esc(p.name) + '" title="' + esc(p.summary) + '">' + esc(p.name) + " — " + esc(p.summary) + "</option>";
+          }).join("") + "</select></label>"
+        : '<label>Perk<input name="detail" maxlength="80" required></label>';
+    } else if (k === "edge" && R.loaded) {
+      var owned = {};
+      d.edges.forEach(function (e) { var r = findEdge(e); if (r) owned[r.key] = true; });
+      h += '<label>Edge<select name="trait" data-edge-pick-buy>' + edgeOptions(null, owned) + "</select></label>";
+    } else if (k === "advantage" && R.loaded) {
+      var have = {};
+      d.advantages.forEach(function (a) { var r = findAdvantage(a.name); if (r) have[r.key] = true; });
+      h += '<label>Advantage<select name="trait" data-adv-pick-buy>' + advantageOptions(true, have) + "</select></label>" +
+        '<label>Detail (optional)<input name="detail" maxlength="60" placeholder="e.g. a court clerk"></label>';
     } else {
       h += '<label>Name<input name="trait" maxlength="80" required placeholder="' + (k === "edge" ? "e.g. Beast Hunter" : "e.g. Allies (a court clerk)") + '"></label>';
     }
@@ -607,6 +753,7 @@
   async function load() {
     if (!/^[a-z0-9-]{1,40}$/.test(slug)) return NPC ? storytellerOnly(false) : notFound();
     setStatus("Opening the sheet…");
+    await loadRules();
     if (NPC) {
       var got = "error";
       if (db) { try { got = await fetchNpc(); } catch (e) { console.error(e); got = "error"; } }
@@ -746,13 +893,22 @@
 
   document.addEventListener("input", function (e) {
     var t = e.target;
-    if (!S.sheet || !t.matches("[data-src], [data-list]")) return;
+    if (!S.sheet || !t.matches("[data-src], [data-list], [data-perks-other]")) return;
     var v = view();
+    if (t.hasAttribute("data-perks-other")) {
+      // Perks typed by hand, kept alongside the ticked ones.
+      if (!S.edit) return;
+      var erow = v.data.edges[+t.getAttribute("data-i")], erule = findEdge(erow);
+      erow.perks = erow.perks.filter(function (x) { return findPerk(erule, x); })
+        .concat(t.value.split(/\s*;\s*/).filter(Boolean));
+      return;
+    }
     if (t.hasAttribute("data-list")) {
       if (!S.edit) return;
       var row = v.data[t.getAttribute("data-list")][+t.getAttribute("data-i")];
       var f = t.getAttribute("data-field");
       row[f] = f === "perks" ? t.value.split(/\s*;\s*/).filter(Boolean) : t.value;
+      if (f === "name" && t.getAttribute("data-list") === "edges") delete row.key;   // retyped: match it by name again
       return;
     }
     var src = t.getAttribute("data-src"), key = t.getAttribute("data-key");
@@ -767,8 +923,47 @@
   document.addEventListener("change", function (e) {
     var t = e.target;
     if (t.id === "newKind") { S.newKind = t.value; render(); return; }
+    if (t.id === "newPerkEdge") { S.newPerkEdge = t.value; render(); return; }
     if (S.edit && t.matches("select[data-list]")) {
       view().data[t.getAttribute("data-list")][+t.getAttribute("data-i")][t.getAttribute("data-field")] = t.value;
+      return;
+    }
+    if (!S.edit) return;
+    var d = view().data, i = +t.getAttribute("data-i");
+
+    // Creed / Drive dropdowns; "Other…" asks for a value not in the list.
+    if (t.matches("select[data-pick]")) {
+      var key = t.getAttribute("data-pick");
+      if (t.value === "__other") {
+        var typed = window.prompt("Type the " + key + ":", d[key] || "");
+        if (typed !== null) d[key] = typed.trim();
+      } else {
+        d[key] = t.value;
+      }
+      render();
+    }
+    // Picking an Edge from the list renames the row and offers its Perks.
+    else if (t.matches("select[data-pick-edge]")) {
+      var rule = R.edges.filter(function (x) { return x.key === t.value; })[0];
+      if (rule) { d.edges[i].name = rule.name; d.edges[i].key = rule.key; }
+      render();
+    }
+    // A Perk tick-box: add the Perk, or remove whichever entry matches it.
+    else if (t.matches("input[data-perk-check]")) {
+      var row = d.edges[i], er = findEdge(row);
+      var perk = perksOf(er).filter(function (p) { return p.key === t.value; })[0];
+      if (!perk) return;
+      if (t.checked) row.perks.push(perk.name);
+      else row.perks = row.perks.filter(function (x) { var m = findPerk(er, x); return !(m && m.key === perk.key); });
+    }
+    // Picking an Advantage or Flaw from the list.
+    else if (t.matches("select[data-pick-adv]")) {
+      var ar = R.advantages.filter(function (x) { return x.key === t.value; })[0];
+      if (ar) {
+        d.advantages[i].name = ar.name + (ar.type === "Flaw" ? " (Flaw)" : "");
+        if (!d.advantages[i].dots) d.advantages[i].dots = ar.min_dots;
+      }
+      render();
     }
   });
 
@@ -783,6 +978,17 @@
       e.preventDefault();
       var g = e.target, kind = g.kind.value;
       var traitVal = (g.trait && g.trait.value || "").trim(), detail = (g.detail && g.detail.value || "").trim();
+      // Dropdowns hold rule keys: turn them back into the names the sheet uses.
+      if (kind === "edge" && g.trait && g.trait.hasAttribute("data-edge-pick-buy")) {
+        var er = R.edges.filter(function (x) { return x.key === traitVal; })[0];
+        traitVal = er ? er.name : traitVal;
+      }
+      if (kind === "advantage" && g.trait && g.trait.hasAttribute("data-adv-pick-buy")) {
+        var ar = R.advantages.filter(function (x) { return x.key === traitVal; })[0];
+        traitVal = (ar ? ar.name : traitVal) + (detail ? " - " + detail : "");
+        detail = "";
+      }
+      if (!traitVal) return;
       var cost = costFor(kind, 1);
       var what = kind === "specialty" ? "the Specialty " + label(traitVal) + " (" + detail + ")"
         : kind === "perk" ? "the Perk " + detail + " for " + traitVal
@@ -983,7 +1189,8 @@
         var perks = e.perks.map(function (k) { return "Perk: " + k; });
         text("edge " + (r * 3 + 1), e.name);
         text("edge " + (r * 3 + 2), perks[0] || "");
-        text("edge " + (r * 3 + 3), perks.slice(1).concat(e.notes ? [e.notes] : []).join("  /  "));
+        var er = findEdge(e);
+        text("edge " + (r * 3 + 3), perks.slice(1).concat(e.notes ? [e.notes] : [], er && er.dice_pool ? ["Pool: " + er.dice_pool] : []).join("  /  "));
       });
       if (S.online && !NPC) { text("Total XP", String(x.total)); text("Spent XP", String(x.spent)); }
       text("Chronicle Tenets", d.tenets); text("Touchstones", p.touchstones); text("Creed Fields", d.creedFields);

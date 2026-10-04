@@ -130,9 +130,40 @@
       });
       h += "</table>";
     }
-    root.innerHTML = h + "</section>" + '<div id="npcSheets"></div>';
+    root.innerHTML = h + "</section>" + xpAwardsHtml() + '<div id="npcSheets"></div>';
     wireSignOut();
     npcSheets();
+  }
+
+  /* --------------------------------------------- end-of-session XP
+     The award questions from the Dead Hand Compendium. Award what the
+     table earns from each hunter's sheet (the Award XP form). */
+  var XP_AWARDS = [
+    { q: "Attendance", question: "Did you show up and play tonight?",
+      note: "The baseline award — for being present and engaged at the table, regardless of how the session went for your character." },
+    { q: "Advancing the Hunt", question: "Did the cell learn something important, gain a resource, or otherwise move the investigation forward?",
+      note: "Covers information, leads, gear, allies, or leverage the cell walks away with — progress on the case itself, not just on the plot as the Storyteller sees it." },
+    { q: "Drive & Redemption", question: "Did you actively engage your character’s Drive this session — whether or not it paid off in Redemption?",
+      note: "Reward the attempt, not just the success. A hunter who chased their Drive and came up short still played their character honestly." },
+    { q: "Creed in Action", question: "Did you play your Creed convincingly, especially when it complicated things rather than made them easier?",
+      note: "An Inquisitive hunter stopping to dig deeper when it costs time, or a Martial hunter refusing to back down when retreat was smarter — that’s Creed showing up in the choices, not just the character sheet." },
+    { q: "Risk & Sacrifice", question: "Did your character take a real risk, make a costly sacrifice, or put something on the line for someone else or for the Hunt?",
+      note: "This is the \"answering the call\" question — the moment a hunter chooses the harder, more dangerous path because it’s the right one." },
+    { q: "Table Contribution", question: "Did you help another player have a better session — setting up their spotlight moment, sharing the scene, or supporting their choices?",
+      note: "Rewards collaborative play. A cell that makes room for each other’s character moments is doing something the mechanics alone can’t capture." },
+    { q: "Storyteller’s Call", question: "Did the Storyteller feel this session meaningfully moved the chronicle forward — twist, reveal, escalation, or consequence?",
+      note: "A discretionary bonus point for sessions that land a genuine turning point, at the Storyteller’s judgment." }
+  ];
+
+  function xpAwardsHtml() {
+    return '<section class="xp-panel"><h2>End-of-session XP</h2>' +
+      '<p class="xp-hint">Standard questions to run through with the table once a session wraps. Ask each one aloud — a “yes” typically earns the character 1 XP (Storyteller’s call on anything borderline). Keep it quick; this should take a few minutes, not derail the after-session debrief.</p>' +
+      '<div class="xp-awards">' + XP_AWARDS.map(function (x) {
+        return '<article class="xp-award"><div class="xp-award-top"><h3>' + esc(x.q) + '</h3><span class="xp-award-badge">+1 XP</span></div>' +
+          '<p class="xp-award-q">' + esc(x.question) + "</p>" +
+          '<p class="xp-award-why"><span>Why it counts</span>' + esc(x.note) + "</p></article>";
+      }).join("") + "</div>" +
+      '<p class="xp-hint" style="margin-top:1rem">Then award each hunter’s total from the <strong>Award XP</strong> form on their sheet (Open sheet, above).</p></section>';
   }
 
   /* ------------------------------------------------- NPC stat sheets

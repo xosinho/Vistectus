@@ -233,3 +233,27 @@ button.box:hover { box-shadow: 0 0 0 2px rgba(224,113,43,.45); }
 
 /* Despair: five boxes, filled up to the current level */
 .box.despair.on { background: var(--paper-ink); }
+
+/* Storyteller page: end-of-session XP questions */
+.xp-awards { display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); gap: 1rem; }
+.xp-award { border: 1px solid var(--line); border-top: 2px solid #8fc28a; background: var(--bg); padding: .9rem 1rem 1rem; }
+.xp-award-top { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem; }
+.xp-award h3 { margin: 0 !important; font-family: var(--font-display); font-size: 1rem; letter-spacing: .04em; color: var(--ink); }
+.xp-award-badge { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .08em; color: #8fc28a; border: 1px solid #8fc28a; padding: .1rem .4rem; white-space: nowrap; }
+.xp-award-q { margin: .6rem 0; font-weight: 600; color: var(--ink); }
+.xp-award-why { margin: 0; color: var(--ink-soft); font-size: .92rem; }
+.xp-award-why span { display: block; font-family: var(--font-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: .2rem; }
+
+/* Rules data on the sheet: Edge dice pools, descriptions, pickers */
+.edge-pool { margin-top: .3rem; font-family: var(--sheet-head); font-size: .85rem; color: #7a3a0c; }
+.edge-req { font-size: .78rem; color: var(--paper-soft); }
+.edge-desc { font-size: .8rem; color: var(--paper-soft); line-height: 1.3; margin-top: .15rem; }
+.edge-desc a, .rules-credit a { color: #7a3a0c; }
+.perk-sum { display: block; font-size: .76rem; color: var(--paper-soft); line-height: 1.25; }
+.grid-table li + li { margin-top: .25rem; }
+.perk-checks { display: flex; flex-direction: column; gap: .15rem; margin-bottom: .35rem; font-size: .85rem; }
+.perk-checks label { display: flex; gap: .35rem; align-items: baseline; cursor: pointer; }
+.perk-checks input { width: auto; }
+.page select.pick { margin-top: .3rem; font-size: .8rem; }
+.adv-edit { display: flex; flex-direction: column; flex: 1; min-width: 0; gap: .2rem; }
+.rules-credit { font-size: .72rem; color: var(--paper-soft); margin: .4rem 0 0; }
