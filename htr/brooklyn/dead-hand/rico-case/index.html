@@ -101,7 +101,7 @@
   }
   #boardScaler{position:relative;}
   #board{
-    position:relative;width:7800px;height:5100px;
+    position:relative;width:12000px;height:7800px;
     transform-origin:0 0;cursor:grab;
     background:
       radial-gradient(circle at 12% 18%, rgba(0,0,0,0.18) 0 3px, transparent 4px) 0 0/64px 64px,
@@ -522,9 +522,14 @@
   var dirty = false;
   var selectedType = 'person';
   var zoneMode = false;
-  var zoom = 1;
-  var ZOOM_MIN = 0.35, ZOOM_MAX = 2.0, ZOOM_STEP = 0.1;
-  var BOARD_W = 7800, BOARD_H = 5100;
+  /* The board is drawn at ZOOM_BASE of its true size, and that is what
+     the zoom label calls 100%. From there it zooms out to 35% and in to
+     400%. Card positions and sizes are unaffected, so saved boards open
+     as they were. */
+  var ZOOM_BASE = 0.35;
+  var zoom = ZOOM_BASE;
+  var ZOOM_MIN = ZOOM_BASE * 0.35, ZOOM_MAX = ZOOM_BASE * 4, ZOOM_STEP = 0.1;
+  var BOARD_W = 12000, BOARD_H = 7800;
 
   var boardEl = document.getElementById('board');
   var boardWrap = document.getElementById('boardWrap');
@@ -595,7 +600,7 @@
     boardEl.style.transform = 'scale(' + zoom + ')';
     boardScaler.style.width = (BOARD_W * zoom) + 'px';
     boardScaler.style.height = (BOARD_H * zoom) + 'px';
-    document.getElementById('zoomLabel').textContent = Math.round(zoom * 100) + '%';
+    document.getElementById('zoomLabel').textContent = Math.round(zoom / ZOOM_BASE * 100) + '%';
   }
   /* Zoom so the board point under (clientX, clientY) stays put: the
      pointer for the wheel, the middle of the view for the buttons. */
@@ -611,9 +616,14 @@
     boardWrap.scrollLeft = bx * zoom - ox;
     boardWrap.scrollTop = by * zoom - oy;
   }
-  function zoomIn(){ zoomTo(Math.round((zoom + ZOOM_STEP) * 100) / 100); }
-  function zoomOut(){ zoomTo(Math.round((zoom - ZOOM_STEP) * 100) / 100); }
-  function zoomReset(){ zoomTo(1); }
+  // The buttons step by 10% of the label, landing on round figures.
+  function zoomStep(d){
+    var shown = Math.round((zoom / ZOOM_BASE + d) * 10) / 10;
+    zoomTo(Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, shown * ZOOM_BASE)));
+  }
+  function zoomIn(){ zoomStep(ZOOM_STEP); }
+  function zoomOut(){ zoomStep(-ZOOM_STEP); }
+  function zoomReset(){ zoomTo(ZOOM_BASE); }
 
   /* ================= online case files =================
      Every Save is kept online as a new numbered version, in the
