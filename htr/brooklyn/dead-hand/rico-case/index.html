@@ -237,6 +237,25 @@
     overflow:hidden;text-overflow:ellipsis;flex:0 0 auto;
   }
 
+  /* ---------- Picked people, places, documents ---------- */
+  .card-photo.card-picked{border-top:3px solid var(--tc);}
+  .card-photo .picked-type{margin-bottom:4px;}
+  .card-open{display:inline-block;margin-top:6px;font-family:var(--mono);font-size:10px;letter-spacing:.5px;
+    text-transform:uppercase;color:var(--blood);text-decoration:none;border-bottom:1px solid currentColor;}
+  .modal.modal-wide{width:760px;}
+  #pickSearch{margin-bottom:10px;}
+  .pick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;max-height:60vh;overflow-y:auto;padding:2px;}
+  .pick-item{display:flex;flex-direction:column;gap:4px;padding:6px;background:#fff;border:1px solid var(--paper-edge);
+    border-radius:2px;cursor:pointer;text-align:left;font:inherit;color:var(--ink);}
+  .pick-item:hover,.pick-item:focus-visible{border-color:var(--blood-bright);box-shadow:0 0 0 2px rgba(181,34,42,.2);}
+  .pick-item img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:2px;background:var(--paper-2);}
+  .pick-noimg{display:flex;align-items:center;justify-content:center;aspect-ratio:3/4;background:var(--paper-2);border-radius:2px;}
+  .pick-wide{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));}
+  .pick-wide img,.pick-wide .pick-noimg{aspect-ratio:4/3;}
+  .pick-noimg svg{width:40px;height:40px;fill:none;stroke:var(--ink-soft);stroke-width:1.4;}
+  .pick-name{font-weight:600;font-size:14px;line-height:1.2;}
+  .pick-sub{font-size:11px;color:var(--ink-soft);line-height:1.25;}
+
   /* ---------- Photo locker section ---------- */
   #photoSection{border-top:1px dashed #4d4230;padding-top:10px;margin-top:4px;}
   #photoSection h3{
@@ -416,7 +435,10 @@
         <textarea id="inpNote" placeholder="Notes (optional)…" maxlength="480" rows="3"></textarea>
       </div>
       <div id="formComment" style="display:none">
-        <textarea id="inpCommentText" placeholder="Write your comment…" maxlength="600" rows="4"></textarea>
+        <textarea id="inpCommentText" placeholder="Write your note…" maxlength="600" rows="4"></textarea>
+      </div>
+      <div id="formPicker" style="display:none">
+        <p class="hint" id="pickerHint" style="margin:0 0 8px"></p>
       </div>
       <div id="formPhoto" style="display:none">
         <p class="hint" style="margin:0 0 8px">Photos go to the Photos section below — drag from there onto the board.</p>
@@ -425,7 +447,7 @@
       <div class="legend" id="legend"></div>
       <div id="offboardList"></div>
       <div id="photoSection">
-        <h3>Photos <span id="photoClearAll" style="cursor:pointer;font-size:9px;opacity:0.6;" title="Clear all photos">Clear all</span></h3>
+        <h3>Photos <span><span id="photoUpload" style="cursor:pointer;font-size:9px;margin-right:10px;" title="Upload a photo">＋ Upload</span><span id="photoClearAll" style="cursor:pointer;font-size:9px;opacity:0.6;" title="Clear all photos">Clear all</span></span></h3>
         <div id="photoList"><div id="photoEmpty" style="font-family:var(--mono);font-size:11px;color:#6e6350;text-align:center;padding:6px 0">No photos uploaded yet.</div></div>
       </div>
     </aside>
@@ -442,6 +464,11 @@
 <!-- Case files are saved online in the site's Supabase project, the
      same one the Builders area uses: its address and public key are read
      from builders/config.js. Setup: see the chronicle README. -->
+<!-- The site's people, maps and documents, for the Person / Place /
+     Document pickers. Hidden entries are left out (archive_hidden). -->
+<script src="../assets/data/npcs.js"></script>
+<script src="../assets/data/maps.js"></script>
+<script src="../assets/data/documents.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../../../builders/config.js"></script>
 <script>
@@ -467,17 +494,25 @@
     faction: '<svg viewBox="0 0 24 24"><path d="M12 2l8 3.2v5.6c0 5.4-3.6 9.6-8 11.2-4.4-1.6-8-5.8-8-11.2V5.2z"/></svg>',
     event: '<svg viewBox="0 0 24 24"><path d="M12 2l2.4 6.9H21l-5.8 4.3 2.3 7-5.5-4.3-5.5 4.3 2.3-7L3 8.9h6.6z"/></svg>',
     comment: '<svg viewBox="0 0 24 24"><path d="M4 4h16v12H7l-3 3V4z"/></svg>',
-    photo: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-5L7 18"/></svg>'
+    photo: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-5L7 18"/></svg>',
+    document: '<svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5M9 13h8M9 17h8"/></svg>',
+    evidence: '<svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="M14.5 14.5L21 21"/></svg>'
   };
   var TYPE_META = {
     person:  {label:'Person',  color:'var(--c-person)',  hex:'#c9a35c'},
     place:   {label:'Place',   color:'var(--c-place)',   hex:'#5c8a76'},
     faction: {label:'Faction', color:'var(--c-faction)', hex:'#a3272b'},
     event:   {label:'Event',   color:'var(--c-event)',   hex:'#5b6f8a'},
-    comment: {label:'Comment', color:'var(--c-comment)', hex:'#b5953a'},
-    photo:   {label:'Photo',   color:'var(--c-photo)',   hex:'#6b7a5a'}
+    comment: {label:'Note',    color:'var(--c-comment)', hex:'#b5953a'},
+    photo:   {label:'Photo',   color:'var(--c-photo)',   hex:'#6b7a5a'},
+    document:{label:'Document',color:'#8a6a3a',          hex:'#8a6a3a'},
+    evidence:{label:'Other Evidence', color:'#7a5a8a',   hex:'#7a5a8a'}
   };
-  var TYPE_ORDER = ['person','place','faction','event','comment','photo'];
+  /* The locker's tabs. Person, Place and Document pick from the site's
+     NPCs, Maps and Documents; Other Evidence and Note are post-its.
+     Faction, Event and Photo cards on older boards still display. */
+  var TYPE_ORDER = ['person','place','document','evidence','comment'];
+  var PICKERS = { person: 'npcs', place: 'maps', document: 'documents' };
   var ZONE_PALETTE = ['#b8935a','#5c8a76','#a3272b','#5b6f8a','#8a5aa8','#c97a3a'];
   var CARD_W = 172, CARD_H = 112;
   var CARD_MIN_W = 140, CARD_MIN_H = 90, CARD_MAX_W = 440, CARD_MAX_H = 440;
@@ -1030,13 +1065,31 @@
         if(el.h){ textEl.style.overflow = 'auto'; }
         wireCardControls(card, el);
 
-      } else if(el.type === 'photo'){
-        card.className = 'card card-photo';
+      } else if(el.type === 'document' && !el.src){
+        // A document that is not a picture: its title, and a way to read it.
+        card.style.width = (el.w || CARD_W) + 'px';
+        if(el.h) card.style.height = el.h + 'px';
+        card.style.setProperty('--tc', TYPE_META.document.hex);
+        card.innerHTML = DEL_BTN +
+          '<div class="card-type">' + ICONS.document + '<span>Document</span></div>' +
+          '<div class="card-name">' + escapeHtml(el.name||'') + '</div>' +
+          (safeDocHref(el.href) ? '<a class="card-open" href="' + escapeHtml(safeDocHref(el.href)) + '" target="_blank" rel="noopener">Open ↗</a>' : '') +
+          PIN_BTN + RESIZE_BTN;
+        cardsLayer.appendChild(card);
+        var openEl = card.querySelector('.card-open');
+        if(openEl) openEl.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
+        wireCardControls(card, el);
+
+      } else if(el.type === 'photo' || (el.src && PICKERS[el.type])){
+        // Uploaded photos, and the pictures of people, places and documents.
+        var typed = el.type !== 'photo';
+        card.className = 'card card-photo' + (typed ? ' card-picked' : '');
         var imgW = el.w || 200;
         card.style.width = imgW + 'px';
         if(el.h) card.style.height = el.h + 'px';
-        card.style.setProperty('--tc', '#6b7a5a');
+        card.style.setProperty('--tc', typed ? TYPE_META[el.type].hex : '#6b7a5a');
         card.innerHTML = DEL_BTN +
+          (typed ? '<div class="card-type picked-type">' + ICONS[el.type] + '<span>' + TYPE_META[el.type].label + '</span></div>' : '') +
           '<img class="photo-img" src="' + escapeHtml(safeImageSrc(el.src)) + '" alt="' + escapeHtml(el.caption||'Photo') + '"/>' +
           (el.caption ? '<div class="photo-caption">' + escapeHtml(el.caption) + '</div>' : '') +
           PIN_BTN + RESIZE_BTN;
@@ -1366,7 +1419,7 @@
         mc.style.borderLeftColor = '#b5953a';
         mc.innerHTML =
           '<div class="card-del" title="Remove">✕</div>' +
-          '<div class="mc-type" style="color:#7a6010">Comment</div>' +
+          '<div class="mc-type" style="color:#7a6010">Note</div>' +
           '<div class="mc-note" style="font-size:12px;color:#2a220a">' + escapeHtml((el.text||'').slice(0,80)) + '</div>';
       } else {
         mc.innerHTML =
@@ -1519,6 +1572,109 @@
     document.addEventListener('pointercancel', cleanup);   // an interrupted touch
   }
 
+  /* ------------------------------------------------ Person / Place / Document
+     The choices are the site's own NPCs, Maps and Documents, minus anything
+     the Storyteller has hidden from players. If the hidden list cannot be
+     checked, nothing is offered, so nothing unrevealed slips through. */
+  var SITE = '../';   // this page sits one folder below the chronicle
+  function siteUrl(path){ return path ? SITE + encodeURI(path) : ''; }
+  function isPicture(path){ return /\.(png|jpe?g|gif|webp)$/i.test(path || ''); }
+  // Documents open in a new tab: only files from the site's own folders.
+  function safeDocHref(h){
+    h = String(h || '');
+    return /^\.\.\/assets\/[\w\-.\/%]+\.(html?|pdf|png|jpe?g|gif|webp)$/i.test(h) ? h : '';
+  }
+
+  async function hiddenList(kind){
+    if(!db) throw new Error('not connected');
+    var r = await withTimeout(db.from('archive_hidden').select('item').eq('chronicle', CHRONICLE).eq('kind', kind), 8000);
+    if(r.error) throw r.error;
+    var h = {};
+    (r.data || []).forEach(function(row){ h[row.item] = true; });
+    return h;
+  }
+
+  function pickerItems(type, hidden){
+    if(type === 'person'){
+      return (window.DEAD_HAND_NPCS || []).filter(function(n){ return n && n.name && !hidden[n.name]; }).map(function(n){
+        var pic = isPicture(n.portrait) ? siteUrl(n.portrait) : '';
+        return { name: n.name, sub: n.role || '', src: pic };
+      });
+    }
+    if(type === 'place'){
+      return (window.DEAD_HAND_MAPS || []).filter(function(m){ return m && m.title && m.image && !hidden[m.image]; }).map(function(m){
+        return { name: m.title, sub: m.when || m.description || '', src: isPicture(m.image) ? siteUrl(m.image) : '' };
+      });
+    }
+    return (window.DEAD_HAND_DOCUMENTS || []).filter(function(d){ return d && d.title && d.file && !hidden[d.file]; }).map(function(d){
+      return { name: d.title, sub: d.description || '', src: isPicture(d.file) ? siteUrl(d.file) : '', href: siteUrl(d.file) };
+    });
+  }
+
+  async function openPicker(type){
+    var title = { person: 'Choose a Person', place: 'Choose a Place', document: 'Choose a Document' }[type];
+    showModal('<h3>' + title + '</h3><p class="hint">Checking what the cell can see…</p>');
+    var hidden;
+    try{ hidden = await hiddenList(PICKERS[type]); }
+    catch(e){
+      console.error(e);
+      showModal('<h3>' + title + '</h3><p class="hint">Could not check what has been revealed to the cell, so nothing is offered just now. Try again in a moment.</p>' +
+        '<div class="modal-actions"><button class="btn btn-ghost" id="modalClose">Close</button></div>');
+      document.getElementById('modalClose').addEventListener('click', closeModal);
+      return;
+    }
+    var items = pickerItems(type, hidden);
+    var grid = items.length ? items.map(function(it, i){
+      return '<button type="button" class="pick-item" data-i="' + i + '">' +
+        (it.src ? '<img src="' + escapeHtml(safeImageSrc(it.src)) + '" alt="" loading="lazy">'
+                : '<span class="pick-noimg">' + ICONS[type] + '</span>') +
+        '<span class="pick-name">' + escapeHtml(it.name) + '</span>' +
+        (it.sub ? '<span class="pick-sub">' + escapeHtml(it.sub) + '</span>' : '') + '</button>';
+    }).join('') : '<p class="hint">' + { person: 'No one has been revealed to the cell yet.', place: 'No maps have been shared yet.', document: 'No documents have been shared yet.' }[type] + '</p>';
+    showModal('<h3>' + title + '</h3>' +
+      (items.length > 8 ? '<input id="pickSearch" placeholder="Search…" autocomplete="off">' : '') +
+      '<div class="pick-grid' + (type !== 'person' ? ' pick-wide' : '') + '">' + grid + '</div>' +
+      '<div class="modal-actions"><button class="btn btn-ghost" id="modalClose">Close</button></div>');
+    document.querySelector('.modal').classList.add('modal-wide');
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    var search = document.getElementById('pickSearch');
+    if(search){
+      search.focus();
+      search.addEventListener('input', function(){
+        var q = search.value.trim().toLowerCase();
+        document.querySelectorAll('.pick-item').forEach(function(b){
+          b.style.display = b.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+        });
+      });
+    }
+    document.querySelectorAll('.pick-item').forEach(function(b){
+      b.addEventListener('click', function(){
+        closeModal();
+        placePicked(type, items[+b.dataset.i]);
+      });
+    });
+  }
+
+  // Put the choice in the middle of what is on screen.
+  function placePicked(type, it){
+    if(!state){ alert('Start or open a case file first.'); return; }
+    var cx = (boardWrap.scrollLeft + boardWrap.clientWidth / 2) / zoom;
+    var cy = (boardWrap.scrollTop + boardWrap.clientHeight / 2) / zoom;
+    var el;
+    if(it.src){
+      var w = type === 'place' ? 280 : 200;   // maps read better wide
+      el = { id: uid(), type: type, src: it.src, caption: it.name, x: Math.max(0, cx - w/2), y: Math.max(0, cy - 120), w: w };
+    } else if(type === 'document'){
+      el = { id: uid(), type: 'document', name: it.name.slice(0, 60), href: it.href, x: Math.max(0, cx - CARD_W/2), y: Math.max(0, cy - CARD_H/2) };
+    } else {
+      // Someone with no portrait yet: a card with their name.
+      el = { id: uid(), type: type, name: it.name.slice(0, 60), note: (it.sub || '').slice(0, 480), x: Math.max(0, cx - CARD_W/2), y: Math.max(0, cy - CARD_H/2) };
+    }
+    state.elements.push(el);
+    markDirty(); renderCards(); renderStrings();
+    toast(it.name + ' placed on the board');
+  }
+
   function renderTypeTabs(){
     var wrap = document.getElementById('typeTabs');
     wrap.innerHTML = '';
@@ -1535,27 +1691,29 @@
   }
 
   function switchForm(t){
-    document.getElementById('formStandard').style.display = (t === 'comment' || t === 'photo') ? 'none' : '';
+    var picker = !!PICKERS[t];
+    document.getElementById('formStandard').style.display = (t === 'evidence') ? '' : 'none';
     document.getElementById('formComment').style.display  = t === 'comment' ? '' : 'none';
-    document.getElementById('formPhoto').style.display    = t === 'photo'   ? '' : 'none';
+    document.getElementById('formPhoto').style.display    = 'none';
+    document.getElementById('formPicker').style.display   = picker ? '' : 'none';
     var addBtn = document.getElementById('btnAddOffboard');
-    var locker = document.getElementById('offboardList');
-    var legend = document.getElementById('legend');
-    if(t === 'photo'){
-      addBtn.textContent = '＋ Upload Photo…';
-      locker.style.display = 'none';
-      legend.style.display = 'none';
+    if(picker){
+      document.getElementById('pickerHint').textContent = {
+        person: 'Choose one of the people the cell knows of. Their picture goes straight onto the board.',
+        place: 'Choose a map or plan. It goes straight onto the board.',
+        document: 'Choose a document the cell has found. It goes straight onto the board.'
+      }[t];
+      addBtn.textContent = { person: 'Choose a Person…', place: 'Choose a Place…', document: 'Choose a Document…' }[t];
     } else {
-      if(t === 'comment') addBtn.textContent = 'Pin Comment to Locker';
-      else addBtn.textContent = 'Pin to Locker';
-      locker.style.display = '';
-      legend.style.display = '';
+      addBtn.textContent = t === 'comment' ? 'Pin Note to Locker' : 'Pin to Locker';
     }
+    document.getElementById('offboardList').style.display = '';
+    document.getElementById('legend').style.display = '';
   }
 
   function renderLegend(){
     var wrap = document.getElementById('legend');
-    wrap.innerHTML = TYPE_ORDER.filter(function(t){ return t !== 'photo'; }).map(function(t){
+    wrap.innerHTML = TYPE_ORDER.map(function(t){
       var meta = TYPE_META[t];
       return '<span><i style="background:' + meta.hex + '"></i>' + meta.label + '</span>';
     }).join('');
@@ -1713,8 +1871,8 @@
       state.offboard.push({ id: uid(), type: 'comment', text: txt.slice(0,600) });
       document.getElementById('inpCommentText').value = '';
       markDirty(); renderOffboardList();
-    } else if(selectedType === 'photo'){
-      document.getElementById('photoUploadInput').click();
+    } else if(PICKERS[selectedType]){
+      openPicker(selectedType);
     } else {
       var name = document.getElementById('inpName').value.trim();
       if(!name){ alert('Give this lead a name first.'); return; }
@@ -1737,6 +1895,11 @@
       markDirty(); renderPhotoList();
       toast('Photo added — drag it onto the board');
     });
+  });
+
+  document.getElementById('photoUpload').addEventListener('click', function(){
+    if(!state){ alert('Start or open a case file first.'); return; }
+    document.getElementById('photoUploadInput').click();
   });
 
   document.getElementById('photoClearAll').addEventListener('click', function(){
