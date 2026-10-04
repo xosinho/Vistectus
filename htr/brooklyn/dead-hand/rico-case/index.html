@@ -101,7 +101,7 @@
   }
   #boardScaler{position:relative;}
   #board{
-    position:relative;width:12000px;height:7800px;
+    position:relative;width:24000px;height:15600px;
     transform-origin:0 0;cursor:grab;
     background:
       radial-gradient(circle at 12% 18%, rgba(0,0,0,0.18) 0 3px, transparent 4px) 0 0/64px 64px,
@@ -522,14 +522,15 @@
   var dirty = false;
   var selectedType = 'person';
   var zoneMode = false;
-  /* The board is drawn at ZOOM_BASE of its true size, and that is what
-     the zoom label calls 100%. From there it zooms out to 35% and in to
-     400%. Card positions and sizes are unaffected, so saved boards open
-     as they were. */
-  var ZOOM_BASE = 0.35;
-  var zoom = ZOOM_BASE;
-  var ZOOM_MIN = ZOOM_BASE * 0.35, ZOOM_MAX = ZOOM_BASE * 4, ZOOM_STEP = 0.1;
-  var BOARD_W = 12000, BOARD_H = 7800;
+  /* The zoom label calls ZOOM_BASE of the board's true size 100%. The
+     board opens at 200% (ZOOM_START), zooms out to 35% and in to 800%.
+     Card positions and sizes are unaffected, so saved boards open as
+     they were. */
+  var ZOOM_BASE = 0.175;
+  var ZOOM_START = ZOOM_BASE * 2;
+  var zoom = ZOOM_START;
+  var ZOOM_MIN = ZOOM_BASE * 0.35, ZOOM_MAX = ZOOM_BASE * 8, ZOOM_STEP = 0.1;
+  var BOARD_W = 24000, BOARD_H = 15600;
 
   var boardEl = document.getElementById('board');
   var boardWrap = document.getElementById('boardWrap');
@@ -623,7 +624,7 @@
   }
   function zoomIn(){ zoomStep(ZOOM_STEP); }
   function zoomOut(){ zoomStep(-ZOOM_STEP); }
-  function zoomReset(){ zoomTo(ZOOM_BASE); }
+  function zoomReset(){ zoomTo(ZOOM_START); }
 
   /* ================= online case files =================
      Every Save is kept online as a new numbered version, in the
