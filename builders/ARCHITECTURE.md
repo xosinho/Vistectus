@@ -84,6 +84,11 @@ matching template and writes it in with these placeholders filled in
    e.g. players.html, sheet.html, locations/index.html, board/index.html
 ```
 
+The empty `.nojekyll` file at the site root must stay: without it GitHub
+Pages runs Jekyll, which leaves out every folder whose name starts with
+`_` (so `_world/` and `_chronicle/` would not be published, and every
+Builder-made page would say "Page not found").
+
 The template sits at the same folder depth as the address it serves, so
 every relative link in it (`../../assets/js/...`, `../../../style.css`,
 `players.html`, `../index.html`) works unchanged. Templates therefore:
