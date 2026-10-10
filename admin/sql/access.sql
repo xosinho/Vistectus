@@ -33,17 +33,26 @@ create table if not exists public.site_admins (
   email  text primary key
 );
 
+-- A chronicle (D&D: a campaign). `path` is where its pages live on the
+-- site, e.g. 'dnd/shrouded/campaign-one/'.
 create table if not exists public.chronicles (
   id          text primary key check (id ~ '^[a-z0-9-]{1,60}$'),
   name        text not null,
-  game        text not null check (game in ('hunter', 'vampire')),
+  game        text not null,
   world       text not null check (world ~ '^[a-z0-9-]{1,60}$'),
   created_at  timestamptz not null default now()
 );
-insert into public.chronicles (id, name, game, world) values
-  ('dead-hand', 'Dead Hand', 'hunter', 'brooklyn'),
-  ('crown-of-ice-and-bone', 'A Crown of Ice and Bone', 'vampire', 'hungary-1242')
+alter table public.chronicles add column if not exists path text;
+alter table public.chronicles drop constraint if exists chronicles_game_check;
+alter table public.chronicles add constraint chronicles_game_check check (game in ('hunter', 'vampire', 'dnd'));
+insert into public.chronicles (id, name, game, world, path) values
+  ('dead-hand', 'Dead Hand', 'hunter', 'brooklyn', 'htr/brooklyn/dead-hand/'),
+  ('crown-of-ice-and-bone', 'A Crown of Ice and Bone', 'vampire', 'hungary-1242', 'vtda/hungary-1242/crown-of-ice-and-bone/'),
+  ('shrouded-campaign-one', 'Shrouded — Campaign One', 'dnd', 'shrouded', 'dnd/shrouded/campaign-one/'),
+  ('the-last-garden-campaign-one', 'The Last Garden — Campaign One', 'dnd', 'the-last-garden', 'dnd/the-last-garden/campaign-one/')
 on conflict (id) do nothing;
+update public.chronicles set path = 'htr/brooklyn/dead-hand/' where id = 'dead-hand' and path is null;
+update public.chronicles set path = 'vtda/hungary-1242/crown-of-ice-and-bone/' where id = 'crown-of-ice-and-bone' and path is null;
 
 create table if not exists public.chronicle_members (
   chronicle  text not null references public.chronicles (id) on delete cascade,
@@ -244,15 +253,21 @@ as $$
    where s.chronicle = p_chronicle and is_chronicle_storyteller(p_chronicle)
 $$;
 
--- Site admin: add or rename a chronicle.
-create or replace function public.save_chronicle(p_id text, p_name text, p_game text, p_world text)
+-- Site admin: add or rename a chronicle or campaign. p_path: where its
+-- pages live, e.g. 'dnd/shrouded/campaign-two/' (empty: the usual place).
+drop function if exists public.save_chronicle(text, text, text, text);
+create or replace function public.save_chronicle(p_id text, p_name text, p_game text, p_world text, p_path text default null)
 returns void
 language plpgsql security definer set search_path = public
 as $$
 begin
   if not is_admin() then raise exception 'Only a site admin can add chronicles.'; end if;
-  insert into chronicles (id, name, game, world) values (p_id, btrim(p_name), p_game, p_world)
-    on conflict (id) do update set name = excluded.name, game = excluded.game, world = excluded.world;
+  p_path := nullif(btrim(coalesce(p_path, '')), '');
+  if p_path is not null and p_path !~ '^[a-z0-9/-]{1,200}/$' then raise exception 'The folder looks like dnd/world/campaign/ (lower case, ending in /).'; end if;
+  insert into chronicles (id, name, game, world, path)
+  values (p_id, btrim(p_name), p_game, p_world,
+          coalesce(p_path, case p_game when 'hunter' then 'htr/' when 'vampire' then 'vtda/' else 'dnd/' end || p_world || '/' || p_id || '/'))
+    on conflict (id) do update set name = excluded.name, game = excluded.game, world = excluded.world, path = excluded.path;
 end $$;
 
 
@@ -356,6 +371,10 @@ begin
   end if;
   if g = 'hunter' and not coalesce(jsonb_typeof(d.data -> 'attributes') = 'object' and jsonb_typeof(d.data -> 'skills') = 'object', false) then
     raise exception 'This is not a complete Hunter character.';
+  end if;
+  if g = 'dnd' and not coalesce(jsonb_typeof(d.data -> 'abilities') = 'object' and jsonb_typeof(d.data -> 'classes') = 'array'
+                                and jsonb_array_length(d.data -> 'classes') > 0, false) then
+    raise exception 'This is not a complete D&D character.';
   end if;
   insert into character_sheets (slug, chronicle, name, data, play)
   values (p_slug, d.chronicle, coalesce(nullif(btrim(d.name), ''), p_slug), (d.data - '_creation') || jsonb_build_object('name', d.name), d.play);
@@ -769,8 +788,9 @@ drop policy if exists "Case board editors add case photos" on storage.objects;
 drop policy if exists "Board editors add board photos"     on storage.objects;
 create policy "Board editors add board photos" on storage.objects for insert to authenticated
   with check (bucket_id = 'case-photos' and case
-                when name like 'crown-of-ice-and-bone/%' then board_editor('crown-of-ice-and-bone')
-                else case_board_editor() end);
+                when name like 'dead-hand/%' or name not like '%/%' then case_board_editor()
+                when split_part(name, '/', 1) in (select id from chronicles) then board_editor(split_part(name, '/', 1))
+                else false end);
 
 
 -- ---------------------------------------------------------- locations
@@ -893,7 +913,7 @@ end $$;
 -- ------------------------------------------------------ permissions
 revoke execute on function
   public.members_of(text), public.add_member(text, text, text), public.remove_member(text, text),
-  public.set_sheet_owner(text, text), public.sheet_owners_of(text), public.save_chronicle(text, text, text, text),
+  public.set_sheet_owner(text, text), public.sheet_owners_of(text), public.save_chronicle(text, text, text, text, text),
   public.save_draft(bigint, text, text, jsonb, jsonb), public.submit_draft(bigint), public.withdraw_draft(bigint),
   public.delete_draft(bigint), public.approve_draft(bigint, text, text), public.reject_draft(bigint, text),
   public.my_chronicles(), public.my_sheets(text), public.is_chronicle_member(text), public.is_chronicle_storyteller(text),
@@ -902,7 +922,7 @@ revoke execute on function
   from public, anon;
 grant execute on function
   public.members_of(text), public.add_member(text, text, text), public.remove_member(text, text),
-  public.set_sheet_owner(text, text), public.sheet_owners_of(text), public.save_chronicle(text, text, text, text),
+  public.set_sheet_owner(text, text), public.sheet_owners_of(text), public.save_chronicle(text, text, text, text, text),
   public.save_draft(bigint, text, text, jsonb, jsonb), public.submit_draft(bigint), public.withdraw_draft(bigint),
   public.delete_draft(bigint), public.approve_draft(bigint, text, text), public.reject_draft(bigint, text),
   public.my_chronicles(), public.my_sheets(text), public.is_chronicle_member(text), public.is_chronicle_storyteller(text),

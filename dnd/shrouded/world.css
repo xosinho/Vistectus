@@ -1,0 +1,17 @@
+/* Shrouded — this world's flavour only. The shared wireframe is in
+   ../../style.css; see ../world-one/world.css for the fully commented
+   version of this file. */
+
+:root {
+  --accent:     #8fb3c4;
+  --accent-ink: #0b1216;
+
+  --bg:         #0c1016;
+  --bg-raised:  #151b23;
+  --bg-sunken:  #080b0f;
+  --line:       #253039;
+
+  /* Key art: --hero: url('/dnd/shrouded/art/hero.jpg'); */
+  --hero: linear-gradient(160deg, #26323d 0%, #0c1016 58%, #1d2630 100%);
+  --art:  linear-gradient(145deg, #1c242e 0%, #10151b 100%);
+}

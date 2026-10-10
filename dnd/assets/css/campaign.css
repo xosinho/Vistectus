@@ -1,0 +1,8 @@
+/* =====================================================================
+   D&D campaigns — what the campaign pages add to the shared style.css
+   and their world's world.css.
+   ===================================================================== */
+
+/* The Party: Create a Character */
+.party-create { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin: 0 0 1.6rem; }
+.party-create span { color: var(--ink-soft); font-size: .95rem; }

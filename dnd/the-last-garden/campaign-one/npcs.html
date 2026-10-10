@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>document.documentElement.classList.add("gate-pending")</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NPCs &middot; The Last Garden — Campaign One &middot; VisTectus</title>
+  <meta name="description" content="The people the party has met so far.">
+
+  <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="../../../style.css">
+  <link rel="stylesheet" href="../world.css">
+  <link rel="stylesheet" href="../../assets/css/campaign.css?v=20261013">
+</head>
+
+<body data-campaign="the-last-garden-campaign-one" data-campaign-name="The Last Garden — Campaign One" data-title="NPCs">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="../../../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
+  <nav class="topnav" aria-label="Site">
+    <a href="../../../dnd/index.html" aria-current="true">D&amp;D</a>
+    <a href="../../../htr/index.html">Hunter</a>
+    <a href="../../../vtda/index.html">Vampire</a>
+    <a href="../../../index.html#about">About</a>
+    <a href="../../../host/index.html">Host a World</a>
+    <a class="nav-cta" href="../../../builders/index.html">Builders</a>
+  </nav>
+</header>
+
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../../../index.html">VisTectus</a></li>
+    <li><a href="../../index.html">D&amp;D</a></li>
+    <li><a href="../index.html">The Last Garden</a></li>
+    <li><a href="index.html">The Last Garden — Campaign One</a></li>
+    <li aria-current="page">NPCs</li>
+  </ol>
+</nav>
+
+<section class="hero hero--compact">
+  <div class="hero-inner">
+    <p class="kicker">NPCs</p>
+    <h1>Dramatis personae</h1>
+    <p class="lede">Everyone the party has met so far. Open a name for what you know of them &mdash; no more, no less.</p>
+  </div>
+</section>
+
+<nav class="tabs" aria-label="Pages">
+  <div class="tabs-inner">
+    <a href="index.html">Campaign</a>
+    <a href="players.html">The Party</a>
+    <a href="npcs.html" aria-current="page">NPCs</a>
+    <a href="resources.html">Resources</a>
+    <a href="login.html">Log in</a>
+    <a href="dm.html">DM Screen</a>
+  </div>
+</nav>
+
+<main id="main">
+  <section class="row">
+    <div class="row-head"><h2>NPCs</h2></div>
+    <!-- The roster renders here from assets/data/npcs.js. -->
+    <div id="npcs-roster"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>&copy; 2026 VisTectus</p>
+    <p class="links">
+      <a href="../../../dnd/index.html">D&amp;D</a>
+      <a href="../../../index.html">Back to the hub</a>
+    </p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../../builders/config.js"></script>
+<script src="../../../gate.js" data-chronicle="the-last-garden-campaign-one" data-unit="campaign" data-dm-label="Dungeon Master"></script>
+<script src="../../assets/js/render.js?v=20261013"></script>
+<script src="assets/data/npcs.js?v=20261013"></script>
+<script>Campaign.renderRoster("npcs-roster", window.CAMPAIGN_NPCS, "npc", { hide: "npcs" });</script>
+<script src="../../assets/js/site.js?v=20261013"></script>
+</body>
+</html>

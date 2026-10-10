@@ -19,6 +19,9 @@
    chronicle" note, takes its place. Pages without a <main> (the board,
    the map) are covered entirely.
 
+   Wording: data-unit="campaign" and data-dm-label="Dungeon Master" (D&D);
+   the defaults are "chronicle" and "Storyteller".
+
    Scripts that need to know who is looking wait for it:
      Gate.ready.then(function (g) { g.role; g.session; g.email; })
    (role: "player" or "storyteller"; Gate.ready never settles for
@@ -34,6 +37,8 @@
   var CHRONICLE = me && me.getAttribute("data-chronicle");
   var WORLD = me && me.getAttribute("data-world");
   var NEED = (me && me.getAttribute("data-need")) || "member";
+  var UNIT = (me && me.getAttribute("data-unit")) || "chronicle";
+  var DM = (me && me.getAttribute("data-dm-label")) || "Storyteller";
   var root = document.documentElement;
   root.classList.add("gate-pending");
 
@@ -74,10 +79,10 @@
     return box;
   }
 
-  var where = NEED === "admin" ? "the site&rsquo;s administrators" : WORLD ? "this world&rsquo;s chronicles" : "this chronicle";
+  var where = NEED === "admin" ? "the site&rsquo;s administrators" : WORLD ? "this world&rsquo;s " + UNIT + "s" : "this " + UNIT;
   function signInBox(db) {
     var b = show("<h2>Members only</h2>" +
-      "<p>These pages are for the players and Storytellers of " + where + ". Sign in with the email your Storyteller added, and a link will be sent to it. The first time, that link also creates your account.</p>" +
+      "<p>These pages are for the players and " + DM + "s of " + where + ". Sign in with the email your " + DM + " added, and a link will be sent to it. The first time, that link also creates your account.</p>" +
       '<form class="gate-form"><input type="email" required autocomplete="email" placeholder="you@example.com" aria-label="Email">' +
       '<button class="btn" type="submit">Send link</button></form><p class="gate-msg" role="status"></p>');
     b.querySelector("form").addEventListener("submit", async function (e) {
@@ -94,7 +99,7 @@
       } catch (err) {
         console.error(err);
         msg.textContent = /not been invited|signups? not allowed|not found|invalid login|hook/i.test(errText(err))
-          ? "That email has not been added to a chronicle. Ask your Storyteller to add it."
+          ? "That email has not been added to a " + UNIT + ". Ask your " + DM + " to add it."
           : "Could not send the link: " + errText(err);
         btn.disabled = false;
       }
@@ -141,8 +146,8 @@
         if (r.error) throw r.error;
         role = r.data || null;
       }
-      if (!role) return refused(db, session, "This account is not part of " + where + ". If it should be, ask your Storyteller to add this email.");
-      if (NEED === "storyteller" && role !== "storyteller") return refused(db, session, "This page is for the Storyteller.");
+      if (!role) return refused(db, session, "This account is not part of " + where + ". If it should be, ask your " + DM + " to add this email.");
+      if (NEED === "storyteller" && role !== "storyteller") return refused(db, session, "This page is for the " + DM + ".");
       Gate.role = role; Gate.session = session; Gate.email = session.user && session.user.email;
       root.classList.remove("gate-pending", "gate-all");
       if (box) { box.remove(); box = null; }

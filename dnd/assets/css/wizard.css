@@ -1,0 +1,175 @@
+/* =====================================================================
+   D&D — Create a Character and Level up (create.js, levelup.js)
+   Only what the character sheet's own styles (sheet.css) lack: the step
+   bar, the counters, the problem lists, the tick-box grids, the review.
+   ===================================================================== */
+
+.create-wrap { --wz-bad: #e0786f; --wz-ok: #8fc28a; --wz-warn: #e3a256; }
+.create-wrap .sheet-bar .btn { padding: .55rem 1rem; }
+.create-wrap, .create-wrap * { box-sizing: border-box; }
+.create-wrap { overflow-wrap: break-word; }
+
+/* panels on the site's dark ground */
+.create-panel { background: var(--bg-raised); border: 1px solid var(--line); padding: 1.1rem 1.3rem; margin-bottom: 1.5rem; }
+.create-panel h2 { margin: 0 0 .8rem; }
+.create-panel p { color: var(--ink-soft); max-width: 46rem; }
+.create-panel h3 { font-family: var(--font-display); font-size: .85rem; letter-spacing: .08em; text-transform: uppercase; margin: 1.1rem 0 .3rem; color: var(--ink-soft); }
+.create-panel .btn, .draft-list .btn { padding: .45rem .8rem; font-size: .7rem; }
+.create-panel a:not(.btn) { color: var(--accent); }
+
+.draft-list { list-style: none; margin: 0; padding: 0; }
+.draft-list li { display: flex; flex-wrap: wrap; gap: .4rem 1rem; align-items: center; justify-content: space-between;
+  padding: .7rem 0; border-bottom: 1px solid var(--line); }
+.draft-list .who { min-width: 0; flex: 1 1 14rem; overflow-wrap: anywhere; }
+.draft-list .who b { display: block; font-family: var(--font-display); font-size: 1rem; color: var(--ink); }
+.draft-list .who > span { font-size: .85rem; color: var(--ink-soft); }
+.draft-list .note { display: block; font-style: italic; color: var(--ink-soft); font-size: .9rem; margin-top: .2rem; white-space: pre-wrap; }
+.draft-list .acts { display: flex; flex-wrap: wrap; gap: .4rem; }
+.status-draft { color: var(--ink-soft); }
+.status-submitted, .status-pending { color: var(--wz-warn); }
+.status-approved { color: var(--wz-ok); }
+.status-rejected, .status-cancelled { color: var(--ink-dim, #999); }
+
+/* the step bar */
+.steps { list-style: none; margin: 0 0 1rem; padding: 0; display: flex; flex-wrap: wrap; gap: .35rem; }
+.steps button { font: 600 .78rem/1.2 var(--font-body); padding: .4rem .6rem; background: transparent; color: var(--ink-soft);
+  border: 1px solid var(--line); cursor: pointer; }
+.steps button:hover:not(:disabled) { border-color: var(--accent); color: var(--ink); }
+.steps button[aria-current="step"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.steps button.done::after { content: " ✓"; }
+.steps button.bad::after { content: " •"; color: var(--wz-bad); }
+.steps button:disabled { opacity: .45; cursor: not-allowed; }
+
+/* the paper page of a step */
+.wiz-page .help { font-size: .95rem; color: var(--paper-soft, #5d574c); margin: .2rem 0 .7rem; max-width: 46rem; }
+.wiz-page a, .dnd-sheet a { color: var(--sheet-link, #7a2a12); }
+.wiz-page h3 .count, .wiz-page .count { font-family: var(--sheet-body, Georgia, serif); font-size: .85rem; text-transform: none; letter-spacing: 0;
+  font-weight: 400; color: var(--paper-soft, #5d574c); margin-left: .4rem; }
+.wiz-page .count.over, .wiz-page .over { color: var(--hunter, #8e1b2b); font-weight: 600; }
+.wiz-page .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem 1.4rem; }
+.wiz-page .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem 1.4rem; margin: .6rem 0; }
+.wiz-page label.lbl, .wiz-page span.lbl { display: block; font-family: var(--sheet-head, Georgia, serif); font-size: .85rem; margin-bottom: .15rem; }
+.wiz-page .info { font-size: .9rem; color: var(--paper-soft, #5d574c); margin: .25rem 0 0; }
+.wiz-page .derived { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem 1.4rem; margin-top: 1rem; }
+.wiz-page .derived > div { border: 1px solid var(--paper-line, #b9b1a1); padding: .6rem .8rem; min-width: 0; }
+.wiz-page .derived b { display: block; font-family: var(--sheet-head, Georgia, serif); font-weight: 500; }
+.wiz-page .derived .big { display: block; font-family: var(--sheet-head, Georgia, serif); font-size: 1.5rem; }
+.wiz-page .btn { color: #f6ecd9; background: var(--hunter, #8e1b2b); border-color: var(--hunter, #8e1b2b); }
+.wiz-page .btn:disabled { opacity: .45; cursor: not-allowed; }
+.wiz-page .mini:disabled { opacity: .35; cursor: not-allowed; }
+
+/* choices */
+.wiz-page .opts { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; margin: .4rem 0 .8rem; }
+.wiz-page .opts label.opt { display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; font-family: var(--sheet-head, Georgia, serif); font-size: .95rem; }
+.wiz-page .opts input[type="radio"] { width: auto; }
+.tick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: .25rem 1rem; margin: .3rem 0 .9rem; }
+.tick { display: flex; align-items: flex-start; gap: .4rem; padding: .25rem .3rem; border-bottom: 1px dotted var(--paper-line, #b9b1a1); min-width: 0; }
+.tick.on { background: rgba(142, 27, 43, .07); }
+.tick.locked { opacity: .65; }
+.tick input[type="checkbox"] { width: auto; margin-top: .2rem; flex: 0 0 auto; }
+.tick label { flex: 1; min-width: 0; cursor: pointer; }
+.tick input:disabled + label { cursor: not-allowed; }
+.tick label small { display: block; font-size: .78rem; color: var(--paper-soft, #5d574c); font-style: italic; line-height: 1.2; }
+.tick .wiki-link { text-decoration: none; font-size: .85rem; padding: 0 .15rem; }
+.tick.hide { display: none; }
+.wiz-page input.tick-filter { display: block; max-width: 22rem; margin: .2rem 0 .4rem; padding: .3rem .4rem; border: 1px solid var(--paper-line, #b9b1a1); }
+.swap-row { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: .6rem; align-items: center; margin: .3rem 0; max-width: 32rem; }
+
+/* point buy, dice */
+.freebie-sum { position: sticky; top: calc(var(--bar-h, 60px) + 3.2rem); z-index: 5; background: var(--paper-2, #e6dbc4);
+  border: 1px solid var(--paper-ink, #1d1b18); padding: .5rem .8rem; margin: .4rem 0 .8rem; font-family: var(--sheet-head, Georgia, serif); }
+.freebie-sum .left { font-size: 1.15rem; }
+.freebie-sum.over .left { color: var(--hunter, #8e1b2b); }
+.freebie-sum small { display: block; font-family: var(--sheet-body, Georgia, serif); font-size: .85rem; color: var(--paper-soft, #5d574c); }
+.pb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); gap: .3rem 1.4rem; margin-bottom: 1rem; }
+.pb-row { display: flex; align-items: center; gap: .5rem; padding: .2rem 0; border-bottom: 1px dotted var(--paper-line, #b9b1a1); }
+.pb-row .pb-name { flex: 1; min-width: 6.5rem; font-family: var(--sheet-head, Georgia, serif); }
+.pb-row .mini { min-width: 2rem; font-size: .95rem; padding: .25rem .4rem; }
+.pb-row .pb-val { font-family: var(--sheet-head, Georgia, serif); font-size: 1.2rem; min-width: 1.6rem; text-align: center; }
+.pb-row .pb-cost { font-size: .8rem; color: var(--paper-soft, #5d574c); min-width: 2.6rem; text-align: right; }
+.roll-box { text-align: center; padding: 1rem 0; }
+.roll-box .die { font-family: var(--sheet-head, Georgia, serif); font-size: 2.6rem; display: block; }
+.roll-sets { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: .2rem 1rem; margin: .4rem 0 .6rem; }
+.roll-set { font-family: var(--sheet-head, Georgia, serif); padding: .2rem 0; border-bottom: 1px dotted var(--paper-line, #b9b1a1); }
+.roll-set s { color: var(--paper-soft, #5d574c); }
+.roll-sets .info { grid-column: 1 / -1; }
+.ab-table { max-width: 32rem; }
+.ab-table td:not(:first-child), .ab-table th:not(:first-child) { text-align: center; }
+
+/* problems and the checklist (on the dark ground) */
+.problems { border: 1px solid var(--wz-bad, #e0786f); background: rgba(224,120,111,.08); padding: .6rem .9rem .6rem 1rem; margin: 0 0 1rem; }
+.problems h3 { margin: 0 0 .3rem; font-size: .9rem; color: var(--wz-bad, #e0786f); font-family: var(--font-display); letter-spacing: .06em; }
+.problems ul { margin: 0; padding-left: 1.1rem; color: var(--ink); }
+.problems.flash { outline: 2px solid var(--wz-bad, #e0786f); }
+.step-ok { color: var(--wz-ok, #8fc28a); font-family: var(--font-mono); font-size: .82rem; margin: 0 0 1rem; }
+.step-nav { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: 1.5rem; }
+.step-nav .spacer { flex: 1; }
+.step-nav .btn { padding: .65rem 1.2rem; }
+.create-wrap .btn[aria-disabled="true"], .create-wrap .btn:disabled { opacity: .5; cursor: not-allowed; }
+.checklist { list-style: none; margin: 0; padding: 0; }
+.checklist li { padding: .35rem 0 .35rem 1.7rem; position: relative; border-bottom: 1px solid var(--line); color: var(--ink); }
+.checklist li::before { position: absolute; left: .2rem; top: .35rem; font-weight: 700; }
+.checklist li.ok::before { content: "✓"; color: var(--wz-ok, #8fc28a); }
+.checklist li.bad::before { content: "✗"; color: var(--wz-bad, #e0786f); }
+.checklist li.flag::before { content: "!"; color: var(--wz-warn, #e3a256); left: .45rem; }
+.checklist li.bad { color: #f0b3ad; }
+.checklist .why { display: block; font-size: .9rem; color: var(--ink-soft); }
+.checklist li.bad .why { color: #f0b3ad; }
+.rejected-note { border-left: 3px solid var(--wz-warn, #e3a256); }
+.create-wrap textarea { width: 100%; }
+.sheet-dialog textarea { width: 100%; font: inherit; padding: .55rem .6rem; background: var(--bg); color: var(--ink); border: 1px solid var(--line); min-height: 6rem; }
+.sheet-dialog label { display: block; margin: .6rem 0 .2rem; font-size: .9rem; color: var(--ink-soft); }
+
+/* the read-only sheet in the review */
+.dnd-sheet .dnd-head { border-bottom: 2px solid var(--paper-ink, #1d1b18); padding-bottom: .5rem; margin-bottom: .8rem; }
+.dnd-sheet .dnd-name { font-family: var(--sheet-head, Georgia, serif); font-size: 1.6rem; font-weight: 600; line-height: 1.1; }
+.dnd-sheet .dnd-line { color: var(--paper-soft, #5d574c); }
+.dnd-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; margin: .6rem 0; }
+.dnd-stat { border: 1px solid var(--paper-ink, #1d1b18); padding: .35rem .5rem; text-align: center; min-width: 0; }
+.dnd-stat b { display: block; font-family: var(--sheet-head, Georgia, serif); font-weight: 500; font-size: .75rem; }
+.dnd-stat span { font-family: var(--sheet-head, Georgia, serif); font-size: 1.15rem; }
+.ab-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .5rem; }
+.ab-box { border: 1px solid var(--paper-ink, #1d1b18); text-align: center; padding: .35rem .2rem; min-width: 0; }
+.ab-box b { display: block; font-family: var(--sheet-head, Georgia, serif); font-weight: 500; font-size: .72rem; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; }
+.ab-box .ab-score { display: block; font-family: var(--sheet-head, Georgia, serif); font-size: 1.5rem; line-height: 1.1; }
+.ab-box .ab-mod { display: block; font-size: .95rem; }
+.ab-box .ab-save { display: block; font-size: .78rem; color: var(--paper-soft, #5d574c); }
+.skill-cols { columns: 3 12rem; column-gap: 1.6rem; }
+.skill-cols .trait { break-inside: avoid; }
+.dnd-sheet .dot { vertical-align: -1px; }
+.dnd-sheet .dot.exp { box-shadow: 0 0 0 2px var(--paper, #f1e9d8), 0 0 0 3px var(--paper-ink, #1d1b18); }
+.spell-table th { width: 6.5rem; }
+.unprep { color: var(--paper-soft, #5d574c); }
+.dnd-sheet .split { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+
+/* level up */
+.lv-figs { display: flex; flex-wrap: wrap; gap: .8rem; margin: .4rem 0 1rem; }
+.lv-fig { border: 1px solid var(--line); padding: .5rem .9rem; min-width: 7rem; }
+.lv-fig b { display: block; font-family: var(--font-display); font-size: 1.5rem; color: var(--ink); }
+.lv-fig span { font-family: var(--font-mono); font-size: .72rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .08em; }
+.lv-diff { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.lv-diff th, .lv-diff td { text-align: left; padding: .4rem .5rem; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink); }
+.lv-diff th { font-family: var(--font-mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); font-weight: 400; }
+.lv-diff td.chg { color: var(--wz-ok, #8fc28a); }
+.wiz-page .lv-diff th, .wiz-page .lv-diff td { color: var(--paper-ink, #1d1b18); border-bottom-color: var(--paper-line, #b9b1a1); }
+.wiz-page .lv-diff td.chg { color: var(--hunter, #8e1b2b); font-weight: 600; }
+.wiz-page .mc-list { list-style: none; margin: .3rem 0 0; padding: 0; }
+.wiz-page .mc-list li { padding: .15rem 0; }
+.lv-wiz-title { margin: 0 0 .6rem; }
+.lv-req { list-style: none; margin: 0; padding: 0; }
+.lv-req li { display: flex; flex-wrap: wrap; gap: .3rem 1rem; justify-content: space-between; align-items: center; padding: .6rem 0; border-bottom: 1px solid var(--line); }
+.lv-req .who { flex: 1 1 14rem; min-width: 0; color: var(--ink); }
+.lv-req .who small { display: block; color: var(--ink-soft); font-size: .85rem; }
+.lv-req .note { display: block; font-style: italic; color: var(--ink-soft); font-size: .9rem; white-space: pre-wrap; }
+
+@media (max-width: 760px) {
+  .wiz-page .grid2, .wiz-page .grid3, .wiz-page .derived { grid-template-columns: 1fr; }
+  .freebie-sum { top: calc(var(--bar-h, 60px) + 2.8rem); }
+  .dnd-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ab-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .dnd-sheet .split { grid-template-columns: 1fr; }
+  .swap-row { grid-template-columns: 1fr; gap: .1rem; }
+  .create-panel { padding: .9rem 1rem; }
+  .steps button { font-size: .72rem; padding: .35rem .45rem; }
+  .lv-diff { font-size: .88rem; }
+}

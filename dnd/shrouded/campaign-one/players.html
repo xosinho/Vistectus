@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>document.documentElement.classList.add("gate-pending")</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Party &middot; Shrouded — Campaign One &middot; VisTectus</title>
+  <meta name="description" content="The adventurers of the party: open one for their story and character sheet.">
+
+  <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="../../../style.css">
+  <link rel="stylesheet" href="../world.css">
+  <link rel="stylesheet" href="../../assets/css/campaign.css?v=20261013">
+</head>
+
+<body data-campaign="shrouded-campaign-one" data-campaign-name="Shrouded — Campaign One" data-title="The Party">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="../../../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
+  <nav class="topnav" aria-label="Site">
+    <a href="../../../dnd/index.html" aria-current="true">D&amp;D</a>
+    <a href="../../../htr/index.html">Hunter</a>
+    <a href="../../../vtda/index.html">Vampire</a>
+    <a href="../../../index.html#about">About</a>
+    <a href="../../../host/index.html">Host a World</a>
+    <a class="nav-cta" href="../../../builders/index.html">Builders</a>
+  </nav>
+</header>
+
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../../../index.html">VisTectus</a></li>
+    <li><a href="../../index.html">D&amp;D</a></li>
+    <li><a href="../index.html">Shrouded</a></li>
+    <li><a href="index.html">Shrouded — Campaign One</a></li>
+    <li aria-current="page">The Party</li>
+  </ol>
+</nav>
+
+<section class="hero hero--compact">
+  <div class="hero-inner">
+    <p class="kicker">The Party</p>
+    <h1>The adventurers</h1>
+    <p class="lede">Open a name for their story and their character sheet.</p>
+  </div>
+</section>
+
+<nav class="tabs" aria-label="Pages">
+  <div class="tabs-inner">
+    <a href="index.html">Campaign</a>
+    <a href="players.html" aria-current="page">The Party</a>
+    <a href="npcs.html">NPCs</a>
+    <a href="resources.html">Resources</a>
+    <a href="login.html">Log in</a>
+    <a href="dm.html">DM Screen</a>
+  </div>
+</nav>
+
+<main id="main">
+  <section class="row">
+    <div class="row-head"><h2>The Party</h2></div>
+    <p class="party-create">
+      <a class="btn" href="create.html?new=1">Create a Character</a>
+      <span>Build your adventurer step by step; the Dungeon Master approves them before they join the party.</span>
+    </p>
+    <!-- The roster renders here from assets/data/players.js. -->
+    <div id="players-roster"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>&copy; 2026 VisTectus</p>
+    <p class="links">
+      <a href="../../../dnd/index.html">D&amp;D</a>
+      <a href="../../../index.html">Back to the hub</a>
+    </p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../../builders/config.js"></script>
+<script src="../../../gate.js" data-chronicle="shrouded-campaign-one" data-unit="campaign" data-dm-label="Dungeon Master"></script>
+<script src="../../assets/js/render.js?v=20261013"></script>
+<script src="assets/data/players.js?v=20261013"></script>
+<script>Campaign.renderRoster("players-roster", window.CAMPAIGN_PLAYERS, "player");</script>
+<script src="../../assets/js/site.js?v=20261013"></script>
+</body>
+</html>

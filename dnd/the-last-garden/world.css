@@ -1,0 +1,17 @@
+/* The Last Garden — this world's flavour only. The shared wireframe is in
+   ../../style.css; see ../world-one/world.css for the fully commented
+   version of this file. */
+
+:root {
+  --accent:     #8cc084;
+  --accent-ink: #0c140b;
+
+  --bg:         #0d110c;
+  --bg-raised:  #161d15;
+  --bg-sunken:  #090c08;
+  --line:       #26321f;
+
+  /* Key art: --hero: url('/dnd/the-last-garden/art/hero.jpg'); */
+  --hero: linear-gradient(160deg, #24341f 0%, #0d110c 58%, #2c2a16 100%);
+  --art:  linear-gradient(145deg, #1c2619 0%, #11160f 100%);
+}

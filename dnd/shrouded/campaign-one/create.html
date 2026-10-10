@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>document.documentElement.classList.add("gate-pending")</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create a Character &middot; Shrouded — Campaign One &middot; VisTectus</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="Build a new adventurer step by step, then send the sheet to the Dungeon Master.">
+
+  <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="../../../style.css">
+  <link rel="stylesheet" href="../world.css">
+  <link rel="stylesheet" href="../../assets/css/campaign.css?v=20261013">
+  <link rel="stylesheet" href="../../assets/css/sheet.css?v=20261013">
+  <link rel="stylesheet" href="../../assets/css/wizard.css?v=20261013">
+</head>
+
+<body data-campaign="shrouded-campaign-one" data-campaign-name="Shrouded — Campaign One" data-title="Create a Character">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="../../../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
+  <nav class="topnav" aria-label="Site">
+    <a href="../../../dnd/index.html" aria-current="true">D&amp;D</a>
+    <a href="../../../htr/index.html">Hunter</a>
+    <a href="../../../vtda/index.html">Vampire</a>
+    <a href="../../../index.html#about">About</a>
+    <a href="../../../host/index.html">Host a World</a>
+    <a class="nav-cta" href="../../../builders/index.html">Builders</a>
+  </nav>
+</header>
+
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../../../index.html">VisTectus</a></li>
+    <li><a href="../../index.html">D&amp;D</a></li>
+    <li><a href="../index.html">Shrouded</a></li>
+    <li><a href="index.html">Shrouded — Campaign One</a></li>
+    <li><a href="players.html">The Party</a></li>
+    <li aria-current="page">Create a Character</li>
+  </ol>
+</nav>
+
+<section class="hero hero--compact">
+  <div class="hero-inner">
+    <p class="kicker">The Party</p>
+    <h1>Create a Character</h1>
+    <p class="lede">Build your adventurer step by step, then send them to the Dungeon Master, who approves them before they join the party.</p>
+  </div>
+</section>
+
+<nav class="tabs" aria-label="Pages">
+  <div class="tabs-inner">
+    <a href="index.html">Campaign</a>
+    <a href="players.html" aria-current="page">The Party</a>
+    <a href="npcs.html">NPCs</a>
+    <a href="resources.html">Resources</a>
+    <a href="login.html">Log in</a>
+    <a href="dm.html">DM Screen</a>
+  </div>
+</nav>
+
+<main id="main" class="sheet-wrap create-wrap">
+  <!-- Drawn by ../../assets/js/create.js once the members' gate has let
+       the reader in. Drafts live in the character_drafts table and are
+       only written through its functions (save_draft, submit_draft,
+       approve_draft, ...). -->
+  <div class="sheet-bar">
+    <span class="sheet-status" id="sheetStatus" role="status" aria-live="polite">Opening…</span>
+  </div>
+  <div id="create"></div>
+  <noscript><div class="sheet-notice">Creating a character needs JavaScript.</div></noscript>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>&copy; 2026 VisTectus</p>
+    <p class="links">
+      <a href="../../../dnd/index.html">D&amp;D</a>
+      <a href="../../../index.html">Back to the hub</a>
+    </p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../../builders/config.js"></script>
+<script src="../../../gate.js" data-chronicle="shrouded-campaign-one" data-unit="campaign" data-dm-label="Dungeon Master"></script>
+<script src="../../assets/data/rules-5e.js?v=20261013"></script>
+<script src="../../assets/js/create.js?v=20261013"></script>
+<script src="../../assets/js/site.js?v=20261013"></script>
+</body>
+</html>
