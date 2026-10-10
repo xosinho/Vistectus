@@ -65,7 +65,8 @@
 
         var sw, sh, base, zoom = 1, x = 0, y = 0;   // stage size, cover scale, offset (stage px)
         function layout() {
-          sw = stage.clientWidth; sh = Math.round(sw / shape.ratio);
+          // The exact (fractional) width, so the picture always reaches the right edge.
+          sw = stage.getBoundingClientRect().width; sh = sw / shape.ratio;
           stage.style.height = sh + "px";
           base = Math.max(sw / iw, sh / ih);
           clamp(); draw();
@@ -101,9 +102,15 @@
         }, { passive: false });
         zoomIn.addEventListener("input", function () { zoomTo(parseFloat(zoomIn.value)); });
         window.addEventListener("resize", layout);
+        // The stage also changes width when the box gains or loses a scrollbar.
+        var watch = window.ResizeObserver ? new ResizeObserver(function () {
+          if (Math.abs(stage.getBoundingClientRect().width - sw) > 0.5) layout();
+        }) : null;
+        if (watch) watch.observe(stage);
 
         function finish(blob) {
           window.removeEventListener("resize", layout);
+          if (watch) watch.disconnect();
           URL.revokeObjectURL(loaded.url);
           back.remove();
           resolve(blob);

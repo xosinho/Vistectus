@@ -237,3 +237,6 @@ details.wb-details summary { cursor: pointer; color: var(--accent); }
   .wb-steps [aria-current] button { font-size: .75rem; gap: .4rem; padding: .35rem .6rem; }
   .wb-opts__list { padding-left: .4rem; grid-template-columns: minmax(0, 1fr); }
 }
+
+/* The wizard moves focus to each new step for screen readers; no ring. */
+#step:focus { outline: none; }

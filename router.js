@@ -43,7 +43,8 @@
 
     var worldId = segs[1], rest = segs.slice(2);
     var w = await db.from("worlds").select("id,name,game,static_path,status").eq("id", worldId).maybeSingle();
-    if (w.error || !w.data || w.data.game !== game) return notFound();
+    if (!w.error && !w.data) return notFound("There is nothing at this address, or it is a world still being built. If it is yours, <a href=\"/builders/index.html\">sign in</a> first, then come back to this page.");
+    if (w.error || w.data.game !== game) return notFound();
     var world = w.data, template = null, chron = null;
 
     if (!rest.length || (rest.length === 1 && rest[0] === "index.html")) {
@@ -58,7 +59,10 @@
     } else {
       var c = await db.from("chronicles").select("id,name,world,game,status").eq("id", rest[0]).maybeSingle();
       if (c.error || !c.data || c.data.world !== world.id) {
-        return notFound(c.data ? "" : "There is no chronicle here, or it is not open to this account yet. If it is yours, <a href=\"/" + sys + "/" + esc(world.id) + "/" + esc(rest[0]) + "/login.html\">log in</a> first.");
+        // A chronicle waiting for approval is found only once signed in
+        // (as its Storyteller, a member or an admin); the Builder's sign-in
+        // serves the whole site.
+        return notFound(c.data ? "" : "There is no chronicle here, or it is not open to this account yet. If it is yours, <a href=\"/builders/index.html\">sign in</a> first, then come back to this page.");
       }
       chron = c.data;
       template = "_chronicle/" + (rest.slice(1).join("/") || "index.html");
@@ -72,7 +76,7 @@
                .split("{{CHRONICLE_ID}}").join(esc(chron ? chron.id : "")).split("{{CHRONICLE_NAME}}").join(esc(chron ? chron.name : ""));
     // A chronicle's pages also load their world's own world.css; only the
     // worlds in the site's files have one.
-    if (!world.static_path) html = html.replace(/[ \t]*<link rel="stylesheet" href="(?:\.\.\/)+world\.css[^"]*">\n?/g, "");
+    if (!world.static_path) html = html.replace(/[ \t]*<link rel="stylesheet" href="(?:\.\.\/)*world\.css[^"]*">\n?/g, "");
     document.open();
     document.write(html);
     document.close();

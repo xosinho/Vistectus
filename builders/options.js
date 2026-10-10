@@ -18,7 +18,8 @@
 
   var B = window.Builders;
   var esc = B.esc;
-  var VAMPIRE_DATA = "../vtda/hungary-1242/crown-of-ice-and-bone/assets/data/rules-data.js";
+  var VAMPIRE_DATA = "../vtda/assets/data/rules-data.js?v=20261015";          // window.VAMPIRE_RULES
+  var VAMPIRE_DATA_OLD = "../vtda/hungary-1242/crown-of-ice-and-bone/assets/data/rules-data.js";  // window.CROWN_RULES
   var DND_DATA = "../dnd/assets/data/rules-5e.js";
   var PHB = "Player's Handbook";
 
@@ -46,8 +47,9 @@
         groups: [{ title: "Creeds", items: rows.map(function (r) { return { name: r.name, sub: r.summary, url: r.url }; }) }] }];
     }
     if (game === "vampire") {
-      await B.loadScript(VAMPIRE_DATA);
-      var clans = (window.CROWN_RULES && window.CROWN_RULES.clans) || [];
+      await B.loadScript(VAMPIRE_DATA).catch(function () { return B.loadScript(VAMPIRE_DATA_OLD); });
+      var R = window.VAMPIRE_RULES || window.CROWN_RULES;
+      var clans = (R && R.clans) || [];
       if (!clans.length) throw new Error("The list of clans could not be read.");
       var kinds = [["Clan", "Clans"], ["Bloodline", "Bloodlines"], ["Clanless", "Clanless"]];
       return [{ key: "clans", title: "Clans and Bloodlines", one: "clan",

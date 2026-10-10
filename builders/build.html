@@ -9,7 +9,7 @@
 
   <link rel="icon" href="../art/VisTectus Logo 1.jpg" type="image/jpeg">
   <link rel="stylesheet" href="../style.css">
-  <link rel="stylesheet" href="builders.css">
+  <link rel="stylesheet" href="builders.css?v=20261015">
 </head>
 
 <body>
@@ -82,12 +82,12 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
-<script src="builders.js"></script>
-<script src="../content.js"></script>
-<script src="../cropper.js"></script>
-<script src="forms.js"></script>
-<script src="editors.js"></script>
-<script src="options.js"></script>
+<script src="builders.js?v=20261015"></script>
+<script src="../content.js?v=20261015"></script>
+<script src="../cropper.js?v=20261015"></script>
+<script src="forms.js?v=20261015"></script>
+<script src="editors.js?v=20261015"></script>
+<script src="options.js?v=20261015"></script>
 <script>
 (function () {
   "use strict";
@@ -170,7 +170,13 @@
   var visited = {};
   function remember() {
     if (!S.world) return;
-    try { localStorage.setItem("wb-step:" + S.world.id, String(cur)); } catch (e) { /* private mode */ }
+    try {
+      var k = "wb-seen:" + S.world.id;
+      var old = JSON.parse(localStorage.getItem(k) || "{}");
+      Object.keys(old).forEach(function (x) { if (old[x]) visited[x] = true; });
+      localStorage.setItem(k, JSON.stringify(visited));
+      localStorage.setItem("wb-step:" + S.world.id, String(cur));
+    } catch (e) { /* private mode: the wizard still works */ }
   }
   function isDone(i) {
     var k = STEPS[i].key;
@@ -192,13 +198,14 @@
 
   async function go(i) {
     if (busy || i === cur || i < 0 || i >= STEPS.length) return;
-    if (!STEPS[i].need()) return;
     busy = true;
     var ok = true;
     try { if (view && view.leave) ok = await view.leave(i > cur ? "next" : "back"); }
     finally { busy = false; }
     if (!ok) return;
-    if (!STEPS[i].need()) { i = cur + 1; if (!STEPS[i] || !STEPS[i].need()) return; }
+    // Saving this step may have opened the next ones; go as far as allowed.
+    while (i > cur && !STEPS[i].need()) i--;
+    if (i === cur) return;
     show(i);
   }
 
@@ -233,12 +240,7 @@
       if (dir === "back" && !changed) return true;
       var p = check();
       if (p.length) {
-        if (dir === "back") return window.confirm("This step is not saved yet:
-
-• " + p.join("
-• ") + "
-
-Go back without saving it?");
+        if (dir === "back") return window.confirm("This step is not saved yet:\n\n• " + p.join("\n• ") + "\n\nGo back without saving it?");
         B.problems($("problems"), p);
         return false;
       }
