@@ -89,10 +89,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../../builders/config.js"></script>
 <script src="../../../gate.js" data-chronicle="dead-hand"></script>
+<script src="../../../content.js?v=20261015"></script>
 <script src="assets/js/render.js?v=20261011"></script>
 <script src="assets/data/players.js?v=20261002"></script>
 <script>
-  DeadHand.renderRoster("players-roster", window.DEAD_HAND_PLAYERS, "player");
+  ChronicleContent.merge("player", window.DEAD_HAND_PLAYERS, "dead-hand").then(function (list) {
+    DeadHand.renderRoster("players-roster", list, "player");
+  });
 </script>
 <script src="assets/js/site.js"></script>
 </body>

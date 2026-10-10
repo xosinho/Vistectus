@@ -23,12 +23,16 @@
    - The Person / Place / Handout pickers offer the campaign's NPCs,
      Maps and Handouts minus whatever the Dungeon Master has hidden
      (archive_hidden). If that list cannot be read, nothing is offered.
+     Those added on the site (the workshop; table chronicle_items) are
+     offered too, through ChronicleContent.merge (/content.js, loaded
+     here from the site root if the page does not load it itself).
    ===================================================================== */
 (function(){
   "use strict";
 
   /* ================= the campaign ================= */
   var CHRONICLE = (document.body.getAttribute('data-campaign') || '').trim();
+  var SCRIPT_SRC = (document.currentScript && document.currentScript.src) || '';
   var VALID_CAMPAIGN = /^[a-z0-9][a-z0-9-]{0,79}$/.test(CHRONICLE);
   /* DEFAULT_BOARD is the board this page opens with. It is stored with
      every save, so do not rename it once boards have been saved. */
@@ -113,7 +117,7 @@
   function safeImageSrc(src){
     src = String(src == null ? '' : src);
     if(/^data:image\/(png|jpe?g|gif|webp);base64,[a-z0-9+\/=\s]+$/i.test(src)) return src;
-    if(/^(https?:\/\/[\w.-]+)?[\w\-.\/%]+\.(png|jpe?g|gif|webp)$/i.test(src)) return src;
+    if(/^(https?:\/\/[\w.-]+(:\d{1,5})?)?[\w\-.\/%]+\.(png|jpe?g|gif|webp)$/i.test(src)) return src;
     return '';
   }
   /* Section colours go into a style attribute: the same rule applies. */
@@ -1140,12 +1144,54 @@
      list cannot be checked, nothing is offered, so nothing unrevealed
      slips through. */
   var SITE = '../';   // this page sits one folder below the campaign
-  function siteUrl(path){ return path ? SITE + encodeURI(String(path)) : ''; }
+  // Files from the campaign's folder are relative to it; pictures and
+  // files added on the site come as whole links (already encoded).
+  function siteUrl(path){
+    if(!path) return '';
+    path = String(path);
+    return /^https?:\/\//i.test(path) ? path : SITE + encodeURI(path);
+  }
   function isPicture(path){ return /\.(png|jpe?g|gif|webp)$/i.test(path || ''); }
-  // Handouts open in a new tab: only files from the campaign's own folders.
+  // The public folder of the site's own uploads (the 'world-media' bucket).
+  var MEDIA = (function(){
+    var u = String((window.BUILDERS_CONFIG || {}).supabaseUrl || '').replace(/\/+$/, '');
+    return u ? u + '/storage/v1/object/public/world-media/' : '';
+  })();
+  // Handouts open in a new tab: only files from the campaign's own
+  // folders, or from the site's own uploads.
   function safeDocHref(h){
     h = String(h || '');
+    if(MEDIA && h.indexOf(MEDIA) === 0){
+      var rest = h.slice(MEDIA.length);
+      return /^[\w\-.\/%]+\.(html?|pdf|png|jpe?g|gif|webp|txt|md)$/i.test(rest) && rest.indexOf('..') < 0 ? h : '';
+    }
     return /^\.\.\/assets\/[\w\-.\/%]+\.(html?|pdf|png|jpe?g|gif|webp)$/i.test(h) && h.indexOf('..', 3) < 0 ? h : '';
+  }
+
+  /* The NPCs, Maps and Handouts: the data files' plus the site's. */
+  var contentLoad = null;
+  function contentModule(){
+    if(window.ChronicleContent) return Promise.resolve(window.ChronicleContent);
+    if(!contentLoad){
+      contentLoad = new Promise(function(resolve){
+        var src;
+        try{ src = new URL('../../../content.js?v=20261015', SCRIPT_SRC || window.location.href).href; }
+        catch(e){ resolve(null); return; }
+        var sc = document.createElement('script');
+        sc.src = src;
+        sc.onload = function(){ resolve(window.ChronicleContent || null); };
+        sc.onerror = function(){ console.warn('Quest Board: content.js did not load; offering the data files only.'); resolve(null); };
+        document.head.appendChild(sc);
+      });
+    }
+    return contentLoad;
+  }
+  var KIND_OF = { person: 'npc', place: 'map', document: 'document' };
+  function listFor(type){
+    var files = arr(type === 'person' ? window.CAMPAIGN_NPCS : type === 'place' ? window.CAMPAIGN_MAPS : window.CAMPAIGN_DOCUMENTS);
+    return contentModule().then(function(cc){
+      return cc && cc.merge ? cc.merge(KIND_OF[type], files, CHRONICLE) : files;
+    }).catch(function(e){ console.warn(e); return files; });
   }
 
   async function hiddenList(kind){
@@ -1158,18 +1204,18 @@
   }
 
   function arr(x){ return Array.isArray(x) ? x : []; }
-  function pickerItems(type, hidden){
+  function pickerItems(type, hidden, list){
     if(type === 'person'){
-      return arr(window.CAMPAIGN_NPCS).filter(function(n){ return n && n.name && !hidden[n.name]; }).map(function(n){
+      return arr(list).filter(function(n){ return n && n.name && !hidden[n.name]; }).map(function(n){
         return { name: String(n.name), sub: String(n.role || n.tagline || ''), src: isPicture(n.portrait) ? siteUrl(n.portrait) : '' };
       });
     }
     if(type === 'place'){
-      return arr(window.CAMPAIGN_MAPS).filter(function(m){ return m && m.title && m.image && !hidden[m.image]; }).map(function(m){
+      return arr(list).filter(function(m){ return m && m.title && m.image && !hidden[m.image]; }).map(function(m){
         return { name: String(m.title), sub: String(m.when || m.description || ''), src: isPicture(m.image) ? siteUrl(m.image) : '' };
       });
     }
-    return arr(window.CAMPAIGN_DOCUMENTS).filter(function(d){ return d && d.title && d.file && !hidden[d.file]; }).map(function(d){
+    return arr(list).filter(function(d){ return d && d.title && d.file && !hidden[d.file]; }).map(function(d){
       return { name: String(d.title), sub: String(d.description || d.when || ''), src: isPicture(d.file) ? siteUrl(d.file) : '', href: siteUrl(d.file) };
     });
   }
@@ -1183,8 +1229,8 @@
   async function openPicker(type){
     var title = PICK_TITLE[type];
     showModal('<h3>' + title + '</h3><p class="hint">Checking what the party may see…</p>');
-    var hidden;
-    try{ hidden = await hiddenList(PICKERS[type]); }
+    var hidden, list;
+    try{ hidden = await hiddenList(PICKERS[type]); list = await listFor(type); }
     catch(e){
       console.error(e);
       showModal('<h3>' + title + '</h3><p class="hint">Could not check what the Dungeon Master has revealed to the party, so nothing is offered just now. Try again in a moment.</p>' +
@@ -1192,7 +1238,7 @@
       wireClose();
       return;
     }
-    var items = pickerItems(type, hidden);
+    var items = pickerItems(type, hidden, list);
     var grid = items.length ? items.map(function(it, i){
       var src = safeImageSrc(it.src);
       return '<button type="button" class="pick-item" data-i="' + i + '">' +

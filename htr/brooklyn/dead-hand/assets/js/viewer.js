@@ -282,5 +282,12 @@
   }
 
   root.appendChild(el("p", "empty", "Opening the archive…"));
-  loadHidden().then(render);
+  // Handouts and maps added on the site (the Builder's workshop) join the file's.
+  var merging = window.ChronicleContent
+    ? window.ChronicleContent.merge(kind === "maps" ? "map" : "document", all, CHRONICLE)
+    : Promise.resolve(all);
+  merging.then(function (list) {
+    all = list.filter(function (x) { return x && x.title && (kind === "maps" ? x.image : x.file); });
+    return loadHidden();
+  }).then(render);
 })();

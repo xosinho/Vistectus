@@ -1,0 +1,14 @@
+/* =====================================================================
+   Vampire: the Dark Ages — what a Builder-made chronicle's pages add to
+   the shared style.css and the world's colours (vtda/_world/world.css,
+   then the world's own world.css).
+   ===================================================================== */
+
+/* ------------------------------------------- the coterie: Create a Cainite */
+.coterie-create { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin: 0 0 1.6rem; }
+.coterie-create span { color: var(--ink-soft); font-size: .95rem; }
+
+/* ------------------------------------------- the Storyteller's workshop link */
+.workshop-link { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin: 0 0 1.4rem;
+  padding: .8rem 1rem; border: 1px solid var(--line); border-left: 3px solid var(--accent); background: var(--bg-raised); }
+.workshop-link span { color: var(--ink-soft); font-size: .95rem; flex: 1 1 16rem; }

@@ -42,7 +42,9 @@
   function accountBar(session, note) {
     return '<div class="sheet-bar"><span class="sheet-status">Signed in as ' + esc(session.user && session.user.email) +
       (note ? " · " + note : "") + '</span><span class="spacer"></span>' +
-      '<button type="button" class="btn btn--ghost" id="stOut">Sign out</button></div>';
+      '<a class="btn" href="../../../builders/workshop.html?c=dead-hand">Open the workshop</a> ' +
+      '<button type="button" class="btn btn--ghost" id="stOut">Sign out</button></div>' +
+      '<p class="xp-hint" style="margin:-.4rem 0 1rem">The workshop is where you add NPCs, handouts, maps, places and factions as the chronicle goes on.</p>';
   }
   function wireSignOut() {
     document.getElementById("stOut").addEventListener("click", async function () {

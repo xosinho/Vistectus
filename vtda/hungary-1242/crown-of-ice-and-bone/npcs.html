@@ -83,10 +83,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../../builders/config.js"></script>
 <script src="../../../gate.js" data-chronicle="crown-of-ice-and-bone"></script>
+<script src="../../../content.js?v=20261015"></script>
 <script src="assets/js/render.js?v=20261011"></script>
 <script src="assets/data/npcs.js?v=20261010"></script>
 <script>
-  Chronicle.renderRoster("npcs-roster", window.CROWN_NPCS, "npc", { hide: "npcs" });
+  ChronicleContent.merge("npc", window.CROWN_NPCS, "crown-of-ice-and-bone").then(function (list) {
+    Chronicle.renderRoster("npcs-roster", list, "npc", { hide: "npcs" });
+  });
 </script>
 <script src="assets/js/site.js"></script>
 </body>

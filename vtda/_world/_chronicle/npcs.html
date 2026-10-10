@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!-- Template for every Vampire: the Dark Ages chronicle made with the
+     World Builder. The router (/router.js on /404.html) serves it at
+     /vtda/<world>/<chronicle>/npcs.html with {{WORLD_ID}} {{WORLD_NAME}}
+     {{CHRONICLE_ID}} {{CHRONICLE_NAME}} filled in (HTML-escaped).
+     Shared scripts and styles: ../../assets/ (vtda/assets/). -->
+<html lang="en">
+<head>
+  <script>document.documentElement.classList.add("gate-pending")</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>People · {{CHRONICLE_NAME}} · VisTectus</title>
+  <meta name="description" content="The people the coterie has crossed paths with so far.">
+
+  <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
+
+  <!-- The hub stylesheet (site root, three folders up), the Vampire
+       default colours, then the world's own, then the shared chronicle styles. -->
+  <link rel="stylesheet" href="../../../style.css?v=20261015">
+  <link rel="stylesheet" href="../../_world/world.css?v=20261015">
+  <link rel="stylesheet" href="../world.css?v=20261015">
+  <link rel="stylesheet" href="../../assets/css/chronicle.css?v=20261015">
+</head>
+
+<body data-page="npcs" data-title="People" data-world="{{WORLD_ID}}" data-world-name="{{WORLD_NAME}}" data-chronicle="{{CHRONICLE_ID}}" data-chronicle-name="{{CHRONICLE_NAME}}">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="../../../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
+  <nav class="topnav" aria-label="Site">
+    <a href="../../../dnd/index.html">D&amp;D</a>
+    <a href="../../../htr/index.html">Hunter</a>
+    <a href="../../../vtda/index.html" aria-current="true">Vampire</a>
+    <a href="../../../index.html#about">About</a>
+    <a href="../../../host/index.html">Host a World</a>
+    <a class="nav-cta" href="../../../builders/index.html">Builders</a>
+  </nav>
+</header>
+
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../../../index.html">VisTectus</a></li>
+    <li><a href="../../../vtda/index.html">Vampire</a></li>
+    <li><a href="../index.html">{{WORLD_NAME}}</a></li>
+    <li><a href="index.html">{{CHRONICLE_NAME}}</a></li>
+    <li aria-current="page">People</li>
+  </ol>
+</nav>
+
+<section class="hero hero--compact">
+  <div class="hero-inner">
+    <p class="kicker">People</p>
+    <h1>Faces of the realm</h1>
+    <p class="lede">The people the coterie has crossed paths with so far. Open a name for what you know about them &mdash; no more, no less.</p>
+  </div>
+</section>
+
+<nav class="tabs" aria-label="Chronicle pages">
+  <div class="tabs-inner">
+    <a href="index.html">Chronicle</a>
+    <a href="players.html">The coterie</a>
+    <a href="npcs.html" aria-current="page">People</a>
+    <a href="resources.html">Resources</a>
+    <a href="login.html">Log in</a>
+    <a href="storyteller.html">Storyteller</a>
+  </div>
+</nav>
+
+<main id="main">
+  <section class="row">
+    <div class="row-head"><h2>People of the realm</h2></div>
+
+    <!-- The roster: the NPCs the Storyteller added in the workshop. The
+         Storyteller can hide each one from players. -->
+    <div id="npcs-roster"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>&copy; 2026 VisTectus</p>
+    <p class="links">
+      <a href="../index.html">{{WORLD_NAME}}</a>
+      <a href="../../../index.html">Back to the hub</a>
+    </p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../../builders/config.js?v=20261015"></script>
+<script src="../../../gate.js?v=20261015" data-chronicle="{{CHRONICLE_ID}}"></script>
+<script src="../../../content.js?v=20261015"></script>
+<script src="../../assets/js/render.js?v=20261015"></script>
+<script>
+  window.VAMPIRE_NPCS = [];
+  Chronicle.renderRoster("npcs-roster",
+    ChronicleContent.merge("npc", window.VAMPIRE_NPCS, document.body.getAttribute("data-chronicle")), "npc", { hide: "npcs" });
+</script>
+<script src="../../assets/js/site.js?v=20261015"></script>
+</body>
+</html>

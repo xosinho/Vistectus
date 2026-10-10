@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>document.documentElement.classList.add("gate-pending")</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resources &middot; {{CHRONICLE_NAME}} &middot; VisTectus</title>
+  <meta name="description" content="Resources for {{CHRONICLE_NAME}}: documents, maps, locations, the case board and references.">
+
+  <link rel="icon" href="../../../art/VisTectus%20Logo%201.jpg" type="image/jpeg">
+
+  <!-- Three folders up to the hub stylesheet; then the Hunter default
+       world look (htr/_world/world.css), then the world's own, if it has one. -->
+  <link rel="stylesheet" href="../../../style.css?v=20261015">
+  <link rel="stylesheet" href="../../_world/world.css?v=20261015">
+  <link rel="stylesheet" href="../world.css?v=20261015">
+</head>
+
+<body data-page="resources" data-title="Resources"
+      data-world="{{WORLD_ID}}" data-world-name="{{WORLD_NAME}}"
+      data-chronicle="{{CHRONICLE_ID}}" data-chronicle-name="{{CHRONICLE_NAME}}">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="../../../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
+  <nav class="topnav" aria-label="Site">
+    <a href="../../../dnd/index.html">D&amp;D</a>
+    <a href="../../../htr/index.html" aria-current="true">Hunter</a>
+    <a href="../../../vtda/index.html">Vampire</a>
+    <a href="../../../index.html#about">About</a>
+    <a href="../../../host/index.html">Host a World</a>
+    <a class="nav-cta" href="../../../builders/index.html">Builders</a>
+  </nav>
+</header>
+
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../../../index.html">VisTectus</a></li>
+    <li><a href="../../../htr/index.html">Hunter</a></li>
+    <li><a href="../index.html">{{WORLD_NAME}}</a></li>
+    <li><a href="index.html">{{CHRONICLE_NAME}}</a></li>
+    <li aria-current="page">Resources</li>
+  </ol>
+</nav>
+
+<section class="hero hero--compact">
+  <div class="hero-inner">
+    <p class="kicker">The chronicle's archive</p>
+    <h1>Resources</h1>
+    <p class="lede">Documents, maps and locations gathered over the course of the chronicle.</p>
+  </div>
+</section>
+
+<!-- Tabs: sticky under the top bar. Tabs to other pages carry aria-current. -->
+<nav class="tabs" aria-label="Chronicle pages">
+  <div class="tabs-inner">
+    <a href="index.html">Chronicle</a>
+    <a href="players.html">The cell</a>
+    <a href="npcs.html">People</a>
+    <a href="resources.html" aria-current="page">Resources</a>
+    <a href="login.html">Log in</a>
+    <a href="storyteller.html">Storyteller</a>
+  </div>
+</nav>
+
+<main id="main">
+  <section class="row">
+    <div class="row-head"><h2>The archive</h2></div>
+    <div class="entries">
+      <article class="entry">
+        <h3><a href="documents.html">Documents</a></h3>
+        <p>Handouts and papers the cell has found, each opened to read in place.</p>
+      </article>
+      <article class="entry">
+        <h3><a href="maps.html">Maps</a></h3>
+        <p>Maps and floor plans of the places the cell has been.</p>
+      </article>
+      <article class="entry">
+        <h3><a href="locations/index.html">Locations</a></h3>
+        <p>The places the cell knows of, pinned on the map.</p>
+      </article>
+      <article class="entry">
+        <h3><a href="board/index.html">The case board</a></h3>
+        <p>Cork, pins and red string: the cell&rsquo;s leads, people, places and documents, and how they connect.</p>
+      </article>
+      <article class="entry">
+        <h3><a href="https://htr.paradoxwikis.com/Hunter_The_Reckoning_Wiki" target="_blank" rel="noopener">Hunter Wiki</a></h3>
+        <p class="meta">Reference &middot; opens in a new tab</p>
+        <p>The official Hunter: The Reckoning wiki: rules, Creeds, Edges and the world of the Hunt.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Reference links the Storyteller added in the workshop. -->
+  <div id="resources"><section class="row"><p class="empty">Opening&hellip;</p></section></div>
+
+  <noscript><section class="row"><p class="prose">The reference list needs JavaScript.</p></section></noscript>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>&copy; 2026 VisTectus</p>
+    <p class="links">
+      <a href="../index.html">{{WORLD_NAME}}</a>
+      <a href="../../../index.html">Back to the hub</a>
+    </p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../../builders/config.js?v=20261015"></script>
+<script src="../../../gate.js?v=20261015" data-chronicle="{{CHRONICLE_ID}}"></script>
+<script src="../../../content.js?v=20261015"></script>
+<script>
+/* The reference list: the page's own (none) plus the links the
+   Storyteller added in the workshop (kind "resource"), grouped by
+   category. Text goes in as text, never as markup. */
+(function () {
+  "use strict";
+  window.HUNTER_RESOURCES = [];
+  var root = document.getElementById("resources");
+  var CHRONICLE = document.body.getAttribute("data-chronicle") || "";
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text) e.textContent = text;
+    return e;
+  }
+  function safeHref(h) {
+    h = String(h == null ? "" : h).trim();
+    return /^(javascript|data|vbscript):/i.test(h.replace(/[^a-z:]+/gi, "")) ? "#" : h;
+  }
+
+  function draw(list) {
+    root.textContent = "";
+    list = (list || []).filter(function (r) { return r && r.title && r.href; });
+    if (!list.length) {
+      var empty = el("section", "row");
+      empty.appendChild(el("p", "empty", "Reference material will appear here as the chronicle goes on."));
+      root.appendChild(empty);
+      return;
+    }
+    var order = [], groups = {};
+    list.forEach(function (r) {
+      var c = r.category || "Reference";
+      if (!groups[c]) { groups[c] = []; order.push(c); }
+      groups[c].push(r);
+    });
+    order.forEach(function (cat) {
+      var section = el("section", "row");
+      var head = el("div", "row-head");
+      head.appendChild(el("h2", null, cat));
+      section.appendChild(head);
+      var entries = el("div", "entries");
+      groups[cat].forEach(function (r) {
+        var item = el("article", "entry");
+        var h3 = el("h3");
+        var a = el("a", null, r.title);
+        a.href = safeHref(r.href);
+        if (r.external || /^https?:/i.test(r.href)) { a.target = "_blank"; a.rel = "noopener"; }
+        h3.appendChild(a);
+        item.appendChild(h3);
+        var meta = [r.kind, r.when].filter(Boolean).join(" · ");
+        if (meta) item.appendChild(el("p", "meta", meta));
+        if (r.description) item.appendChild(el("p", null, r.description));
+        entries.appendChild(item);
+      });
+      section.appendChild(entries);
+      root.appendChild(section);
+    });
+  }
+
+  ChronicleContent.merge("resource", window.HUNTER_RESOURCES, CHRONICLE).then(draw);
+})();
+</script>
+<script src="../../assets/js/site.js?v=20261015"></script>
+</body>
+</html>

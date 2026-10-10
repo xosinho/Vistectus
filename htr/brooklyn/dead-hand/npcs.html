@@ -82,10 +82,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../../builders/config.js"></script>
 <script src="../../../gate.js" data-chronicle="dead-hand"></script>
+<script src="../../../content.js?v=20261015"></script>
 <script src="assets/js/render.js?v=20261011"></script>
 <script src="assets/data/npcs.js?v=20261003c"></script>
 <script>
-  DeadHand.renderRoster("npcs-roster", window.DEAD_HAND_NPCS, "npc", { hide: "npcs" });
+  ChronicleContent.merge("npc", window.DEAD_HAND_NPCS, "dead-hand").then(function (list) {
+    DeadHand.renderRoster("npcs-roster", list, "npc", { hide: "npcs" });
+  });
 </script>
 <script src="assets/js/site.js"></script>
 </body>

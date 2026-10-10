@@ -1,5 +1,6 @@
 /* =====================================================================
-   D&D — Locations (one copy for every campaign)
+   D&D — Locations (one copy for every campaign, and for the Hunter and
+   Vampire chronicles made with the Builder: see WORDING below)
    ---------------------------------------------------------------------
    The world map with pins, plus area maps and building plans with
    tokens. The same app as the Vampire and Hunter Locations boards
@@ -42,6 +43,20 @@
    keep their coordinates when the DM replaces the image, so a new map
    of the same shape keeps every pin where it was.
 
+   WORDING. The app is shared with Hunter and Vampire chronicles made
+   with the Builder. Every game-specific word comes from <body>, with
+   the D&D wording as the default:
+     data-dm-label        "Dungeon Master"       who runs the game
+     data-player-label    "Adventurer"           how a player is shown
+     data-party-label     "party"                the players together
+     data-unit            "campaign"             what the game is called
+     data-system-label    "Dungeons & Dragons"   the game, over the title
+     data-plan-kinds      "Town layouts, dungeon plans or reference drawings"
+     data-plan-example    "a town layout or dungeon plan"
+     data-token-example   "e.g. Goblin, Relic"
+   The id and name come from data-campaign / data-campaign-name, or
+   data-chronicle / data-chronicle-name.
+
    This file holds no campaign content. Keep it that way: its code is
    public.
    ===================================================================== */
@@ -49,8 +64,17 @@
   "use strict";
 
   var body = document.body;
-  var CAMPAIGN = body.getAttribute("data-campaign") || "";
-  var CAMPAIGN_NAME = body.getAttribute("data-campaign-name") || CAMPAIGN;
+  function word(name, dflt) { var v = body.getAttribute(name); return v && v.trim() ? v.trim() : dflt; }
+  var CAMPAIGN = body.getAttribute("data-campaign") || body.getAttribute("data-chronicle") || "";
+  var CAMPAIGN_NAME = body.getAttribute("data-campaign-name") || body.getAttribute("data-chronicle-name") || CAMPAIGN;
+  var DM_LABEL = word("data-dm-label", "Dungeon Master");
+  var PLAYER_LABEL = word("data-player-label", "Adventurer");
+  var PARTY = word("data-party-label", "party");
+  var UNIT = word("data-unit", "campaign");
+  var SYSTEM = word("data-system-label", "Dungeons & Dragons");
+  var PLAN_KINDS = word("data-plan-kinds", "Town layouts, dungeon plans or reference drawings");
+  var PLAN_EXAMPLE = word("data-plan-example", "a town layout or dungeon plan");
+  var TOKEN_EXAMPLE = word("data-token-example", "e.g. Goblin, Relic");
   var BUCKET = "location-maps";
   var PLAYER_PIN = "#c9a227";        // every pin, as players see them
   var SPAN_W = 340, SPAN_H = 170;    // the world map's largest extent, in map units
@@ -101,7 +125,7 @@
     "  </div>",
     '  <div id="nav">',
     '    <div id="nav-header">',
-    '      <div class="eyebrow">DUNGEONS &amp; DRAGONS</div>',
+    '      <div class="eyebrow">' + esc(SYSTEM.toUpperCase()) + "</div>",
     "      <h1>LOCATIONS</h1>",
     '      <div class="sub">' + CAMP + "</div>",
     '      <div class="who" id="who"></div>',
@@ -121,7 +145,7 @@
     '  <label for="pin-name">Name (players see this once revealed)</label>',
     '  <input type="text" id="pin-name" maxlength="120">',
     '  <label for="pin-desc">Description for players</label>',
-    '  <textarea id="pin-desc" maxlength="4000" placeholder="What the party knows of this place."></textarea>',
+    '  <textarea id="pin-desc" maxlength="4000" placeholder="What the ' + esc(PARTY) + ' knows of this place."></textarea>',
     '  <label for="pin-notes">Your notes (only you see these)</label>',
     '  <textarea id="pin-notes" maxlength="8000" placeholder="What is really going on here."></textarea>',
     '  <label for="pin-faction">Faction (only you see this)</label>',
@@ -173,7 +197,7 @@
     '    <div class="kind-opt" data-kind="general">General</div>',
     "  </div>",
     '  <label for="token-label">Label</label>',
-    '  <input type="text" id="token-label" maxlength="40" placeholder="e.g. Goblin, Relic">',
+    '  <input type="text" id="token-label" maxlength="40" placeholder="' + esc(TOKEN_EXAMPLE) + '">',
     "  <label>Colour</label>",
     '  <div class="color-row" id="token-colors"></div>',
     '  <div class="modal-hint">After saving, click the map to drop the token. Drag it to move it; double-click to remove it.</div>',
@@ -294,7 +318,7 @@
   function renderHeader() {
     var who = $("who");
     if (!db || !S.session) { who.innerHTML = ""; return; }
-    who.innerHTML = '<span>' + (S.st ? "Dungeon Master" : "Adventurer") + "</span>" +
+    who.innerHTML = '<span>' + esc(S.st ? DM_LABEL : PLAYER_LABEL) + "</span>" +
       '<button class="pin-mini" type="button" id="signOutBtn">Sign out</button>';
     $("signOutBtn").addEventListener("click", async function () {
       try { await db.auth.signOut(); } catch (e) { console.error(e); }
@@ -377,7 +401,7 @@
       return;
     }
     if (!S.st) {
-      showEmpty(eyebrow, "NO WORLD MAP YET", "The Dungeon Master has not shared a world map yet.");
+      showEmpty(eyebrow, "NO WORLD MAP YET", "The " + DM_LABEL + " has not shared a world map yet.");
       return;
     }
     if (!db) { showEmpty(eyebrow, "NO WORLD MAP YET", "The locations are not connected yet."); return; }
@@ -717,7 +741,7 @@
         // Pin ids are shared across campaigns and chronicles: never load
         // another one's export (a Dead Hand file, or one marked for another).
         if (data._deadhand || (data.chronicle != null && data.chronicle !== CAMPAIGN)) {
-          throw new Error("That file belongs to another campaign's locations, not " + CAMPAIGN_NAME + ".");
+          throw new Error("That file belongs to another " + UNIT + "'s locations, not " + CAMPAIGN_NAME + ".");
         }
         if (!window.confirm("Replace every pin with the " + data.pins.length + " in this file? It is also kept as a saved setup.")) return;
         var snap = { pins: data.pins };
@@ -966,7 +990,7 @@
     $("map-revealed").checked = kind === "world" ? (wm ? !!wm.revealed : true) : false;
     $("map-hint").textContent = kind === "world"
       ? "The new image takes the old one's place. Pins keep their map positions, so a new map of the same shape keeps every pin where it was. Large images are scaled down to " + WORLD_MAX + " pixels."
-      : "Town layouts, dungeon plans or reference drawings. Large images are scaled down to " + PLAN_MAX + " pixels.";
+      : PLAN_KINDS + ". Large images are scaled down to " + PLAN_MAX + " pixels.";
     $("map-save-btn").textContent = kind === "world" ? (wm ? "Replace" : "Upload") : "Add Map";
     openModal("modal-map");
   }
@@ -1041,7 +1065,7 @@
       }
       h += '<div style="height:12px"></div>';
     } else {
-      h += '<div class="notice">Places the party knows of.' + (worldShown() || (wm && S.urls[wm.image_path]) ? " Click one to find it on the map." : "") + "</div>";
+      h += '<div class="notice">Places the ' + esc(PARTY) + ' knows of.' + (worldShown() || (wm && S.urls[wm.image_path]) ? " Click one to find it on the map." : "") + "</div>";
     }
     h += '<div class="nav-section-title">LOCATIONS <span></span></div>';
     h += placed.length ? placed.map(pinItem).join("") : '<div class="empty-hint">No locations yet.</div>';
@@ -1080,7 +1104,7 @@
     var list = mapsOfMode(), active = activeMap();
     var label = S.mode === "area" ? "AREA MAPS" : "BUILDING PLANS";
     var h = '<div class="nav-section-title">' + label + (S.st ? ' <span class="add-link" id="add-map-link">+ Add Map</span>' : " <span></span>") + "</div>";
-    if (!list.length) h += '<div class="empty-hint">' + (S.st ? "None yet. Add a town layout or dungeon plan to start placing tokens." : "None yet.") + "</div>";
+    if (!list.length) h += '<div class="empty-hint">' + (S.st ? esc("None yet. Add " + PLAN_EXAMPLE + " to start placing tokens.") : "None yet.") + "</div>";
     list.forEach(function (m) {
       var src = S.urls[m.image_path];
       h += '<div class="list-item' + (active && m.id === active.id ? " active" : "") + '" data-select="' + esc(m.id) + '">' +
@@ -1147,7 +1171,7 @@
 
   applyPane();
   if (!CAMPAIGN) {
-    $("nav-body").innerHTML = '<div class="notice">This page does not say which campaign it belongs to.</div>';
+    $("nav-body").innerHTML = '<div class="notice">This page does not say which ' + esc(UNIT) + ' it belongs to.</div>';
     return;
   }
   if (!window.L) {

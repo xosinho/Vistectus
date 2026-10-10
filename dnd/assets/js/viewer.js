@@ -7,6 +7,9 @@
 
    The page says which it is:  <div id="collection" data-kind="documents">
    Nothing here needs editing to add a document or a map.
+   When the page also loads /content.js, the handouts and maps added on
+   the site (the workshop; table chronicle_items) follow the files'
+   ones: the list waits for ChronicleContent.merge.
    ===================================================================== */
 (function () {
   "use strict";
@@ -14,8 +17,10 @@
   var root = document.getElementById("collection");
   if (!root) return;
   var kind = root.getAttribute("data-kind");
-  var items = (kind === "maps" ? window.CAMPAIGN_MAPS : window.CAMPAIGN_DOCUMENTS) || [];
-  items = items.filter(function (x) { return x && x.title && (kind === "maps" ? x.image : x.file); });
+  var items = [];
+  function usable(list) {
+    return (list || []).filter(function (x) { return x && x.title && url(kind === "maps" ? x.image : x.file); });
+  }
 
   function el(tag, cls, text) {
     var e = document.createElement(tag);
@@ -24,7 +29,14 @@
     return e;
   }
   // File names may contain spaces; keep them working as addresses.
-  function url(path) { return encodeURI(path); }
+  // Links from the site's database come whole (already encoded); any
+  // other scheme (javascript:, data:...) is refused.
+  function url(path) {
+    path = String(path == null ? "" : path).trim();
+    if (/^https?:\/\//i.test(path)) return path;
+    if (/^[a-z][a-z0-9+.\-]*:/i.test(path) || /^\/\//.test(path)) return "";
+    return encodeURI(path);
+  }
   function ext(path) { var m = /\.([a-z0-9]+)(?:[?#].*)?$/i.exec(path || ""); return m ? m[1].toLowerCase() : ""; }
   function isImage(path) { return /^(jpe?g|png|gif|webp|avif)$/.test(ext(path)); }
 
@@ -56,8 +68,8 @@
     dlg.querySelector("#viewerTitle").textContent = item.title;
     dlg.querySelector("#viewerOpen").href = url(path);
     var pdf = dlg.querySelector("#viewerPdf");
-    pdf.hidden = !item.pdf;
-    if (item.pdf) pdf.href = url(item.pdf);
+    pdf.hidden = !url(item.pdf);
+    if (url(item.pdf)) pdf.href = url(item.pdf);
     dlg.querySelectorAll("[data-step]").forEach(function (b) { b.hidden = kind !== "maps" || items.length < 2; });
 
     body.textContent = "";
@@ -119,7 +131,7 @@
   var db = (cfg.supabaseUrl && cfg.supabaseAnonKey && window.supabase)
     ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
   var CHRONICLE = (document.body && document.body.getAttribute("data-campaign")) || "";
-  var all = items.slice();
+  var all = [];
   var hidden = {}, isST = false, signedIn = false, failed = false;
   function keyOf(x) { return kind === "maps" ? x.image : x.file; }
 
@@ -282,5 +294,13 @@
   }
 
   root.appendChild(el("p", "empty", "Opening the archive…"));
-  loadHidden().then(render);
+  var fileList = (kind === "maps" ? window.CAMPAIGN_MAPS : window.CAMPAIGN_DOCUMENTS) || [];
+  var listed = (window.ChronicleContent && window.ChronicleContent.merge)
+    ? window.ChronicleContent.merge(kind === "maps" ? "map" : "document", fileList, CHRONICLE)
+    : Promise.resolve(fileList);
+  listed.then(function (list) {
+    all = usable(list);
+    items = all.slice();
+    return loadHidden();
+  }).then(render);
 })();

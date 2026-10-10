@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Factions · {{WORLD_NAME}} · VisTectus</title>
+<meta name="description" content="The factions of {{WORLD_NAME}}.">
+<meta property="og:title" content="Factions · {{WORLD_NAME}}">
+<meta property="og:description" content="The powers of {{WORLD_NAME}}.">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --ink: #0b0c14;
+  --ink-2: #14161f;
+  --panel: #14161f;
+  --line: #262a37;
+  --blood: #9e2b25;
+  --blood-soft: #c95a52;
+  --bone: #f1eef5;
+  --bone-dim: #b7adbf;
+  --serif: "Cinzel", Georgia, "Times New Roman", serif;
+  --body: "EB Garamond", Georgia, "Times New Roman", serif;
+  --maxw: 1240px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--body);
+  font-size: 18px;
+  line-height: 1.66;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative;
+  min-height: clamp(14rem, 32vh, 22rem);
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+.hero__art {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #262a37 0%, #0b0c14 62%, #3a1714 100%);
+}
+.hero__art::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(100deg, rgba(10,6,7,.96) 0%, rgba(10,6,7,.86) 38%, rgba(10,6,7,.35) 70%, rgba(10,6,7,.6) 100%),
+    linear-gradient(to top, rgba(10,6,7,.95), rgba(10,6,7,0) 45%);
+}
+.hero__inner {
+  position: relative;
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+}
+.hero h1 { max-width: 22ch; }
+.hero__lede { max-width: 52ch; }
+.eyebrow {
+  font-family: var(--serif);
+  font-size: .8rem;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  margin: 0 0 1rem;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2.3rem, 5.2vw, 3.7rem);
+  line-height: 1.02;
+  letter-spacing: .005em;
+  margin: 0 0 .9rem;
+  text-shadow: 0 2px 40px rgba(0,0,0,.8);
+}
+.hero__lede { font-size: 1.05rem; color: var(--bone); margin: 0 0 1.3rem; }
+
+.chip {
+  display: inline-block;
+  font-family: var(--serif);
+  font-size: .72rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  padding: .42em 1.05em;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  margin: 0;
+  white-space: nowrap;
+}
+.chip--solid {
+  background: var(--blood);
+  border-color: var(--blood);
+  color: #fff;
+}
+
+/* ---------- contents ----------
+   Seven long entries: a reader arriving for one faction should not
+   have to scroll through the other six to find it. */
+.contents {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) 2rem;
+  border-bottom: 1px solid var(--line);
+}
+.contents h2 {
+  font-family: var(--serif);
+  font-size: .8rem;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  font-weight: 600;
+  margin: 0 0 1.6rem;
+}
+.contents ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: .9rem clamp(1.5rem, 3vw, 3rem);
+  counter-reset: faction;
+}
+.contents li { counter-increment: faction; border-top: 1px solid var(--line); padding-top: .7rem; }
+.contents li::before {
+  content: counter(faction, upper-roman);
+  font-family: var(--serif);
+  font-size: .7rem;
+  letter-spacing: .2em;
+  color: var(--blood);
+  display: block;
+  margin-bottom: .2rem;
+}
+.contents a {
+  font-family: var(--serif);
+  font-size: 1.04rem;
+  color: var(--bone);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.contents a:hover { color: var(--blood-soft); border-bottom-color: var(--blood); }
+.contents .sub { display: block; font-family: var(--body); font-size: .92rem; color: var(--bone-dim); }
+
+/* ---------- faction sections ----------
+   Same two-column figure/body grid as the clans page, alternating side
+   to side. The art is a placeholder: the frame, its 3:4 ratio and its
+   border are drawn in CSS, so a section with no file yet still reads as
+   a deliberate empty frame rather than a broken asset. */
+main { display: block; }
+
+.faction {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) 2rem;
+  border-bottom: 1px solid var(--line);
+}
+.faction__art  { grid-column: 1; grid-row: 1; margin: 0; }
+.faction__body { grid-column: 2; grid-row: 1; }
+.faction--right { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+.faction--right .faction__art  { grid-column: 2; }
+.faction--right .faction__body { grid-column: 1; }
+
+.faction__art img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  filter: saturate(.92) contrast(1.04);
+  /* Shows through until a file exists, so the frame is never blank
+     white and never a broken-image box. */
+  background:
+    linear-gradient(135deg, #2f2140 0%, #0e0a15 62%, #3b1d2d 100%);
+  color: var(--bone-dim);
+  font-family: var(--serif);
+  font-size: .78rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.faction__head { max-width: 62ch; margin-bottom: clamp(2rem, 4vw, 3rem); }
+
+.faction h2 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  line-height: 1.02;
+  margin: 1rem 0 .5rem;
+}
+.epithet {
+  color: var(--blood-soft);
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  font-style: italic;
+  margin: 0;
+}
+
+.faction__cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: start;
+}
+
+.stat {
+  border-left: 2px solid var(--blood);
+  background: rgba(201, 19, 19, .055);
+  padding: .85rem 1rem .95rem 1.1rem;
+  margin-bottom: 1rem;
+}
+.stat:last-child { margin-bottom: 0; }
+.stat h3 {
+  font-family: var(--serif);
+  font-size: .78rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  font-weight: 600;
+  margin: 0 0 .5rem;
+}
+.stat p { margin: 0; font-size: .96rem; }
+.stat ul { margin: 0; padding: 0; list-style: none; font-size: .96rem; }
+.stat ul li { margin: 0 0 .55rem; }
+.stat ul li:last-child { margin-bottom: 0; }
+.stat .who { font-family: var(--serif); font-weight: 600; color: var(--bone); }
+.stat .sep { color: var(--blood); padding: 0 .45em; }
+
+.faction__prose p:last-child { margin: 0; }
+.faction__prose em { color: var(--bone); }
+
+/* ---------- footer ---------- */
+footer {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+  color: var(--bone-dim);
+  font-size: .9rem;
+}
+footer p { margin: 0 0 .5rem; }
+.rule {
+  width: 60px; height: 1px; background: var(--blood);
+  margin: 0 0 1.5rem;
+}
+
+/* ---------- the way back into Vistectus ---------- */
+.crumb {
+  font-family: var(--serif);
+  font-size: .72rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  margin: 0 0 1.5rem;
+}
+.crumb a {
+  color: var(--bone-dim);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+}
+.crumb a:hover { color: var(--blood-soft); border-bottom-color: var(--blood); }
+.crumb span { opacity: .45; margin: 0 .3rem; }
+
+.footer-nav { margin-top: 1.8rem; }
+.footer-nav a {
+  font-family: var(--serif);
+  font-size: .75rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  text-decoration: none;
+  margin-right: 1.8rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 3px;
+}
+.footer-nav a:hover { color: var(--blood-soft); border-bottom-color: var(--blood); }
+
+/* ---------- responsive ---------- */
+@media (min-width: 1500px) {
+  .faction__cols { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 2rem; }
+}
+
+@media (max-width: 900px) {
+  .faction, .faction--right { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .faction__art, .faction__body,
+  .faction--right .faction__art, .faction--right .faction__body { grid-column: 1; grid-row: auto; }
+  .faction__art img { aspect-ratio: 4 / 5; }
+  .hero__inner { padding: 4.5rem 1.5rem; }
+  .faction, .contents { padding-left: 1.5rem; padding-right: 1.5rem; }
+}
+
+</style>
+</head>
+
+
+<body data-world="{{WORLD_ID}}" data-world-name="{{WORLD_NAME}}">
+
+<header class="hero">
+  <div class="hero__art"></div>
+  <div class="hero__inner">
+    <p class="crumb">
+      <a href="../../../index.html">Vistectus</a><span>/</span>
+      <a href="../../index.html">Hunter</a><span>/</span>
+      <a href="../index.html">{{WORLD_NAME}}</a>
+    </p>
+    <p class="eyebrow">{{WORLD_NAME}} · The powers of the world</p>
+    <h1>Factions</h1>
+    <p class="hero__lede">Who holds power in {{WORLD_NAME}}, what they want, and who speaks for them.</p>
+    <p class="chip chip--solid">Hunter: The Reckoning</p>
+  </div>
+</header>
+
+<nav class="contents" aria-label="The factions" hidden>
+  <h2>The powers</h2>
+  <ol></ol>
+</nav>
+
+<main>
+  <!-- The world's factions, from the database (factions-view.js). -->
+  <p id="factions-empty" hidden style="max-width:40rem;margin:3rem auto;text-align:center">No factions described yet.</p>
+</main>
+
+<footer>
+  <div class="rule"></div>
+  <p><strong>{{WORLD_NAME}}</strong> — a Hunter: the Reckoning world.</p>
+  <p class="footer-nav">
+    <a href="../options/index.html">Creeds</a>
+    <a href="../index.html">{{WORLD_NAME}}</a>
+    <a href="../../index.html">Hunter</a>
+    <a href="../../../index.html">Vistectus</a>
+  </p>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../../builders/config.js"></script>
+<script src="../../../content.js?v=20261015"></script>
+<script src="../../../factions-view.js?v=20261015"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VisTectus</title>
+  <link rel="icon" href="/art/VisTectus%20Logo%201.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="/style.css">
+  <!-- =================================================================
+       GitHub Pages serves this page for any address that has no file.
+       Worlds and chronicles made with the World Builder have no files:
+       their addresses look like any other page's
+         /dnd/<world>/                     the world
+         /dnd/<world>/factions/index.html  its factions (also options/)
+         /vtda/<world>/rules.html          (Vampire) its rules
+         /dnd/<world>/<chronicle>/players.html ...  a chronicle's pages
+       and land here. router.js looks the world/chronicle up in the
+       database and, if it exists, writes in the matching template page
+       from /<htr|vtda|dnd>/_world/... (same folder depth, so every
+       relative link inside the template works unchanged), with the
+       names filled in. Anything else gets the plain "not found" below.
+       ================================================================= -->
+</head>
+<body>
+<main id="main" class="row" style="min-height:60vh">
+  <div id="routing">
+    <p class="kicker">VisTectus</p>
+    <h1>Opening…</h1>
+  </div>
+  <noscript><h1>Page not found</h1><p><a href="/">Back to the hub</a></p></noscript>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/builders/config.js"></script>
+<script src="/router.js?v=20261015"></script>
+</body>
+</html>

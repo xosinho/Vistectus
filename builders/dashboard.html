@@ -4,11 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Workshop &middot; Builders &middot; VisTectus</title>
+  <title>Your Builder home &middot; VisTectus</title>
   <meta name="robots" content="noindex">
 
   <link rel="icon" href="../art/VisTectus Logo 1.jpg" type="image/jpeg">
   <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="builders.css">
 </head>
 
 <body>
@@ -31,14 +32,14 @@
   <ol>
     <li><a href="../index.html">VisTectus</a></li>
     <li><a href="index.html">Builders</a></li>
-    <li aria-current="page">Workshop</li>
+    <li aria-current="page">Your Builder home</li>
   </ol>
 </nav>
 
 <section class="hero hero--compact">
   <div class="hero-inner">
-    <p class="kicker">Builders</p>
-    <h1>Your workshop</h1>
+    <p class="kicker">World Builder</p>
+    <h1>Your Builder home</h1>
     <p class="lede">
       <span class="whoami" id="whoami">Checking who you are&hellip;</span>
       &nbsp;<button class="linkbtn" id="signout" type="button" hidden>Sign out</button>
@@ -49,19 +50,49 @@
 <main id="main">
 
   <section class="row" id="offline" hidden>
-    <p class="form-status" data-kind="error">The Builders area is not connected
+    <p class="form-status" data-kind="error">The Builder is not connected
       yet. See <code>builders/README.md</code> to set it up.</p>
   </section>
 
+  <section class="row" id="loadfail" hidden>
+    <p class="form-status" data-kind="error" id="loadfail-msg"></p>
+    <p style="margin-top:1rem"><button class="btn btn--ghost" type="button" id="retry">Try again</button></p>
+  </section>
+
+  <!-- ---- Your worlds ------------------------------------------------ -->
+  <section class="row" id="worlds-row" hidden>
+    <div class="row-head"><h2>Your worlds</h2></div>
+    <div class="wb-new" id="new-world"></div>
+    <p class="form-status" id="worlds-status" role="status" hidden></p>
+    <div class="wb-cards" id="worlds"></div>
+    <p class="wb-empty" id="worlds-empty" hidden>No worlds yet.</p>
+  </section>
+
+  <!-- ---- Your chronicles -------------------------------------------- -->
+  <section class="row" id="chronicles-row" hidden>
+    <div class="row-head"><h2>Your chronicles and campaigns</h2></div>
+    <p class="wb-lede">The chronicles and campaigns you run as Storyteller or
+      Dungeon Master. Invite players from the Players section of the
+      Storyteller page or DM Screen; add NPCs, handouts, maps and more in
+      the workshop.</p>
+    <div class="wb-cards" id="chronicles"></div>
+    <p class="wb-empty" id="chronicles-empty" hidden>You are not the Storyteller or
+      Dungeon Master of a chronicle or campaign yet. A world&rsquo;s first chronicle
+      becomes yours when you make it in the Builder.</p>
+  </section>
+
+  <!-- ---- Loose files for the admin ---------------------------------- -->
   <section class="row" id="workshop" hidden>
+    <div class="row-head"><h2>Send other files to the site&rsquo;s admin</h2></div>
     <p class="form-status" style="margin-bottom:1.75rem">
-      Uploads go to a private area only you can see. Nothing appears on the
-      public site until it has been reviewed and placed on your world's pages.
+      For anything the Builder has no place for yet (character sheets,
+      Word documents, music lists&hellip;). These go to a private area only you
+      and the site&rsquo;s admin can see; nothing appears on the site until the
+      admin places it.
     </p>
 
     <div class="dash">
 
-      <!-- ---- Upload ----------------------------------------------- -->
       <div>
         <div class="row-head"><h2>Upload</h2></div>
         <form class="form" id="upload" novalidate>
@@ -72,16 +103,16 @@
           </div>
           <div class="field" id="world-new-wrap" hidden>
             <label for="world-new">Name of the new world</label>
-            <input id="world-new" type="text">
+            <input id="world-new" type="text" maxlength="120">
           </div>
 
           <div class="field">
-            <label for="chronicle">Chronicle</label>
+            <label for="chronicle">Chronicle or campaign</label>
             <select id="chronicle"></select>
           </div>
           <div class="field" id="chronicle-new-wrap" hidden>
             <label for="chronicle-new">Name of the new chronicle</label>
-            <input id="chronicle-new" type="text">
+            <input id="chronicle-new" type="text" maxlength="120">
           </div>
 
           <div class="field">
@@ -108,7 +139,6 @@
         </form>
       </div>
 
-      <!-- ---- Your uploads ----------------------------------------- -->
       <div>
         <div class="row-head">
           <h2>Your uploads</h2>
@@ -133,11 +163,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="builders.js"></script>
+<script src="../content.js"></script>
 <script>
 (function () {
   "use strict";
   var B = window.Builders;
   var $ = function (id) { return document.getElementById(id); };
+  var esc = B && B.esc;
 
   if (!B || !B.connected) {
     $("offline").hidden = false;
@@ -148,37 +180,175 @@
   var client = B.client;
   var bucket = B.config.bucket || "builder-uploads";
   var maxBytes = (B.config.maxUploadMb || 25) * 1024 * 1024;
-  var user = null;
+  var user = null, email = "";
   var queue = [];
+  var editable = [];      // worlds this account can edit
+  var mine = [];          // chronicles this account runs
 
-  /* ---- gate --------------------------------------------------------
-     No session: back to sign-in. Even if someone skipped this check,
-     every read and write below is refused by Supabase without one. */
+  /* ---- gate -------------------------------------------------------- */
   B.requireSession("index.html").then(function (session) {
     if (!session) return;
     user = session.user;
-    $("whoami").textContent = "Signed in as " + user.email;
-    $("signout").hidden = false;
+    email = String(user.email || "").toLowerCase();
+    B.bindWho(session, $("whoami"), $("signout"));
+    loadHome();
     $("workshop").hidden = false;
     fillSelects();
     loadFiles();
   });
+  $("retry").addEventListener("click", loadHome);
 
-  $("signout").addEventListener("click", function () {
-    B.signOut().then(function () { window.location.replace("index.html"); });
-  });
+  /* ---- worlds and chronicles -------------------------------------- */
+  async function loadHome() {
+    $("loadfail").hidden = true;
+    try {
+      var got = await Promise.all([
+        B.rpc("is_builder").catch(function (e) { console.warn(e); return false; }),
+        B.rpc("is_admin").catch(function () { return false; }),
+        B.q(client.from("worlds").select("*").order("updated_at", { ascending: false })),
+        B.rpc("my_chronicles")
+      ]);
+      var isBuilder = got[0] === true, isAdmin = got[1] === true, worlds = got[2] || [], mc = got[3] || [];
+      var runIds = mc.filter(function (c) { return c.role === "storyteller"; }).map(function (c) { return c.chronicle; });
+      var runWorlds = {};
+      mc.forEach(function (c) { if (c.role === "storyteller") runWorlds[c.world] = true; });
+      mine = runIds.length ? (await B.q(client.from("chronicles").select("id,name,game,world,path,status,tagline,card_image").in("id", runIds))) || [] : [];
+      mine.sort(function (a, b) { return String(a.name).localeCompare(String(b.name)); });
 
-  /* ---- the three pickers ------------------------------------------ */
+      editable = worlds.filter(function (w) {
+        return isAdmin || (w.created_by && String(w.created_by).toLowerCase() === email) || runWorlds[w.id] || w.status !== "approved";
+      });
+      drawNew(isBuilder, isAdmin);
+      drawWorlds(isAdmin, worlds);
+      drawChronicles(worlds);
+      $("worlds-row").hidden = false;
+      $("chronicles-row").hidden = false;
+      fillSelects();
+    } catch (e) {
+      console.error(e);
+      $("loadfail-msg").textContent = "Your worlds and chronicles could not be read: " + B.errText(e);
+      $("loadfail").hidden = false;
+    }
+  }
+
+  function drawNew(isBuilder, isAdmin) {
+    var el = $("new-world");
+    if (isBuilder) {
+      var making = editable.filter(function (w) { return w.created_by === email && w.status !== "approved"; }).length;
+      el.innerHTML = '<a class="btn" href="build.html">Build a new world</a>' +
+        '<p class="hint">A guided walk through the system, the world, its factions and player options, its first chronicle or campaign, and what to begin with. ' +
+        "It saves as you go, so you can stop and come back." +
+        (!isAdmin ? " You can have up to five worlds in the making at once" + (making ? " (you have " + making + ")" : "") + "." : "") + "</p>";
+    } else {
+      el.innerHTML = '<p class="wb-lede">Starting a new world is by invitation. If you have a world to bring to VisTectus, tell the site&rsquo;s admin through ' +
+        '<a href="../host/index.html">Host a World</a>; once they add you as a builder, a <strong>Build a new world</strong> button appears here. ' +
+        "Storytellers and Dungeon Masters can already add to their own chronicles and campaigns below.</p>";
+    }
+  }
+
+  function art(path) {
+    return path ? '<img src="' + esc(B.mediaUrl(path)) + '" alt="" loading="lazy">' : "";
+  }
+
+  function drawWorlds(isAdmin) {
+    var box = $("worlds");
+    $("worlds-empty").hidden = editable.length > 0;
+    box.innerHTML = editable.map(function (w) {
+      var g = B.game(w.game), own = isAdmin || String(w.created_by || "").toLowerCase() === email;
+      var acts = [];
+      if (w.status !== "approved" && own) acts.push('<a class="btn wb-small" href="build.html?w=' + encodeURIComponent(w.id) + '">Continue building</a>');
+      acts.push('<a class="btn btn--ghost wb-small" href="workshop.html?w=' + encodeURIComponent(w.id) + '">Workshop</a>');
+      if (w.status === "approved") acts.push('<a class="linkbtn" href="' + esc(B.worldHref(w)) + '">Open the world&rsquo;s page</a>');
+      if (w.status !== "approved" && !w.static_path && own) acts.push('<button type="button" class="linkbtn wb-danger" data-del="' + esc(w.id) + '">Delete</button>');
+      var note = "";
+      if (w.review_note && w.status !== "approved") note = '<p class="wb-card__note"><strong>Note from the site&rsquo;s admin:</strong> ' + esc(w.review_note) + "</p>";
+      var st = B.STATUS[w.status] || {};
+      return '<article class="wb-card">' +
+        '<div class="wb-card__art">' + art(w.card_image) + B.statusBadge(w.status) + "</div>" +
+        '<div class="wb-card__body"><span class="wb-card__sys">' + esc(g.name) + "</span><h3>" + esc(w.name) + "</h3>" +
+          (w.tagline ? "<p>" + esc(w.tagline) + "</p>" : "") +
+          (w.status !== "approved" ? '<p class="hint">' + esc(st.note || "") + (w.status === "pending" ? " You can still make changes while you wait." : "") + "</p>" : "") +
+          note + "</div>" +
+        '<div class="wb-card__acts">' + acts.join("") + "</div></article>";
+    }).join("");
+    box.querySelectorAll("[data-del]").forEach(function (b) {
+      b.addEventListener("click", function () { deleteWorld(b.getAttribute("data-del")); });
+    });
+  }
+
+  function drawChronicles(worlds) {
+    var box = $("chronicles");
+    $("chronicles-empty").hidden = mine.length > 0;
+    var wname = {};
+    (worlds || []).forEach(function (w) { wname[w.id] = w.name; });
+    box.innerHTML = mine.map(function (c) {
+      var g = B.game(c.game);
+      return '<article class="wb-card">' +
+        '<div class="wb-card__art">' + art(c.card_image) + (c.status && c.status !== "approved" ? B.statusBadge(c.status) : "") + "</div>" +
+        '<div class="wb-card__body"><span class="wb-card__sys">' + esc(g.Unit) + " · " + esc(wname[c.world] || c.world) + "</span><h3>" + esc(c.name) + "</h3>" +
+          (c.tagline ? "<p>" + esc(c.tagline) + "</p>" : "") +
+          '<p class="hint">You are its ' + esc(g.st) + ".</p></div>" +
+        '<div class="wb-card__acts">' +
+          '<a class="btn wb-small" href="workshop.html?c=' + encodeURIComponent(c.id) + '">Workshop</a>' +
+          '<a class="linkbtn" href="' + esc(B.chronicleHref(c)) + '">Open the ' + esc(g.unit) + "</a>" +
+          '<a class="linkbtn" href="' + esc(B.storytellerHref(c)) + '">' + esc(g.stPageLabel) + "</a>" +
+        "</div></article>";
+    }).join("");
+  }
+
+  async function deleteWorld(id) {
+    var w = editable.filter(function (x) { return x.id === id; })[0];
+    if (!w) return;
+    if (!window.confirm("Delete the world “" + w.name + "”, with its factions, its chronicles still in the making, their NPCs, handouts, maps and other content, and every picture and file uploaded for them?\n\nThis cannot be undone.")) return;
+    var st = $("worlds-status");
+    B.say(st, "ok", "Deleting…");
+    try {
+      // Remove the uploaded files first: once the world is gone, the
+      // database no longer lets this account remove them.
+      var paths = [w.card_image, w.hero_image];
+      var facs = await B.q(client.from("world_factions").select("image").eq("world", id));
+      (facs || []).forEach(function (f) { paths.push(f.image); });
+      var chs = await B.q(client.from("chronicles").select("id,card_image,status").eq("world", id));
+      var ids = (chs || []).map(function (c) { paths.push(c.card_image); return c.id; });
+      if (ids.length) {
+        var items = await B.q(client.from("chronicle_items").select("data").in("chronicle", ids));
+        (items || []).forEach(function (it) { var d = it.data || {}; paths.push(d.portrait, d.file, d.image, d.pdf); });
+      }
+      await Promise.all(paths.filter(function (p) { return p && !/^https?:/i.test(p) && String(p).indexOf(id + "/") === 0; }).map(B.removeMedia));
+      await B.rpc("builder_delete_world", { p_world: id });
+      B.say(st, "ok", "Deleted: " + w.name + ".");
+      loadHome();
+    } catch (e) {
+      console.error(e);
+      B.say(st, "error", "Not deleted: " + B.errText(e));
+    }
+  }
+
+  /* ---- the upload pickers ----------------------------------------- */
   function option(sel, value, text) {
     var o = document.createElement("option");
     o.value = value; o.textContent = text; sel.appendChild(o);
   }
+  function uploadWorlds() {
+    var list = B.WORLDS.map(function (x) { return { id: x.id, name: x.name, system: x.system, chronicles: x.chronicles.slice() }; });
+    editable.forEach(function (w) {
+      var have = list.filter(function (x) { return x.id === w.id; })[0];
+      if (!have) { have = { id: w.id, name: w.name, system: B.game(w.game).name, chronicles: [] }; list.push(have); }
+      mine.filter(function (c) { return c.world === w.id; }).forEach(function (c) {
+        if (!have.chronicles.some(function (x) { return x.id === c.id; })) have.chronicles.push({ id: c.id, name: c.name });
+      });
+    });
+    return list;
+  }
 
+  var filled = false;
   function fillSelects() {
-    var w = $("world");
-    B.WORLDS.forEach(function (x) { option(w, x.id, x.name + " — " + x.system); });
+    var w = $("world"), keep = w.value;
+    w.innerHTML = "";
+    uploadWorlds().forEach(function (x) { option(w, x.id, x.name + " — " + x.system); });
     option(w, "__new", "A new world…");
-    B.CATEGORIES.forEach(function (c) { option($("category"), c.id, c.name); });
+    if (keep) w.value = keep;
+    if (!filled) { B.CATEGORIES.forEach(function (c) { option($("category"), c.id, c.name); }); filled = true; }
     fillChronicles();
   }
 
@@ -186,7 +356,7 @@
     var c = $("chronicle");
     c.innerHTML = "";
     option(c, "__world", "The whole world");
-    var world = B.WORLDS.filter(function (x) { return x.id === $("world").value; })[0];
+    var world = uploadWorlds().filter(function (x) { return x.id === $("world").value; })[0];
     (world ? world.chronicles : []).forEach(function (x) { option(c, x.id, x.name); });
     option(c, "__new", "A new chronicle…");
     toggleNew();
@@ -200,7 +370,6 @@
   $("world").addEventListener("change", fillChronicles);
   $("chronicle").addEventListener("change", toggleNew);
 
-  /* What the three pickers add up to: ids for the path, names for people. */
   function target() {
     var wSel = $("world"), cSel = $("chronicle");
     var world = wSel.value === "__new"
@@ -215,9 +384,7 @@
   }
 
   /* ---- the queue --------------------------------------------------- */
-  function say(kind, text) {
-    var s = $("up-status"); s.dataset.kind = kind; s.textContent = text; s.hidden = !text;
-  }
+  function say(kind, text) { B.say($("up-status"), kind, text); }
 
   function addFiles(list) {
     var refused = [];
@@ -281,7 +448,7 @@
     waiting.reduce(function (chain, item) {
       return chain.then(function () {
         item.state = "uploading"; renderQueue();
-        // First folder is the Builder's own id: the storage policy only
+        // First folder is the builder's own id: the storage policy only
         // lets them write under it.
         var path = [user.id, t.world.id, t.chronicle.id, t.category,
                     Date.now() + "-" + B.slug(item.file.name)].join("/");
@@ -302,18 +469,19 @@
             item.state = "done";
           })
           .catch(function (err) {
-            item.state = "failed";
+            item.state = "failed: " + B.errText(err);
+            item.failed = true;
             console.error(err);
           })
           .then(renderQueue);
       });
     }, Promise.resolve()).then(function () {
-      var failed = waiting.filter(function (q) { return q.state === "failed"; }).length;
+      var failed = waiting.filter(function (q) { return q.failed; }).length;
       say(failed ? "error" : "ok",
           failed ? failed + " of " + waiting.length + " did not upload. Try those again."
                  : "Uploaded " + waiting.length + (waiting.length === 1 ? " file." : " files."));
       queue = queue.filter(function (q) { return q.state !== "done"; });
-      queue.forEach(function (q) { if (q.state === "failed") q.state = "waiting"; });
+      queue.forEach(function (q) { if (q.failed) { q.state = "waiting"; q.failed = false; } });
       renderQueue();
       loadFiles();
     });
@@ -326,6 +494,7 @@
       .then(function (r) {
         var ul = $("files");
         ul.innerHTML = "";
+        if (r.error) { ul.innerHTML = '<li class="hint">Your uploads could not be read: ' + esc(B.errText(r.error)) + "</li>"; return; }
         var rows = r.data || [];
         $("files-empty").hidden = rows.length > 0;
         rows.forEach(function (row) {

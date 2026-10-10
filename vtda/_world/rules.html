@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!-- Template for the rules page of every Vampire: the Dark Ages world made
+     with the World Builder, served at /vtda/<world>/rules.html by the
+     router (/router.js on /404.html) with the world's id and name filled
+     in (HTML-escaped). Drawn by ../assets/js/rules.js; only the world's
+     players and Storytellers get in (gate.js data-world). -->
+<html lang="en">
+<head>
+  <script>document.documentElement.classList.add("gate-pending")</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The rules · {{WORLD_NAME}} · VisTectus</title>
+  <meta name="description" content="The rules of Vampire: the Dark Ages, from the Storytellers' notes. For the players of {{WORLD_NAME}}.">
+  <meta name="robots" content="noindex">
+
+  <link rel="icon" href="../../art/VisTectus Logo 1.jpg" type="image/jpeg">
+
+  <!-- The hub stylesheet (two folders up), the Vampire default colours,
+       then the world's own, then the rules pages' styles. -->
+  <link rel="stylesheet" href="../../style.css?v=20261015">
+  <link rel="stylesheet" href="../_world/world.css?v=20261015">
+  <link rel="stylesheet" href="world.css?v=20261015">
+  <link rel="stylesheet" href="../assets/css/rules.css?v=20261015">
+</head>
+
+<body data-page="rules" data-title="The rules" data-world="{{WORLD_ID}}" data-world-name="{{WORLD_NAME}}">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="../../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
+  <nav class="topnav" aria-label="Site">
+    <a href="../../dnd/index.html">D&amp;D</a>
+    <a href="../../htr/index.html">Hunter</a>
+    <a href="../../vtda/index.html" aria-current="true">Vampire</a>
+    <a href="../../index.html#about">About</a>
+    <a href="../../host/index.html">Host a World</a>
+    <a class="nav-cta" href="../../builders/index.html">Builders</a>
+  </nav>
+</header>
+
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../../index.html">VisTectus</a></li>
+    <li><a href="../index.html">Vampire</a></li>
+    <li><a href="index.html">{{WORLD_NAME}}</a></li>
+    <li aria-current="page">The rules</li>
+  </ol>
+</nav>
+
+<section class="hero hero--compact">
+  <div class="hero-inner">
+    <p class="kicker">For the players of {{WORLD_NAME}}</p>
+    <h1>The rules</h1>
+    <p class="lede">Vampire: the Dark Ages, from the Storytellers&rsquo; notes in Obsidian.</p>
+  </div>
+</section>
+
+<nav class="tabs" aria-label="World pages">
+  <div class="tabs-inner">
+    <a href="index.html#chronicles">Chronicles</a>
+    <a href="index.html#overview">Overview</a>
+    <a href="factions/index.html">Factions</a>
+    <a href="rules.html" aria-current="page">The rules</a>
+  </div>
+</nav>
+
+<main id="main">
+  <!-- Drawn by rules.js. The notes are uploaded from the Obsidian vault
+       on this page, by one of the world's Storytellers, and kept in the
+       database (vault_notes, under the world's id), where only the
+       players and Storytellers of the world's chronicles can read them. -->
+  <div id="rules" class="rules"><p class="rules-status">Opening the rules…</p></div>
+  <noscript><section class="row"><p class="prose">The rules need JavaScript.</p></section></noscript>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>&copy; 2026 VisTectus</p>
+    <p class="links">
+      <a href="index.html">{{WORLD_NAME}}</a>
+      <a href="../index.html">Vampire</a>
+      <a href="../../index.html">Back to the hub</a>
+    </p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../builders/config.js?v=20261015"></script>
+<script src="../../gate.js?v=20261015" data-world="{{WORLD_ID}}"></script>
+<script src="../assets/js/rules.js?v=20261015"></script>
+<script src="../assets/js/site.js?v=20261015"></script>
+</body>
+</html>

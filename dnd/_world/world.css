@@ -1,0 +1,36 @@
+/* The default colours of a Builder-made D&D world. A world in the
+   site's files has its own world.css, loaded after this one. */
+
+:root {
+  /* The one colour that defines the world. */
+  --accent:     #e0b552;
+  --accent-ink: #17120a;
+
+  /* Indigo, nudged towards warm. */
+  --bg:         #0f0c18;
+  --bg-raised:  #1a1526;
+  --bg-sunken:  #0a0810;
+  --line:       #2e2740;
+
+  /* This world can carry its own logo too. The path is relative to
+     THIS file, so a picture sitting beside it needs no folders: */
+  /* --logo: url('/dnd/world-one/logo.svg'); */
+
+  /* Display face for headings, once you have imported one above. */
+  /* --font-display: "Cinzel", Georgia, serif; */
+
+  /* Key art. Swap the gradient for a picture when you have one:
+     --hero: url('/dnd/world-one/art/hero.jpg'); */
+  --hero: linear-gradient(160deg, #34283f 0%, #0f0c18 58%, #2a2116 100%);
+  --art:  linear-gradient(145deg, #241d33 0%, #140f1f 100%);
+}
+
+/* Flavour beyond colour is fine too, as long as it stays inside this
+   file. A slow ember glow behind the hero title, for instance. */
+.hero h1 {
+  text-shadow: 0 2px 30px rgba(0, 0, 0, .5), 0 0 60px rgba(224, 181, 82, .18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero h1 { text-shadow: 0 2px 30px rgba(0, 0, 0, .5); }
+}

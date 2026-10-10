@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!-- Template for every Vampire: the Dark Ages chronicle made with the
+     World Builder. The router (/router.js on /404.html) serves it at
+     /vtda/<world>/<chronicle>/storyteller.html with {{WORLD_ID}} {{WORLD_NAME}}
+     {{CHRONICLE_ID}} {{CHRONICLE_NAME}} filled in (HTML-escaped).
+     Shared scripts and styles: ../../assets/ (vtda/assets/). -->
+<html lang="en">
+<head>
+  <script>document.documentElement.classList.add("gate-pending")</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Storyteller · {{CHRONICLE_NAME}} · VisTectus</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="The Storyteller's page for {{CHRONICLE_NAME}}.">
+
+  <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
+
+  <!-- The hub stylesheet (site root, three folders up), the Vampire
+       default colours, then the world's own, then the shared chronicle styles. -->
+  <link rel="stylesheet" href="../../../style.css?v=20261015">
+  <link rel="stylesheet" href="../../_world/world.css?v=20261015">
+  <link rel="stylesheet" href="../world.css?v=20261015">
+  <link rel="stylesheet" href="../../assets/css/chronicle.css?v=20261015">
+  <link rel="stylesheet" href="../../assets/css/sheet.css?v=20261015">
+</head>
+
+<body data-page="storyteller" data-title="Storyteller" data-world="{{WORLD_ID}}" data-world-name="{{WORLD_NAME}}" data-chronicle="{{CHRONICLE_ID}}" data-chronicle-name="{{CHRONICLE_NAME}}">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="../../../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
+  <nav class="topnav" aria-label="Site">
+    <a href="../../../dnd/index.html">D&amp;D</a>
+    <a href="../../../htr/index.html">Hunter</a>
+    <a href="../../../vtda/index.html" aria-current="true">Vampire</a>
+    <a href="../../../index.html#about">About</a>
+    <a href="../../../host/index.html">Host a World</a>
+    <a class="nav-cta" href="../../../builders/index.html">Builders</a>
+  </nav>
+</header>
+
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../../../index.html">VisTectus</a></li>
+    <li><a href="../../../vtda/index.html">Vampire</a></li>
+    <li><a href="../index.html">{{WORLD_NAME}}</a></li>
+    <li><a href="index.html">{{CHRONICLE_NAME}}</a></li>
+    <li aria-current="page">Storyteller</li>
+  </ol>
+</nav>
+
+<section class="hero hero--compact">
+  <div class="hero-inner">
+    <p class="kicker">Behind the screen</p>
+    <h1>Storyteller</h1>
+  </div>
+</section>
+
+<nav class="tabs" aria-label="Chronicle pages">
+  <div class="tabs-inner">
+    <a href="index.html">Chronicle</a>
+    <a href="players.html">The coterie</a>
+    <a href="npcs.html">People</a>
+    <a href="resources.html">Resources</a>
+    <a href="login.html">Log in</a>
+    <a href="storyteller.html" aria-current="page">Storyteller</a>
+  </div>
+</nav>
+
+<main id="main" class="sheet-wrap">
+  <!-- Drawn by ../../assets/js/storyteller.js, for the chronicle's
+       Storytellers only (gate.js data-need="storyteller"): the link to
+       the workshop, the coterie's XP and sheets, new Cainites waiting
+       for approval, the players, end-of-session XP and NPC sheets. -->
+  <div id="st"><p class="sheet-status">Checking sign-in…</p></div>
+  <noscript><div class="sheet-notice">Signing in needs JavaScript.</div></noscript>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>&copy; 2026 VisTectus</p>
+    <p class="links">
+      <a href="../index.html">{{WORLD_NAME}}</a>
+      <a href="../../../index.html">Back to the hub</a>
+    </p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../../builders/config.js?v=20261015"></script>
+<script src="../../../gate.js?v=20261015" data-chronicle="{{CHRONICLE_ID}}" data-need="storyteller"></script>
+<script src="../../../content.js?v=20261015"></script>
+<script src="../../../members.js?v=20261015"></script>
+<script>window.VAMPIRE_NPCS = [];</script>
+<script src="../../assets/data/rules-data.js?v=20261015"></script>
+<script src="../../assets/js/storyteller.js?v=20261015"></script>
+</body>
+</html>

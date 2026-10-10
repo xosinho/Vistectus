@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>document.documentElement.classList.add("gate-pending")</script>
+<meta charset="UTF-8">
+<title>Locations · {{CHRONICLE_NAME}} · VisTectus</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<link rel="icon" href="../../../../art/VisTectus%20Logo%201.jpg" type="image/jpeg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- The world's colours (tokens only), then the shared Locations app's
+     own full-screen styling, which takes its colours from them. -->
+<link rel="stylesheet" href="../../../_world/world.css?v=20261015">
+<link rel="stylesheet" href="../../world.css">
+<link rel="stylesheet" href="../../../assets/locations/locations.css?v=20261015">
+</head>
+<!-- The Locations app for this campaign. The page is drawn by the shared
+     script (dnd/assets/locations/locations.js); what it shows comes from
+     the database. -->
+<body data-campaign="{{CHRONICLE_ID}}" data-campaign-name="{{CHRONICLE_NAME}}" data-chronicle="{{CHRONICLE_ID}}" data-chronicle-name="{{CHRONICLE_NAME}}" data-world="{{WORLD_ID}}" data-world-name="{{WORLD_NAME}}">
+
+<nav class="crumbs" id="crumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../../../../index.html">VisTectus</a></li>
+    <li><a href="../../../index.html">D&amp;D</a></li>
+    <li><a href="../../index.html">{{WORLD_NAME}}</a></li>
+    <li><a href="../index.html">{{CHRONICLE_NAME}}</a></li>
+    <li><a href="../resources.html">Resources</a></li>
+    <li aria-current="page">Locations</li>
+  </ol>
+</nav>
+<noscript><p style="padding:16px;">The Locations map needs JavaScript.</p></noscript>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../../../builders/config.js?v=20261015"></script>
+<script src="../../../../gate.js?v=20261015" data-chronicle="{{CHRONICLE_ID}}" data-unit="campaign" data-dm-label="Dungeon Master"></script>
+<script src="../../../assets/locations/locations.js?v=20261015"></script>
+</body>
+</html>

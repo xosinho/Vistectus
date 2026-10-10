@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Build a world &middot; Builders &middot; VisTectus</title>
+  <meta name="robots" content="noindex">
+
+  <link rel="icon" href="../art/VisTectus Logo 1.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="builders.css">
+</head>
+
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
+  <nav class="topnav" aria-label="Site">
+    <a href="../dnd/index.html">D&amp;D</a>
+    <a href="../htr/index.html">Hunter</a>
+    <a href="../vtda/index.html">Vampire</a>
+    <a href="../index.html#about">About</a>
+    <a href="../host/index.html">Host a World</a>
+    <a class="nav-cta" href="index.html" aria-current="page">Builders</a>
+  </nav>
+</header>
+
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">VisTectus</a></li>
+    <li><a href="dashboard.html">Builders</a></li>
+    <li aria-current="page" id="crumb">Build a world</li>
+  </ol>
+</nav>
+
+<section class="hero hero--compact">
+  <div class="hero-inner">
+    <p class="kicker">World Builder</p>
+    <h1 id="title">Build a world</h1>
+    <p class="lede">
+      <span class="whoami" id="whoami">Checking who you are&hellip;</span>
+      &nbsp;<button class="linkbtn" id="signout" type="button" hidden>Sign out</button>
+    </p>
+  </div>
+</section>
+
+<main id="main">
+  <section class="row" id="offline" hidden>
+    <p class="form-status" data-kind="error">The Builder is not connected
+      yet. See <code>builders/README.md</code> to set it up.</p>
+  </section>
+
+  <section class="row" id="stop" hidden>
+    <div class="form-status" data-kind="error" id="stop-msg"></div>
+    <p style="margin-top:1rem"><a class="btn btn--ghost" href="dashboard.html">Back to your Builder home</a></p>
+  </section>
+
+  <section class="row" id="wizard" hidden>
+    <ol class="wb-steps" id="steps" aria-label="Steps"></ol>
+    <p class="form-status" id="note" hidden></p>
+    <div id="step" tabindex="-1"></div>
+    <div class="form-status" id="problems" role="alert" hidden></div>
+    <p class="form-status" id="status" role="status" hidden></p>
+    <div class="wb-actions">
+      <button type="button" class="btn btn--ghost" id="back">Back</button>
+      <span class="spacer"></span>
+      <span class="hint" id="saved-hint"></span>
+      <button type="button" class="btn" id="next">Next</button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>&copy; 2026 VisTectus</p>
+    <p class="links"><a href="dashboard.html">Your Builder home</a></p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="builders.js"></script>
+<script src="../content.js"></script>
+<script src="../cropper.js"></script>
+<script src="forms.js"></script>
+<script src="editors.js"></script>
+<script src="options.js"></script>
+<script>
+(function () {
+  "use strict";
+  var B = window.Builders;
+  var $ = function (id) { return document.getElementById(id); };
+
+  if (!B || !B.connected) {
+    $("offline").hidden = false;
+    $("whoami").textContent = "Not connected";
+    return;
+  }
+  var esc = B.esc, client = B.client;
+
+  /* ---- what the wizard knows ---------------------------------------- */
+  var S = { game: "", world: null, chronicle: null, email: "" };
+  var cur = 0;         // the step on screen
+  var view = null;     // { leave(dir) -> Promise<bool>, ... } for that step
+  var busy = false;
+
+  var STEPS = [
+    { key: "system",    label: "System",          need: function () { return true; } },
+    { key: "world",     label: "World",           need: function () { return !!S.game; } },
+    { key: "factions",  label: "Factions",        need: function () { return !!S.world; } },
+    { key: "options",   label: "Player options",  need: function () { return !!S.world; } },
+    { key: "chronicle", label: function () { return "First " + g().unit; }, need: function () { return !!S.world; } },
+    { key: "npcs",      label: "NPCs",            need: function () { return !!S.chronicle; } },
+    { key: "resources", label: "Resources",       need: function () { return !!S.chronicle; } },
+    { key: "review",    label: "Review and send", need: function () { return !!S.world; } }
+  ];
+  function g() { return B.game(S.game || "hunter"); }
+  function label(s) { return typeof s.label === "function" ? s.label() : s.label; }
+
+  function stop(html) {
+    $("wizard").hidden = true;
+    $("stop-msg").innerHTML = html;
+    $("stop").hidden = false;
+  }
+
+  /* ---- start: who, and which world ---------------------------------- */
+  B.requireSession("index.html").then(async function (session) {
+    if (!session) return;
+    S.email = String(session.user.email || "").toLowerCase();
+    B.bindWho(session, $("whoami"), $("signout"));
+    var wid = B.param("w");
+    try {
+      if (wid) {
+        S.world = await B.q(client.from("worlds").select("*").eq("id", wid).maybeSingle());
+        if (!S.world) return stop("<p>There is no world called <code>" + esc(wid) + "</code> that this account can edit. It may have been deleted, or it belongs to another builder.</p>");
+        var editor = await B.rpc("is_world_editor", { p_world: wid }).catch(function () { return true; });
+        if (!editor) return stop("<p>This account cannot edit <strong>" + esc(S.world.name) + "</strong>.</p>");
+        S.game = S.world.game;
+        var chs = await B.q(client.from("chronicles").select("*").eq("world", wid).order("created_at", { ascending: true }));
+        var mc = await B.rpc("my_chronicles").catch(function () { return []; });
+        var run = {};
+        (mc || []).forEach(function (c) { if (c.role === "storyteller") run[c.chronicle] = true; });
+        S.chronicle = (chs || []).filter(function (c) { return run[c.id]; })[0] || null;
+        if (S.world.status === "approved") {
+          $("note").dataset.kind = "ok";
+          $("note").innerHTML = "This world is approved and on the site. You can still change it here, but the <a href=\"workshop.html?w=" + encodeURIComponent(wid) + "\">workshop</a> is the better place now.";
+          $("note").hidden = false;
+        }
+        var remembered = 0;
+        try { remembered = +localStorage.getItem("wb-step:" + wid) || 0; } catch (e) { remembered = 0; }
+        cur = remembered > 0 && remembered < STEPS.length ? remembered : (S.chronicle ? STEPS.length - 1 : 1);
+        if (!STEPS[cur].need()) cur = 1;
+      } else {
+        var isB = await B.rpc("is_builder");
+        if (!isB) return stop("<p>Starting a new world is by invitation. Ask the site&rsquo;s admin to add you as a builder (through <a href=\"../host/index.html\">Host a World</a>). " +
+          "If you run a chronicle or campaign already, you can add to it from the workshop on <a href=\"dashboard.html\">your Builder home</a>.</p>");
+      }
+    } catch (e) {
+      console.error(e);
+      return stop("<p>The world could not be read: " + esc(B.errText(e)) + "</p><p><a href=\"\">Try again</a></p>");
+    }
+    $("wizard").hidden = false;
+    show(cur);
+  });
+
+  /* ---- the step bar --------------------------------------------------- */
+  var visited = {};
+  function remember() {
+    if (!S.world) return;
+    try { localStorage.setItem("wb-step:" + S.world.id, String(cur)); } catch (e) { /* private mode */ }
+  }
+  function isDone(i) {
+    var k = STEPS[i].key;
+    if (k === "system") return !!S.game && !!S.world;
+    if (k === "world") return !!S.world;
+    if (k === "chronicle") return !!S.chronicle;
+    if (k === "review") return !!S.world && S.world.status !== "draft";
+    return !!visited[k] && i !== cur;
+  }
+  function drawSteps() {
+    $("steps").innerHTML = STEPS.map(function (s, i) {
+      return "<li" + (i === cur ? ' aria-current="step"' : "") + (isDone(i) ? ' class="is-done"' : "") + '><button type="button" data-i="' + i + '"' +
+        (s.need() ? "" : " disabled") + ">" + esc(label(s)) + "</button></li>";
+    }).join("");
+    $("steps").querySelectorAll("button").forEach(function (b) {
+      b.addEventListener("click", function () { go(+b.getAttribute("data-i")); });
+    });
+  }
+
+  async function go(i) {
+    if (busy || i === cur || i < 0 || i >= STEPS.length) return;
+    if (!STEPS[i].need()) return;
+    busy = true;
+    var ok = true;
+    try { if (view && view.leave) ok = await view.leave(i > cur ? "next" : "back"); }
+    finally { busy = false; }
+    if (!ok) return;
+    if (!STEPS[i].need()) { i = cur + 1; if (!STEPS[i] || !STEPS[i].need()) return; }
+    show(i);
+  }
+
+  function show(i) {
+    cur = i;
+    visited[STEPS[i].key] = true;
+    remember();
+    B.problems($("problems"), []);
+    B.say($("status"), "", "");
+    $("saved-hint").textContent = "";
+    var box = $("step");
+    box.innerHTML = "";
+    view = RENDER[STEPS[i].key](box) || {};
+    drawSteps();
+    $("back").hidden = i === 0;
+    $("next").hidden = i === STEPS.length - 1;
+    $("next").textContent = view.nextLabel || "Next";
+    $("title").textContent = S.world ? S.world.name : "Build a world";
+    $("crumb").textContent = S.world ? S.world.name : "Build a world";
+    document.title = (S.world ? S.world.name + " · " : "") + "Build a world · VisTectus";
+    if (S.world && B.param("w") !== S.world.id) history.replaceState(null, "", "build.html?w=" + encodeURIComponent(S.world.id));
+    try { box.focus({ preventScroll: true }); window.scrollTo({ top: $("wizard").offsetTop - 70, behavior: "smooth" }); } catch (e) { /* ignore */ }
+  }
+
+  $("next").addEventListener("click", function () { go(cur + 1); });
+  $("back").addEventListener("click", function () { go(cur - 1); });
+
+  /* A form step's leave(): check, save, and say what went wrong. */
+  function formLeave(check, save, dirty) {
+    return async function (dir) {
+      var changed = dirty();
+      if (dir === "back" && !changed) return true;
+      var p = check();
+      if (p.length) {
+        if (dir === "back") return window.confirm("This step is not saved yet:
+
+• " + p.join("
+• ") + "
+
+Go back without saving it?");
+        B.problems($("problems"), p);
+        return false;
+      }
+      if (!changed) return true;
+      B.say($("status"), "ok", "Saving…");
+      $("next").disabled = true;
+      try {
+        await save();
+        B.say($("status"), "", "");
+        return true;
+      } catch (e) {
+        console.error(e);
+        B.problems($("problems"), [B.errText(e)]);
+        B.say($("status"), "", "");
+        return false;
+      } finally { $("next").disabled = false; }
+    };
+  }
+
+  function intro(title, html) {
+    return '<h2 class="wb-step-title">' + esc(title) + "</h2>" + (html || "");
+  }
+
+  /* ---- the steps -------------------------------------------------------- */
+  var RENDER = {
+
+    /* a. the system */
+    system: function (box) {
+      var fixed = !!S.world;
+      box.innerHTML = intro("Which game is the world for?",
+        '<p class="wb-lede">Each game has its own rules, pages and words. ' + (fixed ? "The system is fixed now that the world is saved." : "Choose carefully: it cannot change once the world is saved.") + "</p>") +
+        '<div class="wb-systems" role="radiogroup" aria-label="System">' +
+        ["hunter", "vampire", "dnd"].map(function (id) {
+          var x = B.GAMES[id];
+          return '<label class="wb-system' + (fixed ? " is-fixed" : "") + '"><input type="radio" name="sys" value="' + id + '"' + (S.game === id ? " checked" : "") + (fixed ? " disabled" : "") + ">" +
+            "<strong>" + esc(x.name) + "</strong><p>" + esc(x.blurb) + "</p>" +
+            '<p class="hint">Its words: a <em>' + esc(x.unit) + "</em>, run by the <em>" + esc(x.st) + "</em>, for the player characters&rsquo; <em>" + esc(x.crew) + "</em>.</p></label>";
+        }).join("") + "</div>";
+      box.querySelectorAll("input[name=sys]").forEach(function (r) {
+        r.addEventListener("change", function () { S.game = r.value; drawSteps(); });
+      });
+      return {
+        leave: async function (dir) {
+          if (dir === "back") return true;
+          if (!S.game) { B.problems($("problems"), ["Choose Hunter: the Reckoning, Vampire: the Dark Ages or Dungeons & Dragons."]); return false; }
+          return true;
+        }
+      };
+    },
+
+    /* b. the world */
+    world: function (box) {
+      box.innerHTML = intro("The world", '<p class="wb-lede">The world is the setting all its ' + esc(g().unit) + "s share: " +
+        "its page on the site is the pitch to players who might join. Next saves it as a draft only you can see.</p>" +
+        '<p class="hint">' + esc(g().name) + "</p><div></div>");
+      var f = BuilderForms.world(box.lastElementChild, { world: S.world, game: S.game });
+      return { leave: formLeave(f.problems, async function () { S.world = await f.save(); }, f.dirty) };
+    },
+
+    /* c. factions */
+    factions: function (box) {
+      box.innerHTML = intro("Factions",
+        '<p class="wb-lede">The powers of the world: courts, guilds, churches, gangs, packs. Add as many as the world needs. For each, write a few words that sum it up, ' +
+        "a one-sentence epithet, its goals, its key figures with a note on each, and a description of a few paragraphs, then choose a 3:4 picture.</p>" +
+        '<p class="hint">Each faction is saved as soon as you add it. You can add, change and reorder factions later in the workshop.</p>' +
+        '<details class="wb-details"><summary>See an example of a well-written faction</summary>' + BuilderEditors.exampleHtml() + "</details><div></div>");
+      BuilderEditors.mount(box.lastElementChild, { kind: "faction", world: S.world });
+      return {};
+    },
+
+    /* d. player options */
+    options: function (box) {
+      var gm = g();
+      box.innerHTML = intro("Player options: " + gm.optionsLabel,
+        '<p class="wb-lede">' + (S.game === "hunter" ? "Which Creeds may players choose for their hunters?"
+          : S.game === "vampire" ? "Which clans and bloodlines may players choose for their Cainites?"
+          : "Which species and classes may players choose? Everything on the wiki is allowed to begin with; untick what does not belong in your world.") +
+        " Everything is ticked to begin with. Players see the allowed options on the world&rsquo;s page and in character creation.</p><div></div>");
+      var picker = null;
+      var ready = BuilderOptions.mount(box.lastElementChild, { game: S.game, worldId: S.world.id, options: S.world.options }).then(function (p) { picker = p; });
+      return {
+        leave: async function (dir) {
+          await ready;
+          if (!picker || picker.failed) return true;
+          var p = picker.problems ? picker.problems() : [];
+          if (p.length) {
+            if (dir === "back" && window.confirm("Not saved: " + p.join(" ") + "\n\nGo back without saving?")) return true;
+            B.problems($("problems"), p); return false;
+          }
+          var opts = picker.get();
+          if (JSON.stringify(opts) === JSON.stringify(S.world.options || {})) return true;
+          B.say($("status"), "ok", "Saving…");
+          try {
+            var w = S.world;
+            await B.rpc("builder_save_world", { p_id: w.id, p_game: w.game, p_name: w.name, p_tagline: w.tagline, p_overview: w.overview,
+              p_card_image: w.card_image, p_hero_image: w.hero_image, p_options: opts });
+            S.world = await B.q(client.from("worlds").select("*").eq("id", w.id).maybeSingle()) || Object.assign({}, w, { options: opts });
+            B.say($("status"), "", "");
+            return true;
+          } catch (e) {
+            console.error(e);
+            B.say($("status"), "", "");
+            B.problems($("problems"), ["The options were not saved: " + B.errText(e)]);
+            return false;
+          }
+        }
+      };
+    },
+
+    /* e. the first chronicle */
+    chronicle: function (box) {
+      var gm = g();
+      box.innerHTML = intro("The first " + gm.unit,
+        '<p class="wb-lede">A world goes to the site with its first ' + esc(gm.unit) + ": the story you will run in it. " +
+        "You become its " + esc(gm.st) + " as soon as it is saved, so you can add its NPCs and resources next, and later invite its players.</p><div></div>");
+      var f = BuilderForms.chronicle(box.lastElementChild, { world: S.world, chronicle: S.chronicle });
+      return { leave: formLeave(f.problems, async function () { S.chronicle = await f.save(); }, f.dirty) };
+    },
+
+    /* f. NPCs */
+    npcs: function (box) {
+      var gm = g();
+      box.innerHTML = intro("NPCs to begin with",
+        '<p class="wb-lede">The people the ' + esc(gm.crew) + " meets early on. For each: a name, a one-line tagline for the card, their role, and a description of what the players know. " +
+        "NPC and character portraits are 3:4 (tall); card pictures are 16:9 (wide).</p>" +
+        '<p class="hint">Tick &ldquo;Hidden from players until revealed&rdquo; for anyone the players have not met yet: you show them later with one click. Each NPC is saved as soon as you add it.</p><div></div>');
+      BuilderEditors.mount(box.lastElementChild, { kind: "npc", world: S.world, chronicle: S.chronicle });
+      return {};
+    },
+
+    /* g. resources */
+    resources: function (box) {
+      var gm = g();
+      box.innerHTML = intro("Resources to begin with",
+        '<p class="wb-lede">Anything the ' + esc(gm.crew) + " should have at the start. All of these are optional, and you can add more at any time in the workshop.</p>" +
+        '<div class="wb-sec"><h3>Handouts</h3><p class="hint">Letters, reports, diaries, clippings: a PDF, a picture or a text file, uploaded as it is (no cropping). They appear on the Documents page.</p><div data-k="document"></div></div>' +
+        '<div class="wb-sec"><h3>Maps</h3><p class="hint">Pictures of maps, uploaded as they are. They appear on the Maps page.</p><div data-k="map"></div></div>' +
+        '<div class="wb-sec"><h3>Places</h3><p class="hint">Places for the Locations app: a name and what the players know. You place each one on the uploaded map later, in Locations (from your ' + esc(gm.stPageLabel) + "). Tick &ldquo;Revealed&rdquo; for places the players already know.</p><div data-k=\"place\"></div></div>" +
+        '<div class="wb-sec"><h3>Reference links</h3><p class="hint">Links to rules, inspiration, playlists and the like. They appear on the Resources page.</p><div data-k="resource"></div></div>');
+      ["document", "map", "place", "resource"].forEach(function (k) {
+        BuilderEditors.mount(box.querySelector('[data-k="' + k + '"]'), { kind: k, world: S.world, chronicle: S.chronicle });
+      });
+      return {};
+    },
+
+    /* h. review and send */
+    review: function (box) {
+      box.innerHTML = intro("Review and send", '<p class="hint">Reading everything back…</p>');
+      var gm = g();
+      (async function () {
+        try {
+          var w = await B.q(client.from("worlds").select("*").eq("id", S.world.id).maybeSingle());
+          if (w) S.world = w;
+          w = S.world;
+          var facs = await B.q(client.from("world_factions").select("name,image").eq("world", w.id).order("sort", { ascending: true }));
+          var c = S.chronicle, counts = {};
+          if (c) {
+            c = await B.q(client.from("chronicles").select("*").eq("id", c.id).maybeSingle()) || c;
+            S.chronicle = c;
+            var items = await B.q(client.from("chronicle_items").select("kind").eq("chronicle", c.id));
+            (items || []).forEach(function (x) { counts[x.kind] = (counts[x.kind] || 0) + 1; });
+            var pins = await B.q(client.from("location_pins").select("id").eq("chronicle", c.id));
+            counts.place = (pins || []).length;
+          }
+          drawReview(box, w, facs || [], c, counts);
+        } catch (e) {
+          console.error(e);
+          box.innerHTML = intro("Review and send", '<p class="form-status" data-kind="error">Your world could not be read back: ' + esc(B.errText(e)) + "</p>");
+        }
+      })();
+      return {};
+
+      function jump(key) { return '<button type="button" class="linkbtn" data-go="' + key + '">Change</button>'; }
+      function drawReview(box, w, facs, c, counts) {
+        var must = [], could = [];
+        if (!w.tagline) must.push("The world needs a tagline (step World).");
+        if (!w.overview) must.push("The world needs an overview (step World).");
+        if (!c) must.push("Make the world’s first " + gm.unit + " (step First " + gm.unit + ").");
+        if (!w.card_image) could.push("The world has no card picture: its card shows a plain background.");
+        if (!facs.length) could.push("The world has no factions yet.");
+        if (c && !c.tagline) could.push("The " + gm.unit + " has no tagline.");
+        if (c && !c.premise) could.push("The " + gm.unit + " has no premise.");
+        if (c && !c.card_image) could.push("The " + gm.unit + " has no card picture.");
+        if (c && !counts.npc) could.push("There are no NPCs yet.");
+
+        var h = intro("Review and send");
+        if (w.status === "rejected") h += '<div class="form-status" data-kind="error"><p><strong>The site&rsquo;s admin sent this world back.</strong> ' + (w.review_note ? "Their note: " + esc(w.review_note) : "") + "</p><p>Make the changes, then send it again.</p></div>";
+        h += '<div class="wb-review">' +
+          '<section><h3>World ' + B.statusBadge(w.status) + jump("world") + "</h3><dl>" +
+            "<dt>System</dt><dd>" + esc(gm.name) + "</dd>" +
+            "<dt>Name</dt><dd>" + esc(w.name) + "</dd>" +
+            "<dt>Address</dt><dd><code>/" + esc(gm.path) + "/" + esc(w.id) + "/</code></dd>" +
+            "<dt>Tagline</dt><dd>" + (w.tagline ? esc(w.tagline) : '<span class="wb-muted">None yet</span>') + "</dd>" +
+            "<dt>Overview</dt><dd>" + (w.overview ? esc(w.overview.length > 400 ? w.overview.slice(0, 397) + "…" : w.overview) : '<span class="wb-muted">None yet</span>') + "</dd>" +
+            "<dt>Card picture</dt><dd>" + (w.card_image ? '<img class="wb-pic" src="' + esc(B.mediaUrl(w.card_image)) + '" alt="">' : '<span class="wb-muted">None</span>') + "</dd>" +
+            "<dt>Banner picture</dt><dd>" + (w.hero_image ? '<img class="wb-pic" src="' + esc(B.mediaUrl(w.hero_image)) + '" alt="">' : '<span class="wb-muted">None (the card picture is used)</span>') + "</dd>" +
+          "</dl></section>" +
+          '<section><h3>Factions ' + jump("factions") + "</h3>" + (facs.length ? "<p>" + facs.length + ": " + facs.map(function (f) { return esc(f.name); }).join(", ") + "</p>" : '<p class="wb-muted">None yet.</p>') + "</section>" +
+          '<section><h3>Player options ' + jump("options") + "</h3><p>" + esc(BuilderOptions.describe(w.game, w.options)) + "</p></section>" +
+          '<section><h3>First ' + esc(gm.unit) + " " + (c ? B.statusBadge(c.status) : "") + jump("chronicle") + "</h3>" + (c ? "<dl>" +
+            "<dt>Name</dt><dd>" + esc(c.name) + "</dd>" +
+            "<dt>Address</dt><dd><code>/" + esc(gm.path) + "/" + esc(w.id) + "/" + esc(c.id) + "/</code></dd>" +
+            "<dt>Tagline</dt><dd>" + (c.tagline ? esc(c.tagline) : '<span class="wb-muted">None yet</span>') + "</dd>" +
+            "<dt>Premise</dt><dd>" + (c.premise ? esc(c.premise.length > 300 ? c.premise.slice(0, 297) + "…" : c.premise) : '<span class="wb-muted">None yet</span>') + "</dd>" +
+            "<dt>Card picture</dt><dd>" + (c.card_image ? '<img class="wb-pic" src="' + esc(B.mediaUrl(c.card_image)) + '" alt="">' : '<span class="wb-muted">None</span>') + "</dd>" +
+            "<dt>To begin with</dt><dd>" + [[counts.npc, "NPC", "NPCs"], [counts.document, "handout", "handouts"], [counts.map, "map", "maps"], [counts.place, "place", "places"], [counts.resource, "reference link", "reference links"]]
+              .map(function (x) { return (x[0] || 0) + " " + (x[0] === 1 ? x[1] : x[2]); }).join(" · ") +
+              ' <button type="button" class="linkbtn" data-go="npcs">NPCs</button> <button type="button" class="linkbtn" data-go="resources">Resources</button></dd>' +
+          "</dl>" : '<p class="wb-muted">Not made yet.</p>') + "</section>";
+        if (could.length) h += '<section><h3>Worth a look</h3><ul class="wb-warn">' + could.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul><p class="hint" style="margin-top:.5rem">None of these stops you sending it.</p></section>';
+        h += "</div>";
+
+        if (w.status === "pending") {
+          h += '<div class="form-status" data-kind="ok" style="margin-top:1.4rem"><p><strong>Sent: waiting for the site&rsquo;s admin.</strong> You can still make changes while you wait. ' +
+            "Once it is approved the world appears on the site; as its " + esc(gm.st) + " you then invite players from the Players section of your " + esc(gm.stPageLabel) + ", and keep adding content in the workshop.</p></div>" +
+            '<div class="wb-actions"><a class="btn" href="dashboard.html">Back to your Builder home</a><a class="btn btn--ghost" href="workshop.html?w=' + encodeURIComponent(w.id) + '">Open the workshop</a></div>';
+        } else if (w.status === "approved") {
+          h += '<div class="form-status" data-kind="ok" style="margin-top:1.4rem"><p><strong>Approved.</strong> The world is on the site.</p></div>' +
+            '<div class="wb-actions"><a class="btn" href="' + esc(B.worldHref(w)) + '">Open the world&rsquo;s page</a><a class="btn btn--ghost" href="workshop.html?w=' + encodeURIComponent(w.id) + '">Open the workshop</a></div>';
+        } else {
+          h += '<div class="wb-sec"><h3>Send for approval</h3><p class="wb-lede">The site&rsquo;s admin looks at the world and its first ' + esc(gm.unit) + " and approves them, or sends them back with a note. " +
+            "Once approved, the world appears on the site. As its " + esc(gm.st) + " you can then invite players (in the Players section of your " + esc(gm.stPageLabel) + ") and keep adding content in the workshop.</p>" +
+            '<div class="form-status" id="must" hidden></div>' +
+            '<div class="wb-actions"><button type="button" class="btn" id="send">Send for approval</button><a class="btn btn--ghost" href="dashboard.html">Not yet: back to your Builder home</a></div>' +
+            '<p class="form-status" id="send-status" role="status" hidden></p></div>';
+        }
+        box.innerHTML = h;
+        box.querySelectorAll("[data-go]").forEach(function (b) {
+          b.addEventListener("click", function () {
+            var k = b.getAttribute("data-go");
+            go(STEPS.map(function (s) { return s.key; }).indexOf(k));
+          });
+        });
+        var send = box.querySelector("#send");
+        if (send) {
+          if (must.length) B.problems(box.querySelector("#must"), must);
+          send.addEventListener("click", async function () {
+            if (must.length) { B.problems(box.querySelector("#must"), must); return; }
+            send.disabled = true;
+            B.say(box.querySelector("#send-status"), "ok", "Sending…");
+            try {
+              await B.rpc("builder_submit", { p_world: w.id, p_chronicle: null });
+              show(cur);
+            } catch (e) {
+              console.error(e);
+              send.disabled = false;
+              B.say(box.querySelector("#send-status"), "error", "Not sent: " + B.errText(e));
+            }
+          });
+        }
+      }
+    }
+  };
+})();
+</script>
+
+</body>
+</html>

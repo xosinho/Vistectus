@@ -4,13 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Builders &middot; VisTectus</title>
-  <meta name="description" content="Sign in to the VisTectus Builders area to upload maps, art, character sheets and handouts for your world.">
+  <title>World Builder &middot; VisTectus</title>
+  <meta name="description" content="Sign in to the VisTectus World Builder: make a world, its factions and its first chronicle, and keep adding to your chronicles as you play.">
   <!-- Nothing on the members' pages is for search engines. -->
   <meta name="robots" content="noindex">
 
   <link rel="icon" href="../art/VisTectus Logo 1.jpg" type="image/jpeg">
   <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="builders.css">
 </head>
 
 <body>
@@ -39,36 +40,55 @@
 <section class="hero hero--compact">
   <div class="hero-inner">
     <p class="kicker">Members</p>
-    <h1>Builders</h1>
-    <p class="lede">The workshop behind the worlds: where the people who
-      build them upload what the table will see.</p>
+    <h1>The World Builder</h1>
+    <p class="lede">Where worlds are made, and where Storytellers and
+      Dungeon Masters keep their chronicles and campaigns up to date.</p>
   </div>
 </section>
 
 <main id="main">
   <section class="row">
-    <div class="row-head"><h2>Sign in</h2></div>
+    <div class="row-head"><h2>Who the Builder is for</h2></div>
+    <div class="dash">
+      <div>
+        <p class="wb-lede"><strong>Invited builders</strong> make a new world here, step
+          by step: its system, its name and pitch, its factions, the options
+          players may choose from, its first chronicle or campaign, the NPCs
+          and resources to begin with. The site&rsquo;s admin approves it, and
+          then it appears on the site.</p>
+        <p class="wb-lede"><strong>Storytellers and Dungeon Masters</strong> use the
+          Builder&rsquo;s workshop to keep adding to their chronicles as play goes
+          on: NPCs, adventurers&rsquo; cards, handouts, maps, reference links and
+          places, each hidden from the players until you choose to show it.</p>
+        <p class="hint">Players do not need the Builder: they sign in on their
+          chronicle&rsquo;s own pages.</p>
+      </div>
 
-    <div class="gate-panel">
-      <p class="form-status" id="offline" data-kind="error" hidden>
-        The Builders area is not connected yet, so signing in is switched
-        off for now.
-      </p>
+      <div class="gate-panel">
+        <h3 class="wb-h3">Sign in</h3>
+        <p class="form-status" id="offline" data-kind="error" hidden>
+          The Builder is not connected yet, so signing in is switched
+          off for now.
+        </p>
 
-      <form class="form" id="signin" novalidate>
-        <div class="field">
-          <label for="email">Your email</label>
-          <input id="email" name="email" type="email" autocomplete="email" required>
-          <p class="hint">We email you a one-time sign-in link. No password to remember.</p>
-        </div>
-        <p class="form-status" id="signin-status" role="status" hidden></p>
-        <div><button class="btn" type="submit" id="signin-btn">Send sign-in link</button></div>
-      </form>
+        <form class="form" id="signin" novalidate>
+          <div class="field">
+            <label for="email">Your email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required>
+            <p class="hint">We email you a one-time sign-in link. No password to
+              remember. The first link also creates your account.</p>
+          </div>
+          <p class="form-status" id="signin-status" role="status" hidden></p>
+          <div><button class="btn" type="submit" id="signin-btn">Send sign-in link</button></div>
+        </form>
 
-      <p class="hint" style="margin-top:1.75rem">
-        Builders are invited. Have a world you want to bring here?
-        <a href="../host/index.html">Host a World</a>.
-      </p>
+        <p class="hint" style="margin-top:1.75rem">
+          Signing in works for invited builders, Storytellers, Dungeon Masters
+          and the site&rsquo;s admins. Have a world you want to bring here?
+          <a href="../host/index.html">Host a World</a>, and the site&rsquo;s
+          admin can invite you as a builder.
+        </p>
+      </div>
     </div>
   </section>
 </main>
@@ -105,16 +125,26 @@
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     var email = document.getElementById("email");
-    if (!email.checkValidity()) { say("error", "Please enter a valid email address."); email.focus(); return; }
+    var value = email.value.trim();
+    if (!value || !email.checkValidity() || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) {
+      say("error", "Please enter a valid email address."); email.focus(); return;
+    }
 
     btn.disabled = true;
     say("ok", "Sending…");
-    B.sendLink(email.value.trim()).then(function () {
-      // Same answer whether or not the address belongs to a Builder, so
-      // this form cannot be used to find out who the Builders are.
-      say("ok", "If that address belongs to a Builder, a sign-in link is on its way. Check your inbox.");
-    }).catch(function () {
-      say("error", "Could not reach the sign-in service. Please try again in a moment.");
+    B.sendLink(value).then(function (r) {
+      if (r && r.error) throw r.error;
+      say("ok", "A sign-in link is on its way to " + value + ". Open it on this device and you land on your Builder home.");
+    }).catch(function (err) {
+      console.error(err);
+      var m = B.errText(err);
+      if (/not been invited|signups? not allowed|hook|not allowed for this/i.test(m)) {
+        say("error", "This email has not been invited yet. The Builder is open to invited builders, Storytellers, Dungeon Masters and the site's admins. Ask the site's admin, or your Storyteller or DM, to add this address.");
+      } else if (/rate limit|too many/i.test(m)) {
+        say("error", "Too many sign-in emails were sent just now. Please wait a few minutes and try again.");
+      } else {
+        say("error", "The link could not be sent: " + m);
+      }
     }).then(function () { btn.disabled = false; });
   });
 })();

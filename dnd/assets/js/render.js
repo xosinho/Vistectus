@@ -6,6 +6,9 @@
        assets/data/players.js
        assets/data/npcs.js
    ...and drop images / sheets into assets/img and assets/sheets.
+   When the page also loads /content.js, the people added on the site
+   (the workshop; table chronicle_items) are shown after the files'
+   ones: the roster waits for ChronicleContent.merge.
 
    This file has no dependencies and loads via a plain <script> tag, so
    the whole site works even when opened directly from disk (file://),
@@ -21,6 +24,15 @@
       .replace(/"/g, "&quot;");
   }
 
+  /* -- a link or picture address from the data: relative paths and
+        http(s) links only, never javascript: or other schemes -- */
+  function safeUrl(u) {
+    u = String(u == null ? "" : u).trim();
+    if (/^https?:\/\//i.test(u)) return u;
+    if (/^[a-z][a-z0-9+.\-]*:/i.test(u) || /^\/\//.test(u)) return "";
+    return u;
+  }
+
   /* -- turn a "background" value into HTML.
         - if it's an array, each item becomes a paragraph
         - if it's a string with blank lines, split into paragraphs
@@ -29,7 +41,7 @@
     if (!bg) return "<p><em>No background on file yet.</em></p>";
     if (Array.isArray(bg)) return bg.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("");
     if (typeof bg === "string" && /\.(html?|txt|md)$/i.test(bg.trim())) {
-      return '<p><a class="btn btn--ghost" href="' + esc(bg.trim()) +
+      return '<p><a class="btn btn--ghost" href="' + esc(safeUrl(bg)) +
              '" target="_blank" rel="noopener">Open full background &rsaquo;</a></p>';
     }
     return String(bg).split(/\n\s*\n/).map(function (p) {
@@ -41,7 +53,7 @@
 
   /* --------------------------------------------------------- build a card */
   function cardHtml(entry, i) {
-    var portrait = entry.portrait || PLACEHOLDER;
+    var portrait = safeUrl(entry.portrait) || PLACEHOLDER;
     return (
       '<button class="roster-card" data-index="' + i + '" aria-haspopup="dialog">' +
         '<span class="roster-card__hint">View</span>' +
@@ -69,10 +81,10 @@
 
   /* ------------------------------------------------ build the detail markup */
   function detailHtml(entry, opts) {
-    var portrait = entry.portrait || PLACEHOLDER;
+    var portrait = safeUrl(entry.portrait) || PLACEHOLDER;
     var meta = (entry.meta || []).map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join("");
     // A real portrait opens full size when clicked; the placeholder does not.
-    var zoomable = !!entry.portrait && entry.portrait !== PLACEHOLDER;
+    var zoomable = portrait !== PLACEHOLDER;
 
     var html =
       '<button class="detail__close" aria-label="Close">&times;</button>' +
@@ -112,7 +124,7 @@
               '<div class="detail__downloads">' +
                 (entry.sheet
                   ? '<a class="btn" href="sheet.html?c=' + encodeURIComponent(entry.sheet) + '">Open character sheet</a>'
-                  : '<a class="btn" href="' + esc(entry.sheetPdf) +
+                  : '<a class="btn" href="' + esc(safeUrl(entry.sheetPdf)) +
                     '" download target="_blank" rel="noopener">&#8681; PDF sheet</a>') +
               '</div>';
     }
@@ -122,8 +134,8 @@
     if (entry.links && entry.links.length) {
       html += '<p class="detail__section-label">Papers</p><div class="detail__downloads">';
       entry.links.forEach(function (l) {
-        if (!l || !l.href) return;
-        html += '<a class="btn" href="' + esc(l.href) + '">' + esc(l.label || "Open") + '</a>';
+        if (!l || !safeUrl(l.href)) return;
+        html += '<a class="btn" href="' + esc(safeUrl(l.href)) + '">' + esc(l.label || "Open") + '</a>';
       });
       html += '</div>';
     }
@@ -266,9 +278,24 @@
     });
   }
 
+  // Pages for Builder-made campaigns carry data-world; they have no data files.
+  var BUILT = !!(document.body && document.body.hasAttribute("data-world"));
+
   function renderRoster(containerId, data, type, opts) {
     var el = document.getElementById(containerId);
     if (!el) return;
+    // The files' entries plus the ones added on the site, once read.
+    if (window.ChronicleContent && window.ChronicleContent.merge && !(opts && opts._merged)) {
+      el.className = "";
+      el.innerHTML = '<div class="empty">Opening the files…</div>';
+      var next = {};
+      Object.keys(opts || {}).forEach(function (k) { next[k] = opts[k]; });
+      next._merged = true;
+      window.ChronicleContent.merge(type === "player" ? "player" : "npc", data, CHRONICLE).then(function (list) {
+        renderRoster(containerId, list, type, next);
+      });
+      return;
+    }
     if (opts && opts.hide && data && data.length) {
       el.className = "";
       el.innerHTML = '<div class="empty">Opening the files…</div>';
@@ -312,10 +339,11 @@
     }
     if (!data || !data.length) {
       el.className = "";
-      el.innerHTML =
-        '<div class="empty">No ' + (type === "player" ? "characters" : "entries") +
-        ' added yet.<br>Edit <code>assets/data/' +
-        (type === "player" ? "players.js" : "npcs.js") + '</code> to add some.</div>';
+      el.innerHTML = BUILT
+        ? '<div class="empty">' + (type === "player" ? "No adventurers have joined the party yet." : "No one here yet.") + '</div>'
+        : '<div class="empty">No ' + (type === "player" ? "characters" : "entries") +
+          ' added yet.<br>Edit <code>assets/data/' +
+          (type === "player" ? "players.js" : "npcs.js") + '</code> to add some.</div>';
       return;
     }
     el.className = "roster";

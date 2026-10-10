@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>document.documentElement.classList.add("gate-pending")</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create Hunter &middot; {{CHRONICLE_NAME}} &middot; VisTectus</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="Make a new hunter for {{CHRONICLE_NAME}} step by step, then send it to the Storyteller for approval.">
+
+  <link rel="icon" href="../../../art/VisTectus%20Logo%201.jpg" type="image/jpeg">
+
+  <!-- Three folders up to the hub stylesheet; then the Hunter default
+       world look (htr/_world/world.css), then the world's own, if it has one. -->
+  <link rel="stylesheet" href="../../../style.css?v=20261015">
+  <link rel="stylesheet" href="../../_world/world.css?v=20261015">
+  <link rel="stylesheet" href="../world.css?v=20261015">
+  <link rel="stylesheet" href="../../assets/css/sheet.css?v=20261015">
+
+  <style>
+    /* Create Hunter only: the step bar, the tallies and the checklist.
+       Everything else is the character sheet's own styling. */
+    .wz-steps { list-style: none; display: flex; flex-wrap: wrap; gap: .35rem; margin: 0 0 1rem; padding: 0; }
+    .wz-steps button {
+      font: .78rem/1.2 var(--font-mono); background: var(--bg-raised); color: var(--ink-soft);
+      border: 1px solid var(--line); padding: .4rem .6rem; cursor: pointer; border-radius: var(--radius);
+    }
+    .wz-steps button:hover:not(:disabled) { border-color: var(--accent); color: var(--ink); }
+    .wz-steps button[aria-current="step"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-ink); }
+    .wz-steps button:disabled { opacity: .45; cursor: not-allowed; }
+    .wz-steps .tick { color: #8fc28a; margin-left: .25rem; }
+    .wz-steps button[aria-current="step"] .tick { color: var(--accent-ink); }
+    @media (max-width: 640px) {
+      .wz-steps .lbl { display: none; }
+      .wz-steps button[aria-current="step"] .lbl { display: inline; }
+    }
+
+    .wz-title { font-family: var(--sheet-head); font-weight: 600; font-size: 1.35rem; text-transform: uppercase;
+      letter-spacing: .03em; margin: 0 0 .3rem; color: var(--paper-ink); }
+    .wz-title small { display: block; font-family: var(--sheet-body); font-weight: 400; font-size: .8rem;
+      text-transform: none; letter-spacing: 0; color: var(--paper-soft); }
+    .wz-intro { margin: 0 0 .9rem; color: var(--paper-soft); max-width: 46rem; }
+
+    .tally { display: flex; flex-wrap: wrap; gap: .45rem; margin: .2rem 0 1rem; }
+    .tally:empty { display: none; }
+    .tally-cell { border: 1.5px solid var(--paper-line); background: var(--paper-2); padding: .3rem .6rem;
+      font-family: var(--sheet-head); font-size: .9rem; color: var(--paper-ink); }
+    .tally-cell b { font-size: 1.05rem; }
+    .tally-cell.ok { border-color: #3f7a3a; color: #2c5a28; }
+    .tally-cell.short { border-color: var(--pending); color: #7a3a0c; }
+    .tally-cell.over { border-color: #a1271f; color: #a1271f; }
+    .tally-cell.info { border-style: dashed; }
+
+    .wz-todo { border: 1px solid var(--line); border-left: 3px solid var(--pending); background: var(--bg-raised);
+      padding: .7rem 1rem; margin: 0 0 1rem; color: var(--ink); }
+    .wz-todo.is-ok { border-left-color: #8fc28a; }
+    .wz-todo h3 { margin: 0 0 .3rem; font-family: var(--font-display); font-size: .95rem; letter-spacing: .06em; }
+    .wz-todo ul { margin: 0; padding-left: 1.2rem; }
+    .wz-todo li + li { margin-top: .2rem; }
+    .wz-todo p { margin: 0; color: var(--ink-soft); }
+
+    .wz-nav { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: 1.5rem; }
+    .wz-nav .spacer { flex: 1; }
+    .sheet-wrap .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; filter: none; }
+
+    .wz-help { background: var(--paper-2); border-left: 3px solid var(--hunter); padding: .6rem .8rem; font-size: .92rem; margin-top: .8rem; }
+    .wz-help h4 { text-align: left; margin: 0 0 .25rem; }
+    .wz-help p { margin: .2rem 0; }
+    .wz-help .muted, .wz-muted { color: var(--paper-soft); }
+    .wz-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+    .wz-label { display: block; font-family: var(--sheet-head); font-weight: 500; font-size: .95rem; margin: 1rem 0 .25rem; }
+    .wz-label small { font-family: var(--sheet-body); font-weight: 400; color: var(--paper-soft); }
+
+    .dist-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; margin-bottom: 1rem; }
+    .dist-pick label { border: 1.5px solid var(--paper-line); padding: .55rem .7rem; cursor: pointer; display: block; background: rgba(255,255,255,.35); }
+    .dist-pick label.on { border-color: var(--hunter); background: #fff4ea; }
+    .dist-pick input { width: auto; margin-right: .35rem; }
+    .dist-pick b { font-family: var(--sheet-head); font-weight: 500; }
+    .dist-pick small { display: block; color: var(--paper-soft); margin-top: .15rem; }
+
+    .spec-rows { display: grid; gap: .55rem; }
+    .spec-row { display: grid; grid-template-columns: 12rem 1fr; gap: .6rem; align-items: baseline; }
+    .spec-row > b { font-family: var(--sheet-head); font-weight: 500; }
+    .spec-row > b small { display: block; font-family: var(--sheet-body); font-weight: 400; font-size: .78rem; color: var(--paper-soft); }
+
+    .pick-card { border: 1px solid var(--paper-ink); padding: .6rem .8rem; margin-bottom: .8rem; background: rgba(255,255,255,.3); }
+    .pick-card-top { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
+    .pick-card-top b { font-family: var(--sheet-head); font-weight: 600; font-size: 1.05rem; }
+    .pick-card .tag { font-family: var(--sheet-head); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; color: #7a3a0c; }
+    .pick-card .perk-checks { margin-top: .5rem; font-size: .9rem; }
+    .pick-card .perk-checks label { align-items: flex-start; }
+    .pick-card .perk-checks small { display: block; color: var(--paper-soft); font-size: .8rem; }
+    .adv-line { display: flex; flex-wrap: wrap; gap: .4rem .8rem; align-items: center; margin-top: .35rem; }
+    .adv-line input[type="text"], .adv-line input:not([type]) { flex: 1; min-width: 10rem; }
+    .adv-line .dots { flex-shrink: 0; }
+    .adv-sum { font-size: .82rem; color: var(--paper-soft); margin-top: .25rem; }
+    .add-row { display: flex; flex-wrap: wrap; gap: .6rem; margin: .4rem 0 1rem; }
+    .add-row select { flex: 1; min-width: 12rem; }
+
+    .ts-row { display: grid; grid-template-columns: 1fr 2fr auto; gap: .5rem; align-items: center; margin-bottom: .5rem; }
+
+    .checklist { list-style: none; margin: 0; padding: 0; }
+    .checklist > li { display: flex; gap: .6rem; padding: .45rem 0; border-bottom: 1px solid var(--line); }
+    .checklist .mark { flex-shrink: 0; width: 1.4rem; font-weight: 700; text-align: center; }
+    .checklist .ok .mark { color: #8fc28a; }
+    .checklist .bad .mark, .checklist .bad b { color: #e0786f; }
+    .checklist ul { margin: .2rem 0 0; padding-left: 1.1rem; color: #e0786f; }
+    .checklist small { display: block; color: var(--ink-soft); }
+
+    .draft-list { list-style: none; margin: 0 0 1rem; padding: 0; }
+    .draft-list > li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .6rem 1rem; padding: .7rem 0; border-bottom: 1px solid var(--line); }
+    .draft-main { min-width: 0; flex: 1 1 16rem; }
+    .draft-main b { font-family: var(--font-display); color: var(--ink); overflow-wrap: anywhere; }
+    .draft-meta { font-size: .85rem; color: var(--ink-soft); }
+    .draft-note { margin: .35rem 0 0; padding: .4rem .6rem; border-left: 2px solid var(--accent); background: var(--bg); color: var(--ink); white-space: pre-wrap; overflow-wrap: anywhere; font-size: .95rem; }
+    .draft-acts { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; }
+    .draft-acts .btn { padding: .35rem .7rem; font-size: .8rem; }
+    .pill { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; border: 1px solid currentColor; padding: .05rem .4rem; margin-left: .4rem; white-space: nowrap; }
+    .pill-draft { color: var(--ink-soft); }
+    .pill-submitted { color: #e3a256; }
+    .pill-rejected { color: #e0786f; }
+    .pill-approved { color: #8fc28a; }
+
+    .review-head dl { display: grid; grid-template-columns: max-content 1fr; gap: .2rem 1rem; margin: .4rem 0 0; }
+    .review-head dt { color: var(--ink-soft); font-family: var(--font-mono); font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; padding-top: .2rem; }
+    .review-head dd { margin: 0; overflow-wrap: anywhere; }
+    .xp-form textarea { font: inherit; font-size: .95rem; background: var(--bg); color: var(--ink); border: 1px solid var(--line); padding: .4rem .5rem; width: 100%; min-height: 5rem; }
+    .xp-form label.grow { flex: 1 1 18rem; }
+    .done-box { border: 1px solid #8fc28a; padding: .7rem 1rem; margin: .8rem 0; }
+
+    .grid-table td { overflow-wrap: anywhere; }
+    @media (max-width: 760px) {
+      .wz-grid2, .dist-pick { grid-template-columns: 1fr; }
+      .spec-row { grid-template-columns: 1fr; gap: .2rem; }
+      .ts-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body data-page="create" data-title="Create Hunter"
+      data-world="{{WORLD_ID}}" data-world-name="{{WORLD_NAME}}"
+      data-chronicle="{{CHRONICLE_ID}}" data-chronicle-name="{{CHRONICLE_NAME}}">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="../../../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
+  <nav class="topnav" aria-label="Site">
+    <a href="../../../dnd/index.html">D&amp;D</a>
+    <a href="../../../htr/index.html" aria-current="true">Hunter</a>
+    <a href="../../../vtda/index.html">Vampire</a>
+    <a href="../../../index.html#about">About</a>
+    <a href="../../../host/index.html">Host a World</a>
+    <a class="nav-cta" href="../../../builders/index.html">Builders</a>
+  </nav>
+</header>
+
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../../../index.html">VisTectus</a></li>
+    <li><a href="../../../htr/index.html">Hunter</a></li>
+    <li><a href="../index.html">{{WORLD_NAME}}</a></li>
+    <li><a href="index.html">{{CHRONICLE_NAME}}</a></li>
+    <li aria-current="page">Create Hunter</li>
+  </ol>
+</nav>
+
+<section class="hero hero--compact">
+  <div class="hero-inner">
+    <p class="kicker">Create Hunter</p>
+    <h1>A new hunter for {{CHRONICLE_NAME}}</h1>
+    <p class="lede">Fill in the character sheet one step at a time. The page keeps count and tells you what is left; when everything is in order, send the hunter to the Storyteller for approval.</p>
+  </div>
+</section>
+
+<!-- Tabs: sticky under the top bar. Tabs to other pages carry aria-current. -->
+<nav class="tabs" aria-label="Chronicle pages">
+  <div class="tabs-inner">
+    <a href="index.html">Chronicle</a>
+    <a href="players.html" aria-current="page">The cell</a>
+    <a href="npcs.html">People</a>
+    <a href="resources.html">Resources</a>
+    <a href="login.html">Log in</a>
+    <a href="storyteller.html">Storyteller</a>
+  </div>
+</nav>
+
+<main id="main" class="sheet-wrap">
+  <!-- Drawn by htr/assets/js/create.js once the members' gate (gate.js)
+       has let the visitor in. Drafts live in the character_drafts table. -->
+  <div id="create"><p class="sheet-status">Opening&hellip;</p></div>
+  <noscript><div class="sheet-notice">Creating a hunter needs JavaScript.</div></noscript>
+</main>
+
+<div class="sheet-toast" id="createToast" role="status" aria-live="polite" hidden></div>
+
+<footer>
+  <div class="footer-inner">
+    <p>&copy; 2026 VisTectus</p>
+    <p class="links">
+      <a href="../index.html">{{WORLD_NAME}}</a>
+      <a href="../../../index.html">Back to the hub</a>
+    </p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../../builders/config.js?v=20261015"></script>
+<script src="../../../gate.js?v=20261015" data-chronicle="{{CHRONICLE_ID}}"></script>
+<script src="../../../content.js?v=20261015"></script>
+<script src="../../assets/js/create.js?v=20261015"></script>
+</body>
+</html>

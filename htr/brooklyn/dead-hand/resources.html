@@ -107,11 +107,12 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../../builders/config.js"></script>
 <script src="../../../gate.js" data-chronicle="dead-hand"></script>
+<script src="../../../content.js?v=20261015"></script>
 <script src="assets/data/resources.js"></script>
 <script>
 (function () {
   "use strict";
-  var list = window.DEAD_HAND_RESOURCES || [];
+  function draw(list) {
   var root = document.getElementById("resources");
 
   function el(tag, cls, text) {
@@ -160,6 +161,9 @@
     section.appendChild(entries);
     root.appendChild(section);
   });
+  }
+  var base = window.DEAD_HAND_RESOURCES || [];
+  (window.ChronicleContent ? window.ChronicleContent.merge("resource", base, "dead-hand") : Promise.resolve(base)).then(draw);
 })();
 </script>
 <script src="assets/js/site.js"></script>

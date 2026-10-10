@@ -8,7 +8,9 @@
      - the party: levels, XP, who plays whom, level-ups waiting;
      - new characters from Create a Character, waiting for approval;
      - the players (add and remove them);
-     - NPC stat sheets (DM only).
+     - NPC stat sheets (DM only);
+     - a link to the workshop (builders/workshop.html?c=<campaign>), where
+       the DM adds NPCs, handouts, maps, reference links and factions.
    Being a campaign's DM means being added to it as Dungeon Master on
    the Admin page; the database checks that, not this page.
    ===================================================================== */
@@ -20,6 +22,9 @@
   var XP_T = R.xpThresholds || [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000, 85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000];
   var db = null, Gate = null;
   var root = document.getElementById("st");
+  // Pages for Builder-made campaigns carry data-world; they have no data files.
+  var BUILT = document.body.hasAttribute("data-world");
+  var WORKSHOP = "../../../builders/workshop.html?c=" + encodeURIComponent(CAMPAIGN);
 
   function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
   function errText(e) { return (e && e.message) ? e.message : String(e); }
@@ -28,6 +33,11 @@
     return String(s || "").normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
       .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, n || 34);
   }
+  // On a phone the wide tables (the party, the players) scroll sideways
+  // inside their panel instead of widening the page.
+  var phoneCss = document.createElement("style");
+  phoneCss.textContent = "@media (max-width: 760px) { #st table.xp-table { display: block; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; } }";
+  document.head.appendChild(phoneCss);
   function level(d) { return ((d && d.classes) || []).reduce(function (t, c) { return t + (parseInt(c.level, 10) || 0); }, 0); }
   function classLine(d) {
     return ((d && d.classes) || []).map(function (c) { return (c.name || c.key) + " " + c.level; }).join(" / ");
@@ -44,6 +54,7 @@
       db.from("character_drafts").select("id,email,name,status,submitted_at,updated_at").eq("chronicle", CAMPAIGN).order("updated_at", { ascending: false })
     ]);
     var bar = '<div class="sheet-bar"><span class="sheet-status">Signed in as ' + esc(Gate.email) + ' · Dungeon Master</span><span class="spacer"></span>' +
+      '<a class="btn" href="' + esc(WORKSHOP) + '" title="Add NPCs, handouts, maps, reference links and factions">Open the workshop</a>' +
       '<button type="button" class="btn btn--ghost" id="stOut">Sign out</button></div>';
     var broken = r.slice(0, 4).filter(function (x) { return x.error; })[0];
     if (broken) {
@@ -115,7 +126,8 @@
       '<label style="flex:1">Name<input id="sheetName" maxlength="120" required placeholder="e.g. Ser Aldric" style="width:100%"></label>' +
       '<label>Short name<input id="sheetSlug" maxlength="40" pattern="[a-z0-9-]{1,40}" required placeholder="aldric"></label>' +
       '<button class="btn btn--ghost" type="submit">Create sheet</button></form>' +
-      '<p class="xp-hint" style="margin-top:.4rem">Normally players make their characters with Create a Character. A blank sheet is for a character you build yourself with <strong>Edit sheet</strong>. The short name is the sheet&rsquo;s address, and goes in the <code>sheet</code> field of the adventurer&rsquo;s card in <code>assets/data/players.js</code>.</p>' +
+      '<p class="xp-hint" style="margin-top:.4rem">Normally players make their characters with Create a Character. A blank sheet is for a character you build yourself with <strong>Edit sheet</strong>. The short name is the sheet&rsquo;s address, and goes in the <code>sheet</code> field of the adventurer&rsquo;s card ' +
+        (BUILT ? 'in the <a href="' + esc(WORKSHOP) + '">workshop</a>' : 'in <code>assets/data/players.js</code> (or in the <a href="' + esc(WORKSHOP) + '">workshop</a>)') + '.</p>' +
       '<p class="sheet-status" id="sheetMsg" role="status"></p></section>';
 
     h += '<section class="xp-panel"><h2>Players</h2><div id="members"></div></section><div id="npcSheets"></div>';
@@ -229,7 +241,9 @@
           '<button type="button" class="btn btn--ghost" data-delnpc="' + esc(n.slug) + '" data-name="' + esc(n.name) + '">Delete</button></td></tr>';
       }).join("") + "</table>";
     }
-    var names = (window.CAMPAIGN_NPCS || []).map(function (n) { return n.name; });
+    var npcList = window.CAMPAIGN_NPCS || [];
+    if (window.ChronicleContent && window.ChronicleContent.merge) npcList = await window.ChronicleContent.merge("npc", npcList, CAMPAIGN);
+    var names = npcList.map(function (n) { return n && n.name; }).filter(Boolean);
     h += '<h3>New NPC sheet</h3><form class="xp-form" id="npcNew">' +
       '<label style="flex:1">Name<input id="npcName" list="npcNames" maxlength="120" required style="width:100%"></label>' +
       '<datalist id="npcNames">' + names.map(function (n) { return '<option value="' + esc(n) + '">'; }).join("") + "</datalist>" +
@@ -240,13 +254,21 @@
       var name = document.getElementById("npcName").value.trim();
       if (!name) return;
       // NPC sheet names share one table with every chronicle: prefix them with the campaign.
+      // Another chronicle's sheets are not visible here, so a name already
+      // taken there only shows when saving: then the next number is tried.
       var base = (CAMPAIGN.split("-").map(function (w) { return w[0]; }).join("") + "-" + (slugify(name) || "npc")).slice(0, 36), slug = base, i = 2;
       var taken = await db.from("npc_sheets").select("slug").like("slug", base + "%"), have = {};
       (taken.data || []).forEach(function (n) { have[n.slug] = true; });
       while (have[slug]) slug = base + "-" + (i++);
       var msg = document.getElementById("npcMsg");
       msg.textContent = "Creating…";
-      var ins = await db.from("npc_sheets").insert({ slug: slug, chronicle: CAMPAIGN, name: name, data: { name: name }, play: {} });
+      var ins;
+      for (var tries = 0; tries < 40; tries++) {
+        ins = await db.from("npc_sheets").insert({ slug: slug, chronicle: CAMPAIGN, name: name, data: { name: name }, play: {} });
+        var dup = ins.error && (ins.error.code === "23505" || /duplicate key|already exists|unique/i.test(errText(ins.error)));
+        if (!dup) break;
+        slug = base + "-" + (i++);
+      }
       if (ins.error) { msg.textContent = "Could not create it: " + errText(ins.error); return; }
       window.location.href = "sheet.html?npc=" + encodeURIComponent(slug);
     });
