@@ -9,7 +9,7 @@
 
    The page is a thin shell: it sets
      <body data-campaign="shrouded-campaign-one"
-           data-campaign-name="Shrouded — Campaign One">
+           data-campaign-name="The Wheel of Time">
    holds the breadcrumb (<nav class="crumbs" id="crumbs">), and loads
    world.css, supabase-js, builders/config.js, gate.js and this file
    (with locations.css). Everything else is drawn here.

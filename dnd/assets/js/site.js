@@ -1,8 +1,8 @@
 /* =====================================================================
    D&D CAMPAIGNS — page title
    ---------------------------------------------------------------------
-   <body data-title="The Party" data-campaign-name="Shrouded — Campaign One">
-   -> "The Party · Shrouded — Campaign One · VisTectus"
+   <body data-title="The Party" data-campaign-name="The Wheel of Time">
+   -> "The Party · The Wheel of Time · VisTectus"
    ===================================================================== */
 (function () {
   "use strict";

@@ -1,5 +1,5 @@
 /* =====================================================================
-   Shrouded — Campaign One — maps
+   The Wheel of Time — maps
    ---------------------------------------------------------------------
    Add an entry below and its page shows it. Files: assets/resources/Maps/ (.jpg, .png, .webp). Hideable on the page by the DM.
    Field reference: see the same file in the Vampire chronicle, or

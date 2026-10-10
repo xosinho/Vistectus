@@ -1,5 +1,5 @@
 /* =====================================================================
-   Shrouded — Campaign One — the people the party has met (player-safe)
+   The Wheel of Time — the people the party has met (player-safe)
    ---------------------------------------------------------------------
    Add an entry below and its page shows it. Portraits: assets/img/npcs/. The DM can hide any entry from players on the NPCs page.
    Field reference: see the same file in the Vampire chronicle, or

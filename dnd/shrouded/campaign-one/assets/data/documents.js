@@ -1,5 +1,5 @@
 /* =====================================================================
-   Shrouded — Campaign One — handouts
+   The Wheel of Time — handouts
    ---------------------------------------------------------------------
    Add an entry below and its page shows it. Files: assets/resources/Documents/ (.html, .pdf, .jpg, .png, .webp). Hideable on the page by the DM.
    Field reference: see the same file in the Vampire chronicle, or

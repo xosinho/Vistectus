@@ -43,30 +43,68 @@
   </div>
 </section>
 
-<nav class="tabs" aria-label="Pages">
+<nav class="tabs" aria-label="On this page">
   <div class="tabs-inner">
     <a href="#campaigns">Campaigns</a>
     <a href="#overview">Overview</a>
-    <a href="https://dnd5e.wikidot.com/" target="_blank" rel="noopener">The Rules</a>
+    <a href="factions/index.html">Factions</a>
+    <a href="races-and-classes/index.html">Races &amp; Classes</a>
+    <a href="https://dnd5e.wikidot.com/" target="_blank" rel="noopener">D&amp;D 5e Wiki</a>
   </div>
 </nav>
 
 <main id="main">
 
+  <!-- ---- Resources: straight under the tabs, as on the Hunter and
+       Vampire world pages. Card art goes in art/ beside this page:
+       style="--art: url('/dnd/shrouded/art/Factions.jpg')" -->
+  <section class="row" id="resources">
+    <div class="row-head"><h2>Resources</h2></div>
+    <div class="cards">
+      <article class="card">
+        <a class="card-art" href="factions/index.html"><span class="card-badge">Power and allegiance</span></a>
+        <div class="card-body">
+          <h3><a href="factions/index.html">Factions</a></h3>
+          <p class="meta">Who holds power</p>
+          <p>The powers of Shrouded: what each wants, who speaks for it, and how its weight is felt.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <a class="card-art" href="races-and-classes/index.html"><span class="card-badge">Player options</span></a>
+        <div class="card-body">
+          <h3><a href="races-and-classes/index.html">Available Races &amp; Classes</a></h3>
+          <p class="meta">What adventurers can be</p>
+          <p>The species and classes allowed in this world, each linked to its page on the wiki.</p>
+        </div>
+      </article>
+
+      <!-- Off-site: the D&D 5th edition wiki. -->
+      <article class="card">
+        <a class="card-art" href="https://dnd5e.wikidot.com/" target="_blank" rel="noopener"><span class="card-badge">Reference</span></a>
+        <div class="card-body">
+          <h3><a href="https://dnd5e.wikidot.com/" target="_blank" rel="noopener">D&amp;D 5e Wiki</a></h3>
+          <p class="meta">The rules</p>
+          <p>Species, classes, backgrounds, feats and spells: the D&amp;D 5th edition wiki. Opens in a new tab.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
   <!-- ---- Campaigns ---------------------------------------------
-       Each campaign has its own folder here (see dnd/README.md). To add
-       one: copy campaign-one, rename it, set its id in every page's
-       <body data-campaign="...">, add it on the Admin page, and copy a
-       card below. -->
+       One card per campaign; each has its own folder (see dnd/README.md).
+       To add one: copy campaign-one, rename it, set its id in every
+       page's <body data-campaign="...">, add it on the Admin page, and
+       copy a card below. -->
   <section class="row" id="campaigns">
     <div class="row-head"><h2>Campaigns</h2></div>
     <div class="cards">
       <article class="card">
-        <a class="card-art" href="campaign-one/index.html"><span class="card-badge">Campaign</span></a>
+        <a class="card-art" href="campaign-one/index.html"><span class="card-badge">Running</span></a>
         <div class="card-body">
-          <h3><a href="campaign-one/index.html">Shrouded — Campaign One</a></h3>
-          <p class="meta">A working name: rename it when the campaign has one.</p>
-          <p>The party, its NPCs, handouts and maps, and the adventurers&rsquo; character sheets.</p>
+          <h3><a href="campaign-one/index.html">The Wheel of Time</a></h3>
+          <p class="meta">Shrouded</p>
+          <p>The party, the people they have met, and the campaign&rsquo;s resources.</p>
         </div>
       </article>
     </div>
@@ -77,20 +115,6 @@
     <div class="prose">
       <!-- The pitch for the WORLD, not one campaign. -->
       <p>The world of Shrouded. Its overview will appear here.</p>
-    </div>
-  </section>
-
-  <section class="row" id="rules">
-    <div class="row-head"><h2>The Rules</h2></div>
-    <div class="cards">
-      <article class="card">
-        <a class="card-art" href="https://dnd5e.wikidot.com/" target="_blank" rel="noopener"><span class="card-badge">5th edition</span></a>
-        <div class="card-body">
-          <h3><a href="https://dnd5e.wikidot.com/" target="_blank" rel="noopener">The Rules</a></h3>
-          <p class="meta">dnd5e.wikidot.com</p>
-          <p>Species, classes, backgrounds, feats and spells: the D&amp;D 5th edition wiki, which opens in a new tab.</p>
-        </div>
-      </article>
     </div>
   </section>
 

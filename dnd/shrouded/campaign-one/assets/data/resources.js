@@ -1,5 +1,5 @@
 /* =====================================================================
-   Shrouded — Campaign One — reference material
+   The Wheel of Time — reference material
    ---------------------------------------------------------------------
    Add an entry below and its page shows it. Fields: title, category, kind, when, description, href, external.
    Field reference: see the same file in the Vampire chronicle, or

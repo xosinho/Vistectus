@@ -48,11 +48,13 @@ alter table public.chronicles add constraint chronicles_game_check check (game i
 insert into public.chronicles (id, name, game, world, path) values
   ('dead-hand', 'Dead Hand', 'hunter', 'brooklyn', 'htr/brooklyn/dead-hand/'),
   ('crown-of-ice-and-bone', 'A Crown of Ice and Bone', 'vampire', 'hungary-1242', 'vtda/hungary-1242/crown-of-ice-and-bone/'),
-  ('shrouded-campaign-one', 'Shrouded — Campaign One', 'dnd', 'shrouded', 'dnd/shrouded/campaign-one/'),
+  ('shrouded-campaign-one', 'The Wheel of Time', 'dnd', 'shrouded', 'dnd/shrouded/campaign-one/'),
   ('the-last-garden-campaign-one', 'The Last Garden — Campaign One', 'dnd', 'the-last-garden', 'dnd/the-last-garden/campaign-one/')
 on conflict (id) do nothing;
 update public.chronicles set path = 'htr/brooklyn/dead-hand/' where id = 'dead-hand' and path is null;
 update public.chronicles set path = 'vtda/hungary-1242/crown-of-ice-and-bone/' where id = 'crown-of-ice-and-bone' and path is null;
+-- Shrouded's first campaign was renamed.
+update public.chronicles set name = 'The Wheel of Time' where id = 'shrouded-campaign-one' and name = 'Shrouded — Campaign One';
 
 create table if not exists public.chronicle_members (
   chronicle  text not null references public.chronicles (id) on delete cascade,
