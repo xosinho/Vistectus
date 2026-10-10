@@ -3,8 +3,8 @@
    ---------------------------------------------------------------------
    Names, costs and table figures only, generated from the Storyteller's
    Obsidian notes (scratchpad make_vtda_rules.py). The rules text itself
-   is in the members-only rules pages (rules.html); every `page` below
-   is a page there. Regenerate rather than edit by hand.
+   is in the members-only rules pages (../rules.html, Hungary 1242);
+   every `page` below is a page there. Regenerate rather than edit by hand.
    ===================================================================== */
 window.CROWN_RULES = {
  "source": "Vampire: the Dark Ages (V20) — names and costs from the Storyteller's notes; full rules in the members-only rules pages.",

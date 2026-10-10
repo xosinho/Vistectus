@@ -137,7 +137,7 @@
       var session = (await db.auth.getSession()).data.session;
       signedIn = !!session;
       if (session) {
-        var st = await db.rpc("is_storyteller");
+        var st = await db.rpc("is_chronicle_storyteller", { p_chronicle: CHRONICLE });
         isST = !st.error && st.data === true;
       }
     } catch (e) {

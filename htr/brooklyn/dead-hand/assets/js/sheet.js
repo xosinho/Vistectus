@@ -713,7 +713,7 @@
     S.session = (await db.auth.getSession()).data.session;
     S.online = false; S.role = "viewer";
     if (!S.session) return "signin";
-    var st = await db.rpc("is_storyteller");
+    var st = await db.rpc("is_chronicle_storyteller", { p_chronicle: "dead-hand" });
     if (st.error || st.data !== true) return "denied";
     var r = await db.from("npc_sheets").select("slug,name,data,play").eq("slug", slug).maybeSingle();
     if (r.error) throw r.error;
@@ -1073,7 +1073,7 @@
     try {
       var r = await db.auth.signInWithOtp({
         email: $("signInEmail").value.trim(),
-        options: { shouldCreateUser: false, emailRedirectTo: window.location.href.split("#")[0] }
+        options: { shouldCreateUser: true, emailRedirectTo: window.location.href.split("#")[0] }
       });
       if (r.error) throw r.error;
       msg.textContent = "Link sent. Open it from your email and this sheet reopens, signed in.";

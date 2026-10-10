@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>document.documentElement.classList.add("gate-pending")</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="The people you have crossed paths with so far. Open a name for what you know about them &mdash; no more, no less.">
@@ -54,6 +55,7 @@
     <a href="players.html">The cell</a>
     <a href="npcs.html" aria-current="page">People</a>
     <a href="resources.html">Resources</a>
+    <a href="create.html">Create Hunter</a>
     <a href="storyteller.html">Storyteller</a>
   </div>
 </nav>
@@ -79,7 +81,8 @@
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../../builders/config.js"></script>
-<script src="assets/js/render.js?v=20261010"></script>
+<script src="../../../gate.js" data-chronicle="dead-hand"></script>
+<script src="assets/js/render.js?v=20261011"></script>
 <script src="assets/data/npcs.js?v=20261003c"></script>
 <script>
   DeadHand.renderRoster("npcs-roster", window.DEAD_HAND_NPCS, "npc", { hide: "npcs" });

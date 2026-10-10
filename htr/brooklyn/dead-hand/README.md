@@ -2,6 +2,20 @@
 
 Part of **Vistectus → Hunter → Brooklyn Chronicles → Dead Hand Chronicle**.
 
+## Members only
+
+Every page but the front page (`index.html`) is for the chronicle's
+members: it opens after signing in, and only for an email added to
+Dead Hand. Storytellers are added on the site's Admin page (`/admin/`);
+players by the Storyteller, under *Players* on `storyteller.html`.
+Adding an email is the invitation: the person signs in with it on any
+of the chronicle's pages, and the first link creates their account.
+Players can make a hunter with **Create Hunter** (`create.html`); it
+comes to the Storyteller for approval and becomes their sheet.
+Setup: `admin/sql/access.sql` (run after the files below; it replaces
+the `storytellers` table and the "anyone reads" rules described
+further down, which are kept here for reference).
+
 ## The one rule
 
 **You add people by editing data files, never HTML.**

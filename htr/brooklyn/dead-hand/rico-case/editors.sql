@@ -1,3 +1,6 @@
+-- !! Since admin/sql/access.sql (chronicles and their members), this file's
+-- !! rules are replaced there. If you ever run this file again, run
+-- !! admin/sql/access.sql again straight after it.
 -- =====================================================================
 -- RICO Case board: who may save and delete
 -- ---------------------------------------------------------------------

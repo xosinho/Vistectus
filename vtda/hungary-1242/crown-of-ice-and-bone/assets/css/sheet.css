@@ -292,7 +292,7 @@ button.box:hover { box-shadow: 0 0 0 2px rgba(142,27,43,.45); }
 .merit-row .pts { font-family: var(--sheet-head); font-size: .85rem; white-space: nowrap; }
 
 /* lists being edited */
-.edit-list .row { display: flex; gap: .4rem; align-items: center; margin-bottom: .3rem; flex-wrap: wrap; }
+.edit-list .row { display: flex; gap: .4rem; align-items: center; margin: 0 0 .3rem; padding: 0; max-width: none; flex-wrap: wrap; }  /* not the site's .row section */
 .edit-list .row > input, .edit-list .row > select { flex: 1; min-width: 7rem; }
 .edit-list .row > input.num { flex: 0 0 4rem; min-width: 0; }
 .edit-list label.chk { display: inline-flex; gap: .25rem; align-items: center; font-size: .85rem; white-space: nowrap; }

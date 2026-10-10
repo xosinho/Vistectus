@@ -3,47 +3,6 @@
    shared style.css and the Hungary 1242 world.css.
    ===================================================================== */
 
-/* ------------------------------------------------------------ the rules */
-.rules { max-width: 72rem; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
-.rules-status { font-family: var(--font-mono); font-size: .8rem; color: var(--ink-soft); }
-.rules-gate { max-width: 34rem; margin: 0 auto; background: var(--bg-raised); border: 1px solid var(--line); padding: 1.2rem 1.4rem; }
-.rules-gate h2 { margin-top: 0; }
-.rules-form { display: flex; gap: .6rem; flex-wrap: wrap; margin: .8rem 0; }
-.rules-form input { flex: 1; min-width: 14rem; padding: .5rem .6rem; background: var(--bg-sunken); color: var(--ink); border: 1px solid var(--line); font: inherit; }
-
-.rules-layout { display: grid; grid-template-columns: 17rem 1fr; gap: 2rem; align-items: start; }
-.rules-side { position: sticky; top: 7rem; max-height: calc(100vh - 8rem); overflow-y: auto; padding-right: .4rem; }
-.rules-search { width: 100%; padding: .5rem .6rem; background: var(--bg-sunken); color: var(--ink); border: 1px solid var(--line); font: inherit; margin-bottom: .6rem; }
-.rules-hits { list-style: none; margin: 0 0 1rem; padding: 0; border-bottom: 1px solid var(--line); }
-.rules-hits li { padding: .25rem 0; }
-.rules-hits small { display: block; color: var(--ink-dim); font-family: var(--font-mono); font-size: .68rem; }
-.rules-nav details { border-bottom: 1px solid var(--line); padding: .35rem 0; }
-.rules-nav summary { cursor: pointer; font-family: var(--font-mono); font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); }
-.rules-nav summary small { color: var(--ink-dim); }
-.rules-nav ul { list-style: none; margin: .3rem 0 .2rem; padding: 0 0 0 .6rem; }
-.rules-nav li { padding: .12rem 0; font-size: .95rem; }
-.rules-nav a, .rules-hits a { color: var(--ink); text-decoration: none; }
-.rules-nav a:hover, .rules-hits a:hover { color: var(--accent); }
-.rules-nav a[aria-current="page"] { color: var(--accent); font-weight: 600; }
-
-.rules-article { min-width: 0; }
-.rules-crumb { font-family: var(--font-mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-dim); margin: 0 0 .4rem; }
-.rules-article h1 { margin-top: 0; }
-.rules-body { line-height: 1.6; max-width: 46rem; }
-.rules-body a { color: var(--accent); }
-.rules-body h2 { margin-top: 2rem; border-bottom: 1px solid var(--line); padding-bottom: .2rem; }
-.rules-body h3 { margin-top: 1.4rem; }
-.rules-body blockquote { margin: 1rem 0; padding: .4rem 1rem; border-left: 3px solid var(--accent); background: var(--bg-raised); color: var(--ink-soft); }
-.rules-body table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .95rem; display: block; overflow-x: auto; }
-.rules-body th, .rules-body td { border: 1px solid var(--line); padding: .35rem .55rem; text-align: left; vertical-align: top; }
-.rules-body th { background: var(--bg-raised); }
-.rules-body code { font-family: var(--font-mono); font-size: .85em; background: var(--bg-sunken); padding: .05rem .3rem; }
-.rules-body hr { border: 0; border-top: 1px solid var(--line); margin: 2rem 0; }
-.rules-missing { border-bottom: 1px dotted var(--ink-dim); color: var(--ink-soft); }
-.rules-foot { margin-top: 3rem; font-size: .8rem; color: var(--ink-dim); border-top: 1px solid var(--line); padding-top: .8rem; }
-
-@media (max-width: 800px) {
-  .rules-layout { grid-template-columns: 1fr; }
-  .rules-side { position: static; max-height: none; }
-  .rules-nav details:not([open]) { padding: .25rem 0; }
-}
+/* ------------------------------------------- the coterie: Create a Cainite */
+.coterie-create { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin: 0 0 1.6rem; }
+.coterie-create span { color: var(--ink-soft); font-size: .95rem; }

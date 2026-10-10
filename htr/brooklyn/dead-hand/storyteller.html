@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>document.documentElement.classList.add("gate-pending")</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Storyteller · Dead Hand · VisTectus</title>
@@ -51,6 +52,7 @@
     <a href="players.html">The cell</a>
     <a href="npcs.html">People</a>
     <a href="resources.html">Resources</a>
+    <a href="create.html">Create Hunter</a>
     <a href="storyteller.html" aria-current="page">Storyteller</a>
   </div>
 </nav>
@@ -75,7 +77,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../../builders/config.js"></script>
+<script src="../../../gate.js" data-chronicle="dead-hand" data-need="storyteller"></script>
+<script src="../../../members.js?v=20261011"></script>
 <script src="assets/data/npcs.js?v=20261003b"></script>
-<script src="assets/js/storyteller.js?v=20261004"></script>
+<script src="assets/js/storyteller.js?v=20261011"></script>
 </body>
 </html>

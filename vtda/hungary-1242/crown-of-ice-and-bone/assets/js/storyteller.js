@@ -1,27 +1,25 @@
 /* =====================================================================
    A CROWN OF ICE AND BONE — Storyteller page
    ---------------------------------------------------------------------
-   Signs in the same way as the character sheets (an emailed link), so
-   signing in here also signs you in on every sheet, the Intrigue Board,
-   the Locations app and the rules.
-
-   Signed in as a Storyteller:
+   Only for this chronicle's Storytellers: the page opens through the
+   gate (gate.js, data-need="storyteller"), which signs people in.
      - the coterie: every Cainite's XP and waiting purchases, the player
        who plays each one, new sheets;
+     - new characters from Create Kindred, waiting for approval;
+     - the players (add and remove them);
      - end-of-session XP;
-     - NPC stat sheets (Storyteller only);
-     - the rules: upload the Dark Ages notes from the Obsidian vault.
+     - NPC stat sheets (Storyteller only).
+   The rules from Obsidian are updated on the rules page itself
+   (../rules.html, Hungary 1242).
 
-   Being a Storyteller means having your email in the storytellers
-   table; the database checks that, not this page.
+   Being this chronicle's Storyteller means being added to it as
+   Storyteller on the Admin page; the database checks that.
    ===================================================================== */
 (function () {
   "use strict";
 
   var CHRONICLE = "crown-of-ice-and-bone";
-  var cfg = window.BUILDERS_CONFIG || {};
-  var db = (cfg.supabaseUrl && cfg.supabaseAnonKey && window.supabase)
-    ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
+  var db = null;
   var root = document.getElementById("st");
   var RULES = window.CROWN_RULES || { abilities: {} };
   var ABILITY_NAME = {};
@@ -53,40 +51,6 @@
     return name + " " + r.from_level + " → " + r.to_level;
   }
 
-  /* ------------------------------------------------------- signed out */
-  function signInForm() {
-    root.innerHTML =
-      '<section class="xp-panel" style="max-width:32rem">' +
-        "<h2>Sign in</h2>" +
-        '<p class="xp-hint">Enter your email and a sign-in link will be sent to it. It brings you back here, signed in; the sheets, the rules and the Intrigue Board then recognise you too.</p>' +
-        '<form class="xp-form" id="stForm">' +
-          '<label style="flex:1">Email<input type="email" id="stEmail" autocomplete="email" required style="width:100%"></label>' +
-          '<button class="btn" type="submit" id="stSend">Send link</button>' +
-        "</form>" +
-        '<p class="sheet-status" id="stMsg" role="status" aria-live="polite" style="margin-top:.8rem"></p>' +
-      "</section>";
-    document.getElementById("stForm").addEventListener("submit", async function (e) {
-      e.preventDefault();
-      var msg = document.getElementById("stMsg"), send = document.getElementById("stSend");
-      send.disabled = true;
-      msg.textContent = "Sending…";
-      try {
-        var r = await db.auth.signInWithOtp({
-          email: document.getElementById("stEmail").value.trim(),
-          options: { shouldCreateUser: false, emailRedirectTo: window.location.href.split("#")[0] }
-        });
-        if (r.error) throw r.error;
-        msg.textContent = "Link sent. Open it from your email to finish signing in.";
-      } catch (err) {
-        console.error(err);
-        msg.textContent = /sign ?ups? not allowed|not found|invalid login/i.test(errText(err))
-          ? "That address has no account. Invite it first under Authentication → Users in Supabase."
-          : "Could not send the link: " + errText(err);
-        send.disabled = false;
-      }
-    });
-  }
-
   /* -------------------------------------------------------- signed in */
   function accountBar(session, note) {
     return '<div class="sheet-bar"><span class="sheet-status">Signed in as ' + esc(session.user && session.user.email) +
@@ -96,7 +60,7 @@
   function wireSignOut() {
     document.getElementById("stOut").addEventListener("click", async function () {
       await db.auth.signOut();
-      render();
+      window.location.reload();
     });
   }
 
@@ -105,25 +69,28 @@
       db.from("character_sheets").select("slug,name").eq("chronicle", CHRONICLE).order("name", { ascending: true }),
       db.from("vtda_xp_awards").select("slug,amount"),
       db.from("vtda_xp_requests").select("*").order("requested_at", { ascending: true }),
-      db.rpc("sheet_owners_of", { p_chronicle: CHRONICLE })
+      db.rpc("sheet_owners_of", { p_chronicle: CHRONICLE }),
+      db.rpc("members_of", { p_chronicle: CHRONICLE }),
+      db.from("character_drafts").select("id,email,name,status,submitted_at,updated_at").eq("chronicle", CHRONICLE).order("updated_at", { ascending: false })
     ]);
-    var setupMissing = r.some(function (x) { return x.error; });
+    var setupMissing = r.slice(0, 4).some(function (x) { return x.error; });
     if (setupMissing) {
       var err = r.filter(function (x) { return x.error; })[0].error;
       root.innerHTML = accountBar(session, "Storyteller") +
         '<div class="sheet-notice">The sheets for this chronicle are not set up yet: run <code>assets/sql/setup.sql</code> in Supabase (see README.md). (' + esc(errText(err)) + ")</div>" +
-        xpAwardsHtml() + '<div id="npcSheets"></div><div id="rulesSync"></div>';
-      wireSignOut(); npcSheets(); rulesSync();
+        xpAwardsHtml() + '<div id="npcSheets"></div>';
+      wireSignOut(); npcSheets();
       return;
     }
     var sheets = r[0].data || [], awards = r[1].data || [], reqs = r[2].data || [], owners = {};
+    var members = r[4].data || [], drafts = r[5].data || [];
     (r[3].data || []).forEach(function (o) { owners[o.slug] = o.email; });
     var names = {};
     sheets.forEach(function (s) { names[s.slug] = s.name; });
 
     var h = accountBar(session, "Storyteller") +
       '<section class="xp-panel"><h2>The coterie</h2>' +
-      '<p class="xp-hint">Open a Cainite to award XP, approve or refund purchases, or edit the sheet. The player&rsquo;s email decides who may update the sheet; it is kept private in the database and shown only to you.</p>';
+      '<p class="xp-hint">Open a Cainite to award XP, approve or refund purchases, or edit the sheet. Choose who plays each one from the chronicle&rsquo;s players (add players under <strong>Players</strong>, below). Players can also make their own Cainite with <a href="create.html">Create Kindred</a>; it comes to you below for approval.</p>';
     if (!sheets.length) h += '<p class="empty-line">No sheets yet. Create the first one below.</p>';
     else {
       h += '<table class="xp-table"><tr><th>Cainite</th><th class="num">Awarded</th><th class="num">Spent</th>' +
@@ -139,8 +106,7 @@
         h += "<tr><td>" + esc(s.name) + '<br><small class="xp-hint">sheet.html?c=' + esc(s.slug) + '</small></td><td class="num">' + total + '</td><td class="num">' + spent +
           '</td><td class="num">' + (total - spent - pending) + '</td><td class="num">' +
           (waiting ? '<span class="status status-pending">' + waiting + "</span>" : "0") + "</td>" +
-          '<td><form class="xp-form owner-form" data-slug="' + esc(s.slug) + '" style="margin:0"><input type="email" name="email" value="' + esc(owners[s.slug] || "") +
-          '" placeholder="player@example.com" aria-label="Player email for ' + esc(s.name) + '" style="min-width:12rem"><button class="btn btn--ghost" type="submit">Save</button></form></td>' +
+          "<td>" + ownerPicker(s.slug, owners[s.slug], members) + "</td>" +
           '<td class="acts"><a class="btn btn--ghost" href="sheet.html?c=' + encodeURIComponent(s.slug) + '">Open sheet</a> ' +
           '<button type="button" class="btn btn--ghost" data-delsheet="' + esc(s.slug) + '" data-name="' + esc(s.name) + '">Delete</button></td></tr>';
       });
@@ -150,11 +116,11 @@
       '<label style="flex:1">Name<input id="sheetName" maxlength="120" required placeholder="e.g. István of Esztergom" style="width:100%"></label>' +
       '<label>Short name<input id="sheetSlug" maxlength="40" pattern="[a-z0-9-]{1,40}" required placeholder="istvan"></label>' +
       '<button class="btn" type="submit">Create sheet</button></form>' +
-      '<p class="xp-hint" style="margin-top:.4rem">The short name is the sheet&rsquo;s address, and goes in the <code>sheet</code> field of the player&rsquo;s entry in <code>assets/data/players.js</code>. The player&rsquo;s email must also be invited under Authentication → Users in Supabase before they can sign in.</p>' +
+      '<p class="xp-hint" style="margin-top:.4rem">The short name is the sheet&rsquo;s address, and goes in the <code>sheet</code> field of the player&rsquo;s entry in <code>assets/data/players.js</code>.</p>' +
       '<p class="sheet-status" id="sheetMsg" role="status" aria-live="polite"></p>';
 
     var pendingList = reqs.filter(function (q) { return q.status === "pending" && names[q.slug]; });
-    h += "<h3>Waiting for your approval</h3>";
+    h += "<h3>XP purchases waiting for your approval</h3>";
     if (!pendingList.length) h += '<p class="empty-line">Nothing waiting.</p>';
     else {
       h += '<table class="xp-table"><tr><th>Date</th><th>Cainite</th><th>Purchase</th><th class="num">XP</th><th></th></tr>';
@@ -165,11 +131,14 @@
       });
       h += "</table>";
     }
-    root.innerHTML = h + "</section>" + xpAwardsHtml() + '<div id="npcSheets"></div><div id="rulesSync"></div>';
+    h += draftsHtml(drafts);
+    root.innerHTML = h + "</section>" +
+      '<section class="xp-panel"><h2>Players</h2><div id="members"></div></section>' +
+      xpAwardsHtml() + '<div id="npcSheets"></div>';
     wireSignOut();
     wireCoterie(sheets);
+    window.ChronicleMembers.render(document.getElementById("members"), { db: db, chronicle: CHRONICLE, admin: false, onChange: function () { render(); } });
     npcSheets();
-    rulesSync();
   }
 
   function wireCoterie(sheets) {
@@ -184,16 +153,12 @@
       if (r.error) { msg.textContent = "Could not create it: " + errText(r.error); return; }
       window.location.href = "sheet.html?c=" + encodeURIComponent(slugIn.value.trim());
     });
-    root.querySelectorAll(".owner-form").forEach(function (f) {
-      f.addEventListener("submit", async function (e) {
-        e.preventDefault();
-        var btn = f.querySelector("button");
-        btn.disabled = true;
-        var r = await db.rpc("set_sheet_owner", { p_slug: f.getAttribute("data-slug"), p_email: f.email.value.trim() });
-        btn.disabled = false;
-        if (r.error) { window.alert("Could not save it: " + errText(r.error)); return; }
-        btn.textContent = "Saved";
-        setTimeout(function () { btn.textContent = "Save"; }, 1600);
+    root.querySelectorAll(".owner-pick").forEach(function (sel) {
+      sel.addEventListener("change", async function () {
+        sel.disabled = true;
+        var r = await db.rpc("set_sheet_owner", { p_slug: sel.getAttribute("data-slug"), p_email: sel.value });
+        sel.disabled = false;
+        if (r.error) { window.alert("Not changed: " + errText(r.error)); render(); }
       });
     });
     root.querySelectorAll("[data-delsheet]").forEach(function (b) {
@@ -228,7 +193,7 @@
         return '<article class="xp-award"><div class="xp-award-top"><h3>' + esc(x.q) + '</h3><span class="xp-award-badge">' + esc(x.award) + "</span></div>" +
           '<p class="xp-award-why">' + esc(x.note) + "</p></article>";
       }).join("") + "</div>" +
-      '<p class="xp-hint" style="margin-top:1rem">Then award each Cainite&rsquo;s total from the <strong>Award XP</strong> form on their sheet (Open sheet, above). The full rules: <a href="rules.html?p=concepts%2Fexperience">Experience</a>.</p></section>';
+      '<p class="xp-hint" style="margin-top:1rem">Then award each Cainite&rsquo;s total from the <strong>Award XP</strong> form on their sheet (Open sheet, above). The full rules: <a href="../rules.html?p=concepts%2Fexperience">Experience</a>.</p></section>';
   }
 
   /* ------------------------------------------------- NPC stat sheets
@@ -289,120 +254,45 @@
     });
   }
 
-  /* ------------------------------------------------------- the rules
-     The rules pages (rules.html) show the Dark Ages notes from the
-     Obsidian vault. They are uploaded from here: choose the vault's
-     dark-ages folder, and every note in it is sent to the vault_notes
-     table, which only the coterie and Storytellers can read. Notes no
-     longer in the folder are removed. Nothing is stored in the site's
-     files, and no key is kept on your computer. */
-  var SMALL = { of: 1, the: 1, and: 1, "in": 1, a: 1, to: 1 };
-  var TITLE_OVERRIDE = {
-    "factions/setite": "Followers of Set", "factions/salubri-healer": "Salubri (Healer)",
-    "factions/salubri-warrior": "Salubri (Warrior)", "factions/salubri-watcher": "Salubri (Watcher)",
-    "factions/true-brujah": "True Brujah", "disciplines/necromancy/the-graves-decay": "The Grave’s Decay",
-    "index": "Rules index", "overview": "Overview"
-  };
-  function titleFor(path, body) {
-    if (TITLE_OVERRIDE[path]) return TITLE_OVERRIDE[path];
-    var h1 = /^#\s+(.+)$/m.exec(body);
-    if (h1) return h1[1].trim();
-    return path.split("/").pop().split("-").map(function (w, i) {
-      return i && SMALL[w] ? w : w.charAt(0).toUpperCase() + w.slice(1);
-    }).join(" ");
-  }
-  function stripFrontmatter(text) {
-    return text.replace(/^﻿?---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+  /* -------------------------------------- who plays which Cainite */
+  function ownerPicker(slug, email, members) {
+    var players = members.filter(function (m) { return m.role === "player" || m.email === email; });
+    return '<select class="owner-pick" data-slug="' + esc(slug) + '" aria-label="Played by">' +
+      '<option value="">— nobody —</option>' + players.map(function (m) {
+        return '<option value="' + esc(m.email) + '"' + (m.email === email ? " selected" : "") + ">" + esc(m.email) + "</option>";
+      }).join("") + "</select>";
   }
 
-  async function rulesSync() {
-    var box = document.getElementById("rulesSync");
-    var count = await db.from("vault_notes").select("path,updated_at").eq("chronicle", CHRONICLE).order("updated_at", { ascending: false }).limit(1);
-    var total = await db.from("vault_notes").select("path", { count: "exact", head: true }).eq("chronicle", CHRONICLE);
-    var h = '<section class="xp-panel"><h2>The rules (Obsidian)</h2>' +
-      '<p class="xp-hint">The <a href="rules.html">rules pages</a> show your Dark Ages notes from Obsidian, to the coterie and Storytellers only. After you change the notes in Obsidian, upload them again here: choose the folder <code>Obsidian Vault/RPG/wiki/dark-ages</code>. Every note in it is sent; notes you have deleted are removed from the site.</p>';
-    if (count.error) {
-      box.innerHTML = h + '<div class="sheet-notice">The rules store is not set up yet: run <code>assets/sql/setup.sql</code> in Supabase. (' + esc(errText(count.error)) + ")</div></section>";
-      return;
+  /* ------------------------------ new characters (Create Kindred) */
+  function draftsHtml(drafts) {
+    var waiting = drafts.filter(function (d) { return d.status === "submitted"; });
+    var working = drafts.filter(function (d) { return d.status === "draft" || d.status === "rejected"; });
+    var h = "<h3>New Cainites waiting for your approval</h3>";
+    if (!waiting.length) h += '<p class="empty-line">None waiting.</p>';
+    else {
+      h += '<table class="xp-table"><tr><th>Sent</th><th>Cainite</th><th>Player</th><th></th></tr>';
+      waiting.forEach(function (d) {
+        h += "<tr><td>" + esc(fmtDate(d.submitted_at)) + "</td><td>" + esc(d.name || "(no name)") + "</td><td>" + esc(d.email) +
+          '</td><td class="acts"><a class="btn" href="create.html?review=' + encodeURIComponent(d.id) + '">Review</a></td></tr>';
+      });
+      h += "</table>";
     }
-    h += '<p class="xp-hint">' + (total.count ? total.count + " notes online, last uploaded " + esc(fmtDate(count.data[0].updated_at)) + "." : "No notes uploaded yet.") + "</p>" +
-      '<form class="xp-form" id="vaultForm"><label style="flex:1">Folder<input type="file" id="vaultDir" webkitdirectory directory multiple required></label>' +
-      '<button class="btn" type="submit" id="vaultSend">Upload the notes</button></form>' +
-      '<p class="sheet-status" id="vaultMsg" role="status" aria-live="polite" style="margin-top:.6rem"></p></section>';
-    box.innerHTML = h;
-
-    document.getElementById("vaultForm").addEventListener("submit", async function (e) {
-      e.preventDefault();
-      var files = Array.prototype.filter.call(document.getElementById("vaultDir").files, function (f) { return /\.md$/i.test(f.name); });
-      var msg = document.getElementById("vaultMsg"), send = document.getElementById("vaultSend");
-      if (!files.length) { msg.textContent = "There are no notes (.md files) in that folder."; return; }
-      send.disabled = true;
-      try {
-        var notes = [];
-        for (var i = 0; i < files.length; i++) {
-          var f = files[i];
-          // "dark-ages/concepts/abilities.md" -> "concepts/abilities"
-          var rel = (f.webkitRelativePath || f.name).replace(/\\/g, "/").split("/").slice(1).join("/").replace(/\.md$/i, "");
-          if (!rel || !/^[A-Za-z0-9 ._\/-]{1,200}$/.test(rel)) { console.warn("Skipped", f.webkitRelativePath); continue; }
-          var body = stripFrontmatter(await f.text());
-          notes.push({ path: rel, title: titleFor(rel, body), body: body });
-        }
-        if (!window.confirm("Upload " + notes.length + " notes to the rules pages? Notes on the site that are not in this folder will be removed.")) {
-          msg.textContent = ""; send.disabled = false; return;
-        }
-        var sent = 0, batch = [], size = 0;
-        async function flush() {
-          if (!batch.length) return;
-          var r = await db.rpc("vault_sync_notes", { p_chronicle: CHRONICLE, p_notes: batch });
-          if (r.error) throw r.error;
-          sent += batch.length; batch = []; size = 0;
-          msg.textContent = "Uploaded " + sent + " of " + notes.length + "…";
-        }
-        for (var j = 0; j < notes.length; j++) {
-          batch.push(notes[j]); size += notes[j].body.length;
-          if (size > 250000 || batch.length >= 40) await flush();
-        }
-        await flush();
-        var pr = await db.rpc("vault_prune_notes", { p_chronicle: CHRONICLE, p_keep: notes.map(function (n) { return n.path; }) });
-        if (pr.error) throw pr.error;
-        msg.textContent = "Done: " + sent + " notes uploaded" + (pr.data ? ", " + pr.data + " old ones removed" : "") + ".";
-        setTimeout(rulesSync, 2500);
-      } catch (err) {
-        console.error(err);
-        msg.textContent = "Upload stopped: " + errText(err);
-        send.disabled = false;
-      }
-    });
+    if (working.length) {
+      h += '<p class="xp-hint" style="margin-top:.6rem">Being made: ' + working.map(function (d) {
+        return esc(d.name || "(no name)") + " (" + esc(d.email) + (d.status === "rejected" ? ", sent back" : "") + ")";
+      }).join(", ") + ".</p>";
+    }
+    return h;
   }
 
   async function render() {
-    if (!db) {
-      root.innerHTML = '<div class="sheet-notice">Online sign-in is not connected yet.</div>';
-      return;
-    }
-    try {
-      var session = (await db.auth.getSession()).data.session;
-      if (!session) return signInForm();
-      var st = await db.rpc("is_storyteller");
-      if (st.error) throw st.error;
-      if (!st.data) {
-        root.innerHTML = accountBar(session) +
-          '<div class="sheet-notice">This account is not a Storyteller. Players update their Cainites from their own ' +
-          '<a href="players.html">character sheets</a>, and read the <a href="rules.html">rules</a>.</div>';
-        wireSignOut();
-        return;
-      }
-      await overview(session);
-    } catch (e) {
+    try { await overview(Gate.session); }
+    catch (e) {
       console.error(e);
       root.innerHTML = '<div class="sheet-notice">Could not reach the sheets: ' + esc(errText(e)) + "</div>";
     }
   }
 
-  if (db) {
-    db.auth.onAuthStateChange(function (event) {
-      if (event === "SIGNED_IN" || event === "SIGNED_OUT") render();
-    });
-  }
-  render();
+  var Gate = null;
+  window.Gate.ready.then(function (g) { Gate = g; db = g.db; render(); });
 })();

@@ -1,11 +1,18 @@
 /* =====================================================================
-   A CROWN OF ICE AND BONE — the rules (from the Obsidian vault)
+   HUNGARY 1242 — the rules (from the Obsidian vault)
    ---------------------------------------------------------------------
    rules.html?p=<path> shows one note, e.g. ?p=concepts/abilities.
-   The notes are the Storyteller's Obsidian notes on Vampire: the Dark
-   Ages, uploaded on the Storyteller page into the vault_notes table.
-   The database lets only a Storyteller, or a player with a sheet in
-   this chronicle, read them; everyone else sees a sign-in box.
+
+   The notes are the Storytellers' Obsidian notes on Vampire: the Dark
+   Ages, kept in the vault_notes table for the world "hungary-1242".
+   Every player and Storyteller of a chronicle in Hungary 1242 can read
+   them (the gate, gate.js, and the database both check); nobody else.
+
+   HOW THE NOTES GET HERE. The website cannot reach Obsidian on your
+   computer, so a Storyteller copies the notes up from this page: the
+   "Update from Obsidian" box (Storytellers only) reads the dark-ages
+   folder of the vault in the browser and sends every note to the
+   database. Do it again after changing the notes in Obsidian.
 
    Obsidian's [[links]] work: [[abilities]], [[../factions/brujah|Brujah]]
    and [[the-roads#Road of Kings]] open the note they name.
@@ -13,11 +20,9 @@
 (function () {
   "use strict";
 
-  var CHRONICLE = "crown-of-ice-and-bone";
+  var WORLD = "hungary-1242";
   var HOME = "index";
-  var cfg = window.BUILDERS_CONFIG || {};
-  var db = (cfg.supabaseUrl && cfg.supabaseAnonKey && window.supabase)
-    ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
+  var db = null;
   var root = document.getElementById("rules");
   var notes = [];          // [{path, title}]
   var byPath = {};
@@ -28,10 +33,14 @@
       .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
   function errText(e) { return (e && e.message) ? e.message : String(e); }
+  function fmtDate(iso) {
+    var d = new Date(iso);
+    return isNaN(d) ? "" : d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+  }
   function current() { return new URLSearchParams(window.location.search).get("p") || HOME; }
   function href(path, anchor) { return "rules.html?p=" + encodeURIComponent(path) + (anchor ? "#" + anchorId(anchor) : ""); }
   function anchorId(s) {
-    return "h-" + String(s).toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    return "h-" + String(s).toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
   }
   var FOLDER_NAMES = { concepts: "Rules and setting", factions: "Clans and bloodlines", disciplines: "Disciplines",
     locations: "Places", roads: "Roads", apocrypha: "Apocrypha", necromancy: "Necromancy", thaumaturgy: "Thaumaturgy" };
@@ -85,40 +94,6 @@
       });
   }
 
-  /* ----------------------------------------------------- signed out */
-  function signIn(reason) {
-    root.innerHTML =
-      '<section class="xp-panel rules-gate">' +
-        "<h2>For the coterie</h2>" +
-        "<p>" + (reason || "The rules are for the players of this chronicle and the Storyteller. Sign in with the email your invitation went to, and a link will be sent to it.") + "</p>" +
-        '<form class="rules-form" id="rulesForm">' +
-          '<input type="email" id="rulesEmail" autocomplete="email" required placeholder="you@example.com" aria-label="Email">' +
-          '<button class="btn" type="submit" id="rulesSend">Send link</button>' +
-        "</form>" +
-        '<p class="rules-status" id="rulesMsg" role="status" aria-live="polite"></p>' +
-      "</section>";
-    document.getElementById("rulesForm").addEventListener("submit", async function (e) {
-      e.preventDefault();
-      var msg = document.getElementById("rulesMsg"), send = document.getElementById("rulesSend");
-      send.disabled = true;
-      msg.textContent = "Sending…";
-      try {
-        var r = await db.auth.signInWithOtp({
-          email: document.getElementById("rulesEmail").value.trim(),
-          options: { shouldCreateUser: false, emailRedirectTo: window.location.href.split("#")[0] }
-        });
-        if (r.error) throw r.error;
-        msg.textContent = "Link sent. Open it from your email and the rules open here, signed in.";
-      } catch (err) {
-        console.error(err);
-        msg.textContent = /sign ?ups? not allowed|not found|invalid login/i.test(errText(err))
-          ? "That address has no account. Ask the Storyteller for an invitation."
-          : "Could not send the link: " + errText(err);
-        send.disabled = false;
-      }
-    });
-  }
-
   /* ----------------------------------------------------------- index */
   function sidebar(active) {
     var groups = {}, order = [];
@@ -152,7 +127,7 @@
         var ql = q.toLowerCase();
         var byTitle = notes.filter(function (n) { return n.title.toLowerCase().indexOf(ql) >= 0; }).slice(0, 12);
         var safe = q.replace(/[%_\\]/g, function (c) { return "\\" + c; });
-        var r = await db.from("vault_notes").select("path,title").eq("chronicle", CHRONICLE).ilike("body", "%" + safe + "%").limit(25);
+        var r = await db.from("vault_notes").select("path,title").eq("world", WORLD).ilike("body", "%" + safe + "%").limit(25);
         if (box.value.trim() !== q) return;
         var seen = {}, list = [];
         byTitle.concat(r.data || []).forEach(function (n) { if (!seen[n.path]) { seen[n.path] = 1; list.push(n); } });
@@ -167,7 +142,7 @@
   async function show(path) {
     var article = document.getElementById("rulesArticle");
     article.innerHTML = '<p class="rules-status">Opening…</p>';
-    var r = await db.from("vault_notes").select("path,title,body,updated_at").eq("chronicle", CHRONICLE).eq("path", path).maybeSingle();
+    var r = await db.from("vault_notes").select("path,title,body,updated_at").eq("world", WORLD).eq("path", path).maybeSingle();
     if (r.error) { article.innerHTML = '<div class="sheet-notice">Could not open this note: ' + esc(errText(r.error)) + "</div>"; return; }
     if (!r.data) {
       article.innerHTML = '<div class="sheet-notice">There is no note called &ldquo;' + esc(path) + '&rdquo;. <a href="' + href(HOME) + '">Back to the index</a>.</div>';
@@ -181,8 +156,8 @@
     article.innerHTML = '<p class="rules-crumb">' + (crumbs || "&nbsp;") + "</p>" +
       (/^\s*#\s/.test(n.body) ? "" : "<h1>" + esc(n.title) + "</h1>") +
       '<div class="rules-body">' + html + "</div>" +
-      '<p class="rules-foot">From the Storyteller&rsquo;s notes on <em>Vampire: the Dark Ages</em>, for the players of this chronicle only. Please do not copy or share them.</p>';
-    document.title = n.title + " · The rules · A Crown of Ice and Bone · VisTectus";
+      '<p class="rules-foot">From the Storytellers&rsquo; notes on <em>Vampire: the Dark Ages</em>, for the players of Hungary 1242 only. Please do not copy or share them.</p>';
+    document.title = n.title + " · The rules · Hungary 1242 · VisTectus";
     // Headings get ids, so [[note#Heading]] lands on them.
     article.querySelectorAll(".rules-body h1, .rules-body h2, .rules-body h3, .rules-body h4").forEach(function (h) { h.id = anchorId(h.textContent); });
     // Links to other sites open in a new tab.
@@ -193,24 +168,112 @@
     if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
   }
 
+  /* ------------------------------------------- update from Obsidian
+     Storytellers only. The browser reads the chosen folder's notes and
+     sends them to the database; nothing is kept anywhere else. */
+  var SMALL = { of: 1, the: 1, and: 1, "in": 1, a: 1, to: 1 };
+  var TITLE_OVERRIDE = {
+    "factions/setite": "Followers of Set", "factions/salubri-healer": "Salubri (Healer)",
+    "factions/salubri-warrior": "Salubri (Warrior)", "factions/salubri-watcher": "Salubri (Watcher)",
+    "factions/true-brujah": "True Brujah", "disciplines/necromancy/the-graves-decay": "The Grave’s Decay",
+    "index": "Rules index", "overview": "Overview"
+  };
+  function titleFor(path, body) {
+    if (TITLE_OVERRIDE[path]) return TITLE_OVERRIDE[path];
+    var h1 = /^#\s+(.+)$/m.exec(body);
+    if (h1) return h1[1].trim();
+    return path.split("/").pop().split("-").map(function (w, i) {
+      return i && SMALL[w] ? w : w.charAt(0).toUpperCase() + w.slice(1);
+    }).join(" ");
+  }
+  function stripFrontmatter(text) {
+    return text.replace(/^﻿?---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+  }
+
+  async function uploadPanel(open) {
+    var box = document.getElementById("rulesUpload");
+    var total = await db.from("vault_notes").select("path", { count: "exact", head: true }).eq("world", WORLD);
+    var last = await db.from("vault_notes").select("updated_at").eq("world", WORLD).order("updated_at", { ascending: false }).limit(1);
+    var state = total.error ? "The rules store is not set up yet (" + esc(errText(total.error)) + ")."
+      : total.count ? total.count + " notes online, last updated " + esc(fmtDate(last.data[0].updated_at)) + "." : "No notes online yet.";
+    box.innerHTML = "<details" + (open ? " open" : "") + '><summary>Update from Obsidian <small>(Storytellers only)</small></summary>' +
+      '<p class="rules-status">' + state + "</p>" +
+      "<ol class=\"rules-steps\">" +
+        "<li>Make your changes in Obsidian as usual. The Dark Ages notes are in the folder <code>Obsidian Vault › RPG › wiki › dark-ages</code>.</li>" +
+        "<li>Here, press <strong>Choose folder</strong> and pick that <code>dark-ages</code> folder. Your browser may ask whether to upload the files: they are only read by this page and sent to the rules database.</li>" +
+        "<li>Press <strong>Upload</strong>. Every note is copied, notes you have deleted in Obsidian are removed here, and players see the new version straight away.</li>" +
+      "</ol>" +
+      '<form class="rules-form" id="vaultForm"><label class="btn btn--ghost" for="vaultDir">Choose folder</label>' +
+      '<input type="file" id="vaultDir" webkitdirectory directory multiple hidden>' +
+      '<span class="rules-status" id="vaultPicked">No folder chosen.</span>' +
+      '<button class="btn" type="submit" id="vaultSend" disabled>Upload</button></form>' +
+      '<p class="rules-status" id="vaultMsg" role="status" aria-live="polite"></p></details>';
+    var dir = document.getElementById("vaultDir"), send = document.getElementById("vaultSend");
+    dir.addEventListener("change", function () {
+      var n = Array.prototype.filter.call(dir.files, function (f) { return /\.md$/i.test(f.name); }).length;
+      var top = dir.files.length ? (dir.files[0].webkitRelativePath || "").split("/")[0] : "";
+      document.getElementById("vaultPicked").textContent = n ? n + " notes in “" + top + "”" : "That folder has no notes (.md files).";
+      send.disabled = !n;
+    });
+    document.getElementById("vaultForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      var files = Array.prototype.filter.call(dir.files, function (f) { return /\.md$/i.test(f.name); });
+      var msg = document.getElementById("vaultMsg");
+      if (!files.length) return;
+      send.disabled = true;
+      try {
+        var list = [];
+        for (var i = 0; i < files.length; i++) {
+          var f = files[i];
+          // "dark-ages/concepts/abilities.md" -> "concepts/abilities"
+          var rel = (f.webkitRelativePath || f.name).replace(/\\/g, "/").split("/").slice(1).join("/").replace(/\.md$/i, "");
+          if (!rel || !/^[A-Za-z0-9 ._\/-]{1,200}$/.test(rel)) { console.warn("Skipped", f.webkitRelativePath); continue; }
+          var body = stripFrontmatter(await f.text());
+          list.push({ path: rel, title: titleFor(rel, body), body: body });
+        }
+        if (!window.confirm("Upload " + list.length + " notes? Notes online that are not in this folder will be removed.")) {
+          send.disabled = false; return;
+        }
+        var sent = 0, batch = [], size = 0;
+        async function flush() {
+          if (!batch.length) return;
+          var r = await db.rpc("vault_sync_notes", { p_world: WORLD, p_notes: batch });
+          if (r.error) throw r.error;
+          sent += batch.length; batch = []; size = 0;
+          msg.textContent = "Uploaded " + sent + " of " + list.length + "…";
+        }
+        for (var j = 0; j < list.length; j++) {
+          batch.push(list[j]); size += list[j].body.length;
+          if (size > 250000 || batch.length >= 40) await flush();
+        }
+        await flush();
+        var pr = await db.rpc("vault_prune_notes", { p_world: WORLD, p_keep: list.map(function (n) { return n.path; }) });
+        if (pr.error) throw pr.error;
+        msg.textContent = "Done: " + sent + " notes uploaded" + (pr.data ? ", " + pr.data + " old ones removed" : "") + ". Reloading…";
+        setTimeout(function () { window.location.reload(); }, 1500);
+      } catch (err) {
+        console.error(err);
+        msg.textContent = "Upload stopped: " + errText(err);
+        send.disabled = false;
+      }
+    });
+  }
+
   /* ------------------------------------------------------------- start */
-  async function start() {
-    if (!db) { root.innerHTML = '<div class="sheet-notice">The rules are not connected.</div>'; return; }
+  async function start(gate) {
+    db = gate.db;
+    var st = gate.role === "storyteller";
     try {
-      var session = (await db.auth.getSession()).data.session;
-      if (!session) return signIn();
-      var r = await db.from("vault_notes").select("path,title").eq("chronicle", CHRONICLE).order("path", { ascending: true });
+      var r = await db.from("vault_notes").select("path,title").eq("world", WORLD).order("path", { ascending: true });
       if (r.error) throw r.error;
       notes = r.data || [];
-      if (!notes.length) {
-        var st = await db.rpc("is_storyteller");
-        root.innerHTML = '<div class="sheet-notice">' + (st.data === true
-          ? 'No notes uploaded yet. Upload them from the <a href="storyteller.html">Storyteller page</a>.'
-          : "This account cannot read the rules: it plays no Cainite in this chronicle, or the Storyteller has not uploaded them yet. Ask the Storyteller.") +
-          ' <button type="button" class="btn btn--ghost" id="rulesOut">Sign out</button></div>';
-        document.getElementById("rulesOut").addEventListener("click", async function () { await db.auth.signOut(); start(); });
-        return;
-      }
+      root.innerHTML = (st ? '<div id="rulesUpload" class="rules-upload"></div>' : "") +
+        (notes.length ? '<div class="rules-layout"><aside class="rules-side" id="rulesSide"></aside>' +
+                        '<article class="rules-article" id="rulesArticle"></article></div>'
+                      : '<div class="sheet-notice">' + (st ? "No notes yet: upload them with the box above."
+                          : "The Storytellers have not put the rules up yet.") + "</div>");
+      if (st) uploadPanel(!notes.length);
+      if (!notes.length) return;
       byPath = {}; byBase = {};
       notes.forEach(function (n) {
         byPath[n.path] = n;
@@ -219,8 +282,7 @@
       });
       var path = current();
       if (!byPath[path]) path = byPath[HOME] ? HOME : notes[0].path;
-      root.innerHTML = '<div class="rules-layout"><aside class="rules-side">' + sidebar(path) + "</aside>" +
-        '<article class="rules-article" id="rulesArticle"></article></div>';
+      document.getElementById("rulesSide").innerHTML = sidebar(path);
       wireSearch();
       await show(path);
     } catch (e) {
@@ -229,8 +291,5 @@
     }
   }
 
-  db && db.auth.onAuthStateChange(function (event) {
-    if (event === "SIGNED_IN" || event === "SIGNED_OUT") start();
-  });
-  start();
+  window.Gate.ready.then(start);
 })();

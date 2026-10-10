@@ -93,7 +93,7 @@
       S.session = (await db.auth.getSession()).data.session;
       S.st = false;
       if (S.session) {
-        var r = await db.rpc("is_storyteller");
+        var r = await db.rpc("is_chronicle_storyteller", { p_chronicle: CHRONICLE });
         S.st = !r.error && r.data === true;
       }
       var got = await Promise.all([
@@ -817,7 +817,7 @@
     try {
       var r = await db.auth.signInWithOtp({
         email: $("signin-email").value.trim(),
-        options: { shouldCreateUser: false, emailRedirectTo: window.location.href.split("#")[0] }
+        options: { shouldCreateUser: true, emailRedirectTo: window.location.href.split("#")[0] }
       });
       if (r.error) throw r.error;
       msg.textContent = "Link sent. Open it from your email and this page reopens, signed in.";

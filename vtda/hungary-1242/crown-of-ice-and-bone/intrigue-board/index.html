@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>document.documentElement.classList.add("gate-pending")</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Intrigue Board · A Crown of Ice and Bone · VisTectus</title>
@@ -478,6 +479,7 @@
 <script src="../assets/data/documents.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../../../builders/config.js"></script>
+<script src="../../../../gate.js" data-chronicle="crown-of-ice-and-bone"></script>
 <script>
 (function(){
   "use strict";
@@ -710,8 +712,9 @@
     }catch(e){ console.error(e); }
   }
 
-  /* Magic-link sign-in, as in the Builders area. shouldCreateUser:false
-     means only invited addresses get a link. */
+  /* Magic-link sign-in. An account is created on the first sign-in, but
+     only for an email added to a chronicle (the sign-up check in
+     admin/sql/access.sql turns everyone else away). */
   function openSignIn(){
     showModal(
       '<h3>Sign in to save</h3>' +
@@ -738,7 +741,7 @@
       try{
         var r = await withTimeout(db.auth.signInWithOtp({
           email: email,
-          options: { shouldCreateUser: false, emailRedirectTo: window.location.href.split('#')[0] }
+          options: { shouldCreateUser: true, emailRedirectTo: window.location.href.split('#')[0] }
         }), 15000);
         if(r.error) throw r.error;
         msg.textContent = 'Link sent. Check your email, use the link, then come back to this tab and save.';

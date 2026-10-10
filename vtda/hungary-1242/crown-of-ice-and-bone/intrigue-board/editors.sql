@@ -1,3 +1,3 @@
--- The Intrigue Board's database rules are part of this chronicle's single
--- setup file: ../assets/sql/setup.sql (section "The Intrigue Board").
--- Run that file; there is nothing to run here.
+-- The Intrigue Board's database rules (who may save and delete boards)
+-- are part of the site-wide admin/sql/access.sql. There is nothing to
+-- run here.

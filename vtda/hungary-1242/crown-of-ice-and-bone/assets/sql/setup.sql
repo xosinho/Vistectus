@@ -2,39 +2,23 @@
 -- A Crown of Ice and Bone — character sheets, experience and the rules
 -- ---------------------------------------------------------------------
 -- Run this whole file in Supabase: SQL Editor -> New query -> Run.
--- It needs what the Dead Hand chronicle already set up, and shares it:
---   * the sheet setup (htr/brooklyn/dead-hand/assets/sheets/sql/setup.sql):
---     character_sheets, sheet_owners, storytellers, is_storyteller()...;
---   * npc-sheets.sql and archive-hidden.sql in the same folder;
---   * the case_files table, the case-photos bucket and
---     rico-case/editors.sql (case_board_editor());
---   * locations/setup.sql (the Locations app's tables).
--- Safe to run again. It changes nothing about the Dead Hand chronicle.
+-- Run it AFTER admin/sql/access.sql (who belongs to which chronicle),
+-- which in turn comes after the Dead Hand files. Safe to run again.
 --
 -- Who may do what (enforced here, by the database, not by the pages):
---   * Anyone can read the Cainites' sheets, the XP costs, awards and
---     purchases (as for the Dead Hand sheets).
+--   * The chronicle's members (players and Storytellers, see the Admin
+--     page and the Storyteller page) read its sheets, awards and
+--     purchases. Nobody else does.
 --   * A player marks damage, blood and Willpower, keeps their own
 --     notes, and asks to buy traits with XP. Nothing else.
---   * A purchase only changes the sheet when a Storyteller approves it.
---   * Storytellers create sheets, say which player plays which, award
---     XP, approve, reject or refund purchases, and edit any sheet.
---   * The rules notes from Obsidian can be read only by a Storyteller
---     or by a player who has a sheet in the chronicle. Visitors who are
---     not signed in get nothing. Only a Storyteller can upload them.
+--   * A purchase only changes the sheet when the chronicle's
+--     Storyteller approves it.
+--   * The chronicle's Storytellers create sheets, award XP, approve,
+--     reject or refund purchases, and edit any sheet.
+--   * The Dark Ages rules from Obsidian belong to the world, Hungary
+--     1242: every member of a chronicle there may read them, and its
+--     Storytellers upload them (from the rules page).
 -- =====================================================================
-
-
--- ------------------------------------------------------------ members
-
--- A Storyteller, or a player with a sheet in the chronicle.
-create or replace function public.is_chronicle_member(p_chronicle text) returns boolean
-language sql stable security definer set search_path = public
-as $$
-  select is_storyteller() or exists (
-    select 1 from sheet_owners o join character_sheets s on s.slug = o.slug
-     where s.chronicle = p_chronicle and lower(o.email) = my_email() and my_email() <> '')
-$$;
 
 
 -- ------------------------------------------------------------- tables
@@ -96,14 +80,24 @@ create table if not exists public.vtda_xp_requests (
 create index if not exists vtda_xp_requests_slug on public.vtda_xp_requests (slug, requested_at);
 
 -- The rules wiki: the Dark Ages notes from the Storyteller's Obsidian
--- vault, one row per note, uploaded from the Storyteller page.
+-- vault, one row per note, uploaded from the rules page. They belong to
+-- a world (Hungary 1242), shared by every chronicle in it.
+-- (A first version kept them per chronicle: moved over below.)
+do $$ begin
+  if exists (select 1 from information_schema.columns
+              where table_schema = 'public' and table_name = 'vault_notes' and column_name = 'chronicle') then
+    drop policy if exists "Members read the rules" on public.vault_notes;
+    alter table public.vault_notes rename column chronicle to world;
+    update public.vault_notes set world = 'hungary-1242' where world = 'crown-of-ice-and-bone';
+  end if;
+end $$;
 create table if not exists public.vault_notes (
-  chronicle   text not null,
+  world       text not null,
   path        text not null check (path ~ '^[A-Za-z0-9 ._/-]{1,200}$'),
   title       text not null default '',
   body        text not null default '' check (char_length(body) <= 400000),
   updated_at  timestamptz not null default now(),
-  primary key (chronicle, path)
+  primary key (world, path)
 );
 
 alter table public.vtda_xp_costs    enable row level security;
@@ -114,14 +108,19 @@ alter table public.vault_notes      enable row level security;
 drop policy if exists "Costs are public"     on public.vtda_xp_costs;
 drop policy if exists "Awards are public"    on public.vtda_xp_awards;
 drop policy if exists "Purchases are public" on public.vtda_xp_requests;
+drop policy if exists "Members read awards"    on public.vtda_xp_awards;
+drop policy if exists "Members read purchases" on public.vtda_xp_requests;
 drop policy if exists "Members read the rules" on public.vault_notes;
 create policy "Costs are public"     on public.vtda_xp_costs    for select to anon, authenticated using (true);
-create policy "Awards are public"    on public.vtda_xp_awards   for select to anon, authenticated using (true);
-create policy "Purchases are public" on public.vtda_xp_requests for select to anon, authenticated using (true);
--- The rules: members only. Visitors who are not signed in cannot even ask.
+create policy "Members read awards"    on public.vtda_xp_awards   for select to authenticated
+  using (public.is_chronicle_member(public.sheet_chronicle(slug)));
+create policy "Members read purchases" on public.vtda_xp_requests for select to authenticated
+  using (public.is_chronicle_member(public.sheet_chronicle(slug)));
+-- The rules: members of the world's chronicles only. Visitors who are
+-- not signed in cannot even ask.
 revoke all on public.vault_notes from anon;
 create policy "Members read the rules" on public.vault_notes
-  for select to authenticated using (public.is_chronicle_member(chronicle));
+  for select to authenticated using (public.is_world_member(world));
 -- No table has an insert, update or delete policy: all writes go
 -- through the functions below.
 
@@ -236,7 +235,7 @@ declare
   idx      integer;
   row_clan boolean;
 begin
-  if not (owns_sheet(p_slug) or is_storyteller()) then
+  if not (owns_sheet(p_slug) or is_sheet_storyteller(p_slug)) then
     raise exception 'You can only spend XP on your own sheet.';
   end if;
   select * into s from character_sheets where slug = p_slug for update;
@@ -352,7 +351,7 @@ declare r vtda_xp_requests; new_status text;
 begin
   select * into r from vtda_xp_requests where id = p_id for update;
   if not found or r.status <> 'pending' then raise exception 'That purchase is no longer waiting.'; end if;
-  if is_storyteller() then new_status := 'rejected';
+  if is_sheet_storyteller(r.slug) then new_status := 'rejected';
   elsif owns_sheet(r.slug) then new_status := 'cancelled';
   else raise exception 'Only the player or a Storyteller can do that.';
   end if;
@@ -375,9 +374,9 @@ declare
   awarded  integer;
   spent    integer;
 begin
-  if not is_storyteller() then raise exception 'Only a Storyteller can approve purchases.'; end if;
   select * into r from vtda_xp_requests where id = p_id for update;
   if not found or r.status <> 'pending' then raise exception 'That purchase is no longer waiting.'; end if;
+  if not is_sheet_storyteller(r.slug) then raise exception 'Only the chronicle''s Storyteller can approve purchases.'; end if;
   select data into d from character_sheets where slug = r.slug for update;
 
   select coalesce(sum(amount), 0) into awarded from vtda_xp_awards where slug = r.slug;
@@ -416,9 +415,9 @@ language plpgsql security definer set search_path = public
 as $$
 declare r vtda_xp_requests; d jsonb; cur integer; lst text;
 begin
-  if not is_storyteller() then raise exception 'Only a Storyteller can refund purchases.'; end if;
   select * into r from vtda_xp_requests where id = p_id for update;
   if not found or r.status <> 'approved' then raise exception 'Only an approved purchase can be refunded.'; end if;
+  if not is_sheet_storyteller(r.slug) then raise exception 'Only the chronicle''s Storyteller can refund purchases.'; end if;
   select data into d from character_sheets where slug = r.slug for update;
 
   if r.kind in ('ritual', 'expertise') then
@@ -448,7 +447,7 @@ returns void
 language plpgsql security definer set search_path = public
 as $$
 begin
-  if not is_storyteller() then raise exception 'Only a Storyteller can award XP.'; end if;
+  if not is_sheet_storyteller(p_slug) then raise exception 'Only the chronicle''s Storyteller can award XP.'; end if;
   if not exists (select 1 from character_sheets where slug = p_slug and vtda_is_sheet(data)) then
     raise exception 'There is no such sheet.';
   end if;
@@ -465,9 +464,9 @@ language plpgsql security definer set search_path = public
 as $$
 declare a vtda_xp_awards;
 begin
-  if not is_storyteller() then raise exception 'Only a Storyteller can remove an award.'; end if;
   select * into a from vtda_xp_awards where id = p_id for update;
   if not found then raise exception 'That award is already gone.'; end if;
+  if not is_sheet_storyteller(a.slug) then raise exception 'Only the chronicle''s Storyteller can remove an award.'; end if;
   if vtda_xp_available(a.slug) - a.amount < 0 then
     raise exception 'Removing it would leave less XP than has already been spent or requested.';
   end if;
@@ -485,7 +484,7 @@ returns void
 language plpgsql security definer set search_path = public
 as $$
 begin
-  if not is_storyteller() then raise exception 'Only a Storyteller can edit the whole sheet.'; end if;
+  if not is_sheet_storyteller(p_slug) then raise exception 'Only the chronicle''s Storyteller can edit the whole sheet.'; end if;
   if jsonb_typeof(p_data) <> 'object' or not vtda_is_sheet(p_data) or jsonb_typeof(p_play) <> 'object'
      or octet_length(p_data::text) + octet_length(p_play::text) > 200000 then
     raise exception 'That sheet could not be saved.';
@@ -503,9 +502,9 @@ language plpgsql security definer set search_path = public
 as $$
 declare d jsonb;
 begin
-  if not is_storyteller() then raise exception 'Only a Storyteller can create sheets.'; end if;
+  if not exists (select 1 from chronicles where id = p_chronicle and game = 'vampire') then raise exception 'Unknown chronicle.'; end if;
+  if not is_chronicle_storyteller(p_chronicle) then raise exception 'Only the chronicle''s Storyteller can create sheets.'; end if;
   if coalesce(p_slug, '') !~ '^[a-z0-9-]{1,40}$' then raise exception 'The short name may use a-z, 0-9 and dashes only.'; end if;
-  if coalesce(p_chronicle, '') !~ '^[a-z0-9-]{1,60}$' or p_chronicle = 'dead-hand' then raise exception 'Unknown chronicle.'; end if;
   if char_length(btrim(coalesce(p_name, ''))) not between 1 and 120 then raise exception 'Give the character a name.'; end if;
   if exists (select 1 from character_sheets where slug = p_slug) then raise exception 'That short name is already taken.'; end if;
   d := jsonb_build_object(
@@ -529,146 +528,45 @@ returns void
 language plpgsql security definer set search_path = public
 as $$
 begin
-  if not is_storyteller() then raise exception 'Only a Storyteller can delete sheets.'; end if;
+  if not is_sheet_storyteller(p_slug) then raise exception 'Only the chronicle''s Storyteller can delete sheets.'; end if;
   delete from character_sheets where slug = p_slug and vtda_is_sheet(data);
   if not found then raise exception 'There is no such Dark Ages sheet.'; end if;
 end $$;
 
--- Storyteller: say which account plays a character. An empty email
--- removes the player. The address stays private in sheet_owners. The
--- player also needs an account: invite the address under
--- Authentication -> Users in Supabase.
-create or replace function public.set_sheet_owner(p_slug text, p_email text)
-returns void
-language plpgsql security definer set search_path = public
-as $$
-begin
-  if not is_storyteller() then raise exception 'Only a Storyteller can assign players.'; end if;
-  if not exists (select 1 from character_sheets where slug = p_slug) then raise exception 'There is no such sheet.'; end if;
-  p_email := lower(btrim(coalesce(p_email, '')));
-  if p_email = '' then delete from sheet_owners where slug = p_slug; return; end if;
-  if p_email !~ '^[^@\s]+@[^@\s]+\.[^@\s]+$' then raise exception 'That is not an email address.'; end if;
-  insert into sheet_owners (slug, email) values (p_slug, p_email)
-    on conflict (slug) do update set email = excluded.email;
-end $$;
-
--- Storyteller: who plays which character in a chronicle.
-create or replace function public.sheet_owners_of(p_chronicle text)
-returns table (slug text, email text)
-language sql stable security definer set search_path = public
-as $$
-  select o.slug, o.email from sheet_owners o join character_sheets s on s.slug = o.slug
-   where s.chronicle = p_chronicle and is_storyteller()
-$$;
-
-
 -- -------------------------------------------------------- the rules
 
--- Storyteller: upload notes from the vault, a batch at a time.
+-- A world's Storyteller: upload notes from the vault, a batch at a time.
 -- p_notes: [{"path": "concepts/abilities", "title": "Abilities", "body": "..."}]
-create or replace function public.vault_sync_notes(p_chronicle text, p_notes jsonb)
+drop function if exists public.vault_sync_notes(text, jsonb);
+drop function if exists public.vault_prune_notes(text, text[]);
+create or replace function public.vault_sync_notes(p_world text, p_notes jsonb)
 returns integer
 language plpgsql security definer set search_path = public
 as $$
 declare n integer;
 begin
-  if not is_storyteller() then raise exception 'Only a Storyteller can upload the rules.'; end if;
+  if not is_world_storyteller(p_world) then raise exception 'Only a Storyteller of this world can upload the rules.'; end if;
   if jsonb_typeof(p_notes) <> 'array' then raise exception 'Nothing to upload.'; end if;
-  insert into vault_notes (chronicle, path, title, body, updated_at)
-  select p_chronicle, x ->> 'path', left(coalesce(x ->> 'title', ''), 200), coalesce(x ->> 'body', ''), now()
+  insert into vault_notes (world, path, title, body, updated_at)
+  select p_world, x ->> 'path', left(coalesce(x ->> 'title', ''), 200), coalesce(x ->> 'body', ''), now()
     from jsonb_array_elements(p_notes) x
-  on conflict (chronicle, path) do update set title = excluded.title, body = excluded.body, updated_at = now();
+  on conflict (world, path) do update set title = excluded.title, body = excluded.body, updated_at = now();
   get diagnostics n = row_count;
   return n;
 end $$;
 
--- Storyteller: after an upload, remove the notes no longer in the vault.
-create or replace function public.vault_prune_notes(p_chronicle text, p_keep text[])
+-- A world's Storyteller: after an upload, remove the notes no longer in the vault.
+create or replace function public.vault_prune_notes(p_world text, p_keep text[])
 returns integer
 language plpgsql security definer set search_path = public
 as $$
 declare n integer;
 begin
-  if not is_storyteller() then raise exception 'Only a Storyteller can change the rules.'; end if;
-  delete from vault_notes where chronicle = p_chronicle and not (path = any (coalesce(p_keep, '{}')));
+  if not is_world_storyteller(p_world) then raise exception 'Only a Storyteller of this world can change the rules.'; end if;
+  delete from vault_notes where world = p_world and not (path = any (coalesce(p_keep, '{}')));
   get diagnostics n = row_count;
   return n;
 end $$;
-
-
--- =====================================================================
--- The Intrigue Board: who may save and delete boards
--- ---------------------------------------------------------------------
--- The board shares the case_files table and the case-photos bucket with
--- the Dead Hand's RICO Case board; rows are kept apart by their chronicle
--- column, pictures by their first folder. A 'crown-of-ice-and-bone' board
--- can be saved or deleted by a Storyteller or by any player with a sheet
--- in this chronicle. Dead Hand boards keep exactly today's rule,
--- case_board_editor() from rico-case/editors.sql. Reading is unchanged.
--- If rico-case/editors.sql is ever run again, run this file again after.
--- =====================================================================
-
-
--- May the signed-in account save and delete this chronicle's boards?
--- The Intrigue Board asks it too (rpc 'board_editor'), to decide
--- whether to offer Save and Delete. Dead Hand keeps its own list,
--- kept in case_board_editor() so the RICO Case page and its
--- editors.sql work exactly as before.
-create or replace function public.board_editor(p_chronicle text) returns boolean
-language sql stable security definer set search_path = public
-as $$
-  select coalesce(case p_chronicle
-                    when 'dead-hand' then case_board_editor()
-                    else is_chronicle_member(p_chronicle)
-                  end, false)
-$$;
-
--- Nothing secret in the answers (signed out, both are just false),
--- but only the site's own roles need to ask.
-revoke execute on function public.board_editor(text) from public;
-grant  execute on function public.board_editor(text) to anon, authenticated, service_role;
-
-
--- ------------------------------------------------------------ case_files
-
--- The Hunter editors.sql policies and the README's originals...
-drop policy if exists "Signed-in players save case files"     on public.case_files;
-drop policy if exists "Signed-in players delete case files"   on public.case_files;
-drop policy if exists "Case board editors save case files"    on public.case_files;
-drop policy if exists "Case board editors delete case files"  on public.case_files;
--- ...and this file's own, so it can be run again safely.
-drop policy if exists "Board editors save boards"   on public.case_files;
-drop policy if exists "Board editors delete boards" on public.case_files;
-
--- Each row is checked against its own chronicle. For 'dead-hand' rows
--- board_editor() is case_board_editor(): the same check as before.
-create policy "Board editors save boards"
-  on public.case_files for insert to authenticated
-  with check (saved_by = (select auth.uid()) and public.board_editor(chronicle));
-
-create policy "Board editors delete boards"
-  on public.case_files for delete to authenticated
-  using (public.board_editor(chronicle));
-
-
--- ------------------------------------------------------------ pictures
-
--- Both boards upload to case-photos as '<chronicle>/<hash>.<ext>'.
-drop policy if exists "Signed-in players add case photos"  on storage.objects;
-drop policy if exists "Case board editors add case photos" on storage.objects;
-drop policy if exists "Board editors add board photos"     on storage.objects;
-
--- To open another chronicle's folder to its own players, add a 'when'
--- line like the first one. Every other path keeps today's rule.
-create policy "Board editors add board photos"
-  on storage.objects for insert to authenticated
-  with check (
-    bucket_id = 'case-photos'
-    and case
-          when name like 'crown-of-ice-and-bone/%' then public.board_editor('crown-of-ice-and-bone')
-          else public.case_board_editor()
-        end
-  );
 
 
 -- ------------------------------------------------------ permissions
@@ -678,16 +576,14 @@ revoke execute on function
   public.vtda_approve_xp_request(bigint, text), public.vtda_refund_xp_request(bigint, text),
   public.vtda_award_xp(text, integer, text), public.vtda_delete_xp_award(bigint),
   public.vtda_save_sheet(text, jsonb, jsonb), public.vtda_create_sheet(text, text, text),
-  public.vtda_delete_sheet(text), public.set_sheet_owner(text, text), public.sheet_owners_of(text),
-  public.vault_sync_notes(text, jsonb), public.vault_prune_notes(text, text[]),
-  public.is_chronicle_member(text)
+  public.vtda_delete_sheet(text),
+  public.vault_sync_notes(text, jsonb), public.vault_prune_notes(text, text[])
   from public, anon;
 grant execute on function
   public.vtda_request_xp(text, text, text, text), public.vtda_close_xp_request(bigint, text),
   public.vtda_approve_xp_request(bigint, text), public.vtda_refund_xp_request(bigint, text),
   public.vtda_award_xp(text, integer, text), public.vtda_delete_xp_award(bigint),
   public.vtda_save_sheet(text, jsonb, jsonb), public.vtda_create_sheet(text, text, text),
-  public.vtda_delete_sheet(text), public.set_sheet_owner(text, text), public.sheet_owners_of(text),
-  public.vault_sync_notes(text, jsonb), public.vault_prune_notes(text, text[]),
-  public.is_chronicle_member(text)
+  public.vtda_delete_sheet(text),
+  public.vault_sync_notes(text, jsonb), public.vault_prune_notes(text, text[])
   to authenticated;

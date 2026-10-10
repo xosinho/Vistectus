@@ -5,50 +5,59 @@ A Vampire: the Dark Ages chronicle. It works like the Dead Hand chronicle
 Storytellers and tables; the two chronicles' data are kept apart by the
 chronicle id `crown-of-ice-and-bone`.
 
+Every page except the front page (`index.html`) is for the chronicle's
+members only: it opens after signing in, and only for someone added to
+the chronicle (`gate.js` at the site root; the database checks too).
+
 | Page | What it is |
 |---|---|
-| `index.html` | The chronicle's front page |
+| `index.html` | The chronicle's front page (open to everyone) |
 | `players.html` | The coterie: one card per Cainite, from `assets/data/players.js` |
 | `npcs.html` | People, from `assets/data/npcs.js` (Storyteller can hide entries) |
-| `resources.html` | Links to Documents, Maps, Locations, the Intrigue Board and the rules |
+| `resources.html` | Links to Documents, Maps, Locations and the Intrigue Board |
 | `documents.html`, `maps.html` | From `assets/data/documents.js` and `maps.js` (hideable) |
 | `locations/` | The Locations app: pins you reveal, private notes |
 | `intrigue-board/` | The coterie's board (people, places, documents, strings) |
+| `create.html` | Create Kindred: a player makes a Cainite step by step; it comes to the Storyteller for approval |
 | `sheet.html?c=<name>` | A Cainite's V20 Dark Ages sheet, with XP |
 | `sheet.html?npc=<name>` | An NPC stat sheet (Storyteller only) |
-| `storyteller.html` | Sign-in, the coterie's XP and players, NPC sheets, rules upload |
-| `rules.html` | The Dark Ages rules from the Obsidian vault — coterie only |
+| `storyteller.html` | The coterie's XP and players, characters waiting for approval, NPC sheets |
+| `../rules.html` | The Dark Ages rules from Obsidian, for every Hungary 1242 member (one level up) |
 
 ## One-time setup
 
-1. **SQL.** In Supabase, SQL Editor → New query, run
-   `assets/sql/setup.sql`. It builds on what the Dead Hand already set
-   up, so those files must have been run first, in this order:
-   `htr/brooklyn/dead-hand/assets/sheets/sql/setup.sql`,
-   `npc-sheets.sql`, `archive-hidden.sql` (same folder), the case files
-   block in the Dead Hand `README.md`, `rico-case/editors.sql`, and
-   `locations/setup.sql`. Safe to run again; it changes nothing for the
-   Dead Hand. If `rico-case/editors.sql` is ever run again, run this
-   file again after it.
-2. **Sign-in links.** Authentication → URL Configuration → Redirect
-   URLs: add `https://vistectus.com/vtda/**`, so sign-in links can
-   bring people back to these pages.
-3. **The rules.** On the Storyteller page, under *The rules (Obsidian)*,
-   choose the folder `Obsidian Vault/RPG/wiki/dark-ages` and upload.
-   Do it again whenever you change the notes in Obsidian.
+1. **SQL**, in Supabase → SQL Editor, in this order (each is safe to run
+   again): `admin/sql/access.sql` (chronicles and members, site-wide),
+   then `assets/sql/setup.sql` (this chronicle). They build on the Dead
+   Hand files already run. Then make yourself site admin with the line at
+   the end of `access.sql`.
+2. **Authentication → Hooks**: add *Before User Created* → Postgres →
+   `public.hook_before_user_created`. **Authentication → Sign In /
+   Providers**: turn *Allow new users to sign up* on. Together these let
+   an email added to a chronicle create its account at its first
+   sign-in, and nobody else.
+3. **Authentication → URL Configuration → Redirect URLs**: add
+   `https://vistectus.com/**`.
+4. **The rules**: on `../rules.html`, a Storyteller opens *Update from
+   Obsidian* and follows the three steps there.
 
-## Adding a player
+## People
 
-1. Storyteller page → *New character sheet*: a name and a short name
-   (e.g. `istvan`). Fill the sheet with **Edit sheet**.
-2. Supabase → Authentication → Users → *Invite user* with the
-   player's email. Then, on the Storyteller page, type the same email
-   in the *Player* box beside the Cainite and press Save. That player
-   can now update the sheet, spend XP and read the rules.
-3. Add their card to `assets/data/players.js`, with `sheet: "istvan"`.
+- **Storytellers** are added to the chronicle by a site admin on the
+  Admin page (`/admin/`).
+- **Players** are added by the chronicle's Storyteller, under *Players*
+  on the Storyteller page (or by a site admin). Adding an email is the
+  invitation: tell them to sign in with it on any of the chronicle's
+  pages; the first link creates their account.
+- **A player's character**: the player makes it with *Create Kindred*,
+  the Storyteller reviews it from the Storyteller page and approves it
+  (it becomes their sheet) or sends it back with a note. A Storyteller
+  can also create a blank sheet on the Storyteller page and choose who
+  plays it.
+- Add each Cainite's card to `assets/data/players.js` with
+  `sheet: "<short name>"`.
 
-Players' emails live only in the database (`sheet_owners`), never in
-the site's files.
+Emails live only in the database, never in the site's files.
 
 ## NPCs, documents and maps
 
@@ -83,8 +92,10 @@ stays in the members-only rules pages.
 
 ## The rules pages
 
-The notes are kept in the `vault_notes` table. The database lets only a
-Storyteller, or a player with a sheet in this chronicle, read them;
-visitors who are not signed in get nothing, and nothing of the rules is
-in the site's files. They are your notes on a published rulebook: keep
-them for the table.
+The Dark Ages notes are kept in the `vault_notes` table for the world
+Hungary 1242, readable by every member of its chronicles and nobody
+else; nothing of the rules is in the site's files. The website cannot
+reach Obsidian on your computer, so a Storyteller copies the notes up
+from the rules page (*Update from Obsidian*): choose the vault's
+`dark-ages` folder, press Upload. Do it again after changing the notes.
+They are your notes on a published rulebook: keep them for the table.
