@@ -1,0 +1,3 @@
+-- The Intrigue Board's database rules are part of this chronicle's single
+-- setup file: ../assets/sql/setup.sql (section "The Intrigue Board").
+-- Run that file; there is nothing to run here.

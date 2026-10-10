@@ -3,18 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>A Crown of Ice and Bone &middot; VisTectus</title>
-  <meta name="description" content="">
+  <meta name="description" content="A Crown of Ice and Bone — a Vampire: the Dark Ages chronicle set in the Kingdom of Hungary, 1242.">
 
   <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
 
   <!-- Three folders up to the hub stylesheet, one up for the world flavour. -->
   <link rel="stylesheet" href="../../../style.css">
   <link rel="stylesheet" href="../world.css">
+  <link rel="stylesheet" href="assets/css/chronicle.css?v=20261010">
 </head>
 
-<body>
+<body data-page="home" data-title="">
 
 <a class="skip" href="#main">Skip to content</a>
 
@@ -39,71 +38,73 @@
   </ol>
 </nav>
 
-<!-- Key art goes here: style="--hero: url('/vtda/hungary-1242/crown-of-ice-and-bone/art/hero.jpg')" -->
+<!-- Key art: style="--hero: url('/vtda/hungary-1242/crown-of-ice-and-bone/art/hero.jpg')" -->
 <section class="hero hero--compact">
   <div class="hero-inner">
     <p class="kicker">Chronicle</p>
     <h1>A Crown of Ice and Bone</h1>
-    <p class="lede"><!-- One line: where and when this one runs. --></p>
+    <p class="lede">The Kingdom of Hungary, 1242.</p>
   </div>
 </section>
 
 <!-- Tabs: sticky under the top bar. In-page tabs light up as the
      reader scrolls (tabs.js); tabs to other pages carry aria-current. -->
-<nav class="tabs" aria-label="On this page">
+<nav class="tabs" aria-label="Chronicle pages">
   <div class="tabs-inner">
-    <a href="#about">Chronicle</a>
-    <a href="#cast">Cast</a>
-    <a href="#sessions">Sessions</a>
-    <a href="#assets">Assets</a>
+    <a href="index.html" aria-current="page">Chronicle</a>
+    <a href="players.html">The coterie</a>
+    <a href="npcs.html">People</a>
+    <a href="resources.html">Resources</a>
+    <a href="storyteller.html">Storyteller</a>
   </div>
 </nav>
 
 <main id="main">
 
+  <!-- ---- Assets: straight under the tabs, as on the world page ---- -->
+  <section class="row" id="resources">
+    <div class="row-head"><h2>Assets</h2></div>
+
+    <div class="cards">
+
+      <!-- Card art: style="--art: url('/vtda/hungary-1242/crown-of-ice-and-bone/art/name.jpg')" -->
+      <article class="card">
+        <a class="card-art" href="players.html"><span class="card-badge">Players</span></a>
+        <div class="card-body">
+          <h3><a href="players.html">The coterie</a></h3>
+          <p class="meta">Players</p>
+          <p>Backgrounds and character sheets for each Cainite.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <a class="card-art" href="npcs.html"><span class="card-badge">Dossiers</span></a>
+        <div class="card-body">
+          <h3><a href="npcs.html">People of the realm</a></h3>
+          <p class="meta">Dossiers</p>
+          <p>Everyone the coterie has crossed paths with so far.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <a class="card-art" href="resources.html"><span class="card-badge">Archive</span></a>
+        <div class="card-body">
+          <h3><a href="resources.html">Resources</a></h3>
+          <p class="meta">Documents, maps and the rules</p>
+          <p>Everything the table has been given over the course of the chronicle, and the rules of the Dark Medieval.</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
   <section class="row" id="about">
     <div class="row-head"><h2>The chronicle</h2></div>
     <div class="prose">
-      <p><!-- Premise, tone, what the table is here to find out. --></p>
-    </div>
-  </section>
-
-  <section class="row" id="cast">
-    <div class="row-head"><h2>Cast</h2></div>
-
-    <!-- Portraits live here: style="--art: url('/vtda/hungary-1242/crown-of-ice-and-bone/art/name.jpg')" -->
-    <div class="cards">
-      <article class="card">
-        <span class="card-art"></span>
-        <div class="card-body">
-          <h3>Character name</h3>
-          <p class="meta"><!-- player / role --></p>
-          <p><!-- one or two lines --></p>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <section class="row" id="sessions">
-    <div class="row-head"><h2>Sessions</h2></div>
-    <div class="entries">
-      <article class="entry">
-        <h3>Session one</h3>
-        <p class="meta"><!-- date --></p>
-        <p><!-- what happened --></p>
-      </article>
-    </div>
-  </section>
-
-  <section class="row" id="assets">
-    <div class="row-head"><h2>Assets</h2></div>
-    <div class="prose">
-      <p><!-- Handouts, sheets, maps, house rules. Keep the files in
-               the assets folder beside this page. --></p>
-      <p class="links">
-        <a href="#">Character sheets</a>
-        <a href="#">Handouts</a>
-      </p>
+      <!-- Premise, tone, what the table is here to find out. -->
+      <p>Hungary, in the year of Our Lord 1242. The Mongol horde has burned the kingdom from the Carpathians
+        to the Danube, and its king has fled to the coast. In the dark beneath the ashes, the Cainites who
+        survived the winter count what is left, and what can now be taken.</p>
     </div>
   </section>
 
@@ -118,7 +119,6 @@
     </p>
   </div>
 </footer>
-
-<script src="../../../tabs.js" defer></script>
+<script src="assets/js/site.js"></script>
 </body>
 </html>

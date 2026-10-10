@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Locations · A Crown of Ice and Bone · VisTectus</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<link rel="icon" href="../../../../art/VisTectus%20Logo%201.jpg" type="image/jpeg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- The Vampire world's flavour (colour tokens only); the board below
+     takes its background and accent from it. -->
+<link rel="stylesheet" href="../../world.css?v=20261010">
+<!-- The Crown of Ice and Bone Locations board: the same app as the Dead
+     Hand board, for this chronicle. What it shows comes from the database
+     (locations.js). -->
+<style>
+  :root{
+    --near-black:var(--bg, #0e0a15);
+    --panel:var(--bg-raised, #191222);
+    --panel-2:#21182c;
+    --parchment:#ddd3c2;
+    --parchment-dim:#a89cad;
+    --blood:#7a1a32;
+    --blood-bright:var(--accent, #b03a55);
+    --brass:#8a7148;
+    --brass-bright:#c9a227;
+    --steel:#4a5a68;
+    --hairline: rgba(201,162,39,0.28);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;background:var(--near-black);color:var(--parchment);font-family:'EB Garamond',serif;overflow:hidden;}
+  #app{display:flex;height:100vh;width:100vw;}
+
+  /* ---------- BOARD (left) ---------- */
+  #board{flex:1;position:relative;background:
+      radial-gradient(ellipse at 30% 20%, #1c1426 0%, #0e0a15 60%);
+      overflow:hidden;border-right:1px solid var(--hairline);}
+  #city-view{position:absolute;inset:0;display:none;}
+  #canvas-view{position:absolute;inset:0;display:none;cursor:grab;}
+  #canvas-view.placing{cursor:crosshair;}
+  #canvas-view.dragging{cursor:grabbing;}
+  #canvas-viewport{position:absolute;inset:0;overflow:hidden;}
+  #canvas-world{position:absolute;top:0;left:0;transform-origin:0 0;}
+  #canvas-world img{display:block;user-select:none;pointer-events:none;max-width:none;}
+
+  .empty-board{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--parchment-dim);text-align:center;padding:40px;}
+  .empty-board h2{font-family:'Bebas Neue',sans-serif;letter-spacing:3px;font-size:28px;color:var(--brass-bright);font-weight:400;margin:0;}
+  .empty-board p{max-width:420px;font-size:17px;line-height:1.5;margin:0;}
+  .ghost-btn{border:1px solid var(--brass);color:var(--brass-bright);background:transparent;padding:10px 22px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .15s;}
+  .ghost-btn:hover{background:var(--brass);color:var(--near-black);}
+
+  /* floating toolbar over board */
+  #toolbar{position:absolute;top:16px;left:16px;z-index:500;display:none;gap:8px;background:rgba(11,9,8,0.85);border:1px solid var(--hairline);padding:8px;border-radius:3px;backdrop-filter:blur(4px);}
+  #toolbar.show{display:flex;}
+  #toolbar button{background:var(--panel-2);border:1px solid var(--hairline);color:var(--parchment);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.5px;padding:8px 12px;cursor:pointer;border-radius:2px;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+  #toolbar button:hover{border-color:var(--brass-bright);color:var(--brass-bright);}
+  #toolbar button.active-token-btn{background:var(--blood);color:#fff;border-color:var(--blood-bright);}
+  #reset-pins-btn{color:var(--parchment-dim);}
+  .swatch{width:10px;height:10px;border-radius:50%;display:inline-block;}
+
+  #zoom-readout{position:absolute;bottom:16px;left:16px;z-index:500;font-family:'DM Mono',monospace;font-size:11px;color:var(--parchment-dim);background:rgba(11,9,8,0.8);padding:6px 10px;border:1px solid var(--hairline);border-radius:2px;display:none;}
+  #zoom-readout.show{display:block;}
+
+  /* map name label */
+  #board-title{position:absolute;top:16px;right:16px;z-index:500;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--brass-bright);background:rgba(11,9,8,0.8);padding:8px 16px;border:1px solid var(--hairline);border-radius:2px;display:none;}
+  #board-title.show{display:block;}
+
+  /* tokens */
+  .token{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;cursor:grab;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:#fff;user-select:none;}
+  .token:active{cursor:grabbing;}
+  .token.selected{outline:3px solid var(--brass-bright);outline-offset:2px;}
+  .token-label{position:absolute;top:36px;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:'DM Mono',monospace;font-size:10px;background:rgba(11,9,8,0.85);color:var(--parchment);padding:2px 6px;border-radius:2px;pointer-events:none;border:1px solid var(--hairline);}
+
+  /* leaflet pin popup styling */
+  .leaflet-popup-content-wrapper{background:var(--panel);color:var(--parchment);border:1px solid var(--hairline);border-radius:2px;}
+  .leaflet-popup-tip{background:var(--panel);}
+  .leaflet-popup-content h3{font-family:'Bebas Neue',sans-serif;letter-spacing:1.5px;color:var(--brass-bright);margin:0 0 6px 0;font-size:18px;}
+  .leaflet-popup-content p{margin:0;font-size:14px;line-height:1.4;}
+  .leaflet-popup-content .tag{display:inline-block;margin-top:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:2px;}
+  .pin-icon{width:22px;height:22px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.6);}
+  .ref-icon{width:14px;height:14px;border-radius:50%;background:#6b6257;border:2px solid #cdbd93;box-shadow:0 1px 4px rgba(0,0,0,0.6);opacity:0.9;}
+  .leaflet-popup-content .drag-hint{margin-top:8px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.5px;color:var(--brass-bright);text-transform:uppercase;}
+  .leaflet-popup-content .moved-note{margin-top:4px;font-size:11px;color:var(--parchment-dim);font-style:italic;}
+
+  /* ---------- NAV (right) ---------- */
+  #nav{width:340px;flex-shrink:0;background:var(--panel);display:flex;flex-direction:column;height:100vh;}
+  #nav-header{padding:20px 20px 14px 20px;border-bottom:1px solid var(--hairline);}
+  #nav-header .eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--brass);text-transform:uppercase;}
+  #nav-header h1{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:2px;color:var(--parchment);margin:4px 0 0 0;font-weight:400;}
+  #nav-header .sub{font-size:13px;color:var(--parchment-dim);font-style:italic;margin-top:2px;}
+
+  #mode-tabs{display:flex;border-bottom:1px solid var(--hairline);}
+  .mode-tab{flex:1;padding:14px 6px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--parchment-dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
+  .mode-tab:hover{color:var(--parchment);}
+  .mode-tab.active{color:var(--brass-bright);border-bottom-color:var(--blood-bright);background:rgba(122,22,32,0.08);}
+
+  #nav-body{flex:1;overflow-y:auto;padding:18px 20px;}
+  #nav-body::-webkit-scrollbar{width:8px;}
+  #nav-body::-webkit-scrollbar-thumb{background:var(--hairline);border-radius:4px;}
+
+  .nav-section-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--brass);margin:0 0 10px 0;display:flex;justify-content:space-between;align-items:center;}
+  .add-link{color:var(--brass-bright);cursor:pointer;font-size:10px;border:1px solid var(--brass);padding:3px 8px;border-radius:2px;}
+  .add-link:hover{background:var(--brass);color:var(--near-black);}
+
+  .list-item{padding:10px 12px;border:1px solid var(--hairline);border-radius:2px;margin-bottom:8px;cursor:pointer;transition:all .12s;background:var(--panel-2);}
+  .list-item:hover{border-color:var(--brass);}
+  .list-item.active{border-color:var(--blood-bright);background:rgba(122,22,32,0.12);}
+  .list-item .name{font-size:15px;color:var(--parchment);}
+  .list-item .desc{font-size:12px;color:var(--parchment-dim);margin-top:2px;line-height:1.35;}
+  .list-item .row{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .mini-btn{font-family:'DM Mono',monospace;font-size:9px;color:var(--parchment-dim);border:1px solid var(--hairline);padding:2px 6px;border-radius:2px;background:transparent;cursor:pointer;}
+  .mini-btn:hover{color:var(--blood-bright);border-color:var(--blood-bright);}
+
+  .thumb{width:100%;height:70px;object-fit:cover;border-radius:2px;margin-bottom:6px;border:1px solid var(--hairline);}
+
+  .empty-hint{color:var(--parchment-dim);font-size:13px;font-style:italic;line-height:1.5;padding:12px 0;}
+
+  .faction-dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px;}
+
+  /* modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:2000;display:none;align-items:center;justify-content:center;}
+  .modal-overlay.show{display:flex;}
+  .modal{background:var(--panel);border:1px solid var(--brass);border-radius:3px;padding:26px;width:360px;max-width:90vw;}
+  .modal h3{font-family:'Bebas Neue',sans-serif;letter-spacing:2px;color:var(--brass-bright);margin:0 0 16px 0;font-size:22px;font-weight:400;}
+  .modal label{display:block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--parchment-dim);margin:14px 0 6px 0;}
+  .modal input[type=text], .modal textarea, .modal select{width:100%;background:var(--near-black);border:1px solid var(--hairline);color:var(--parchment);padding:9px 10px;font-family:'EB Garamond',serif;font-size:15px;border-radius:2px;}
+  .modal textarea{resize:vertical;min-height:60px;}
+  .modal input[type=file]{width:100%;color:var(--parchment-dim);font-size:12px;}
+  .color-row{display:flex;gap:8px;margin-top:6px;}
+  .color-opt{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;}
+  .color-opt.picked{border-color:#fff;}
+  .kind-row{display:flex;gap:8px;margin-top:6px;}
+  .kind-opt{flex:1;text-align:center;padding:8px 4px;border:1px solid var(--hairline);border-radius:2px;font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;color:var(--parchment-dim);}
+  .kind-opt.picked{border-color:var(--brass-bright);color:var(--brass-bright);background:rgba(201,162,39,0.08);}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px;}
+  .btn-primary{background:var(--blood);border:1px solid var(--blood-bright);color:#fff;padding:9px 20px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:2px;}
+  .btn-primary:hover{background:var(--blood-bright);}
+  .btn-secondary{background:transparent;border:1px solid var(--hairline);color:var(--parchment-dim);padding:9px 20px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:2px;}
+  .btn-secondary:hover{color:var(--parchment);}
+  .modal-hint{font-size:11px;color:var(--parchment-dim);margin-top:6px;font-style:italic;}
+
+  /* pane collapse */
+  #nav.collapsed{display:none;}
+  #pane-toggle{
+    position:absolute;top:16px;right:16px;z-index:600;
+    background:rgba(11,9,8,0.85);border:1px solid var(--hairline);color:var(--parchment);
+    font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;
+    padding:8px 12px;border-radius:2px;cursor:pointer;backdrop-filter:blur(4px);
+  }
+  #pane-toggle:hover{border-color:var(--brass-bright);color:var(--brass-bright);}
+
+  /* board-title recentred so it never sits under the pane toggle */
+  #board-title{left:50%;right:auto;transform:translateX(-50%);}
+
+  /* pin action buttons in nav rows */
+  .pin-actions{display:flex;gap:4px;flex-shrink:0;}
+  .pin-mini{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.5px;text-transform:uppercase;
+    color:var(--parchment-dim);border:1px solid var(--hairline);padding:2px 6px;border-radius:2px;background:transparent;cursor:pointer;}
+  .pin-mini:hover{color:var(--brass-bright);border-color:var(--brass-bright);}
+  .pin-mini.danger:hover{color:var(--blood-bright);border-color:var(--blood-bright);}
+
+  /* popup action buttons */
+  .leaflet-popup-content .popup-actions{display:flex;gap:6px;margin-top:10px;}
+  .leaflet-popup-content .popup-actions button{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;
+    padding:4px 10px;border-radius:2px;cursor:pointer;background:transparent;border:1px solid var(--hairline);color:var(--parchment);}
+  .leaflet-popup-content .popup-actions button:hover{border-color:var(--brass-bright);color:var(--brass-bright);}
+  .leaflet-popup-content .popup-actions button.danger:hover{border-color:var(--blood-bright);color:var(--blood-bright);}
+
+  /* config rows */
+  .cfg-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--hairline);border-radius:2px;margin-bottom:8px;background:var(--near-black);}
+  .cfg-row .cfg-name{font-size:15px;color:var(--parchment);}
+  .cfg-row .cfg-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--parchment-dim);margin-top:2px;}
+  .cfg-actions{display:flex;gap:6px;flex-shrink:0;}
+  .divider-or{display:flex;align-items:center;gap:10px;color:var(--parchment-dim);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;margin:16px 0 12px;}
+  .divider-or::before,.divider-or::after{content:"";flex:1;height:1px;background:var(--hairline);}
+
+  /* toast */
+  #toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--panel);border:1px solid var(--brass);color:var(--parchment);
+    font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.5px;padding:10px 18px;border-radius:3px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:3000;}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* ---------- website additions ---------- */
+  #nav-header .crumbs{margin:0 0 10px 0;}
+  #nav-header .crumbs ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:2px 0;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--parchment-dim);}
+  #nav-header .crumbs li+li::before{content:"\203A";margin:0 6px;color:var(--brass);}
+  #nav-header .crumbs a{color:var(--parchment-dim);text-decoration:none;}
+  #nav-header .crumbs a:hover{color:var(--brass-bright);}
+  #nav-header .crumbs [aria-current]{color:var(--brass-bright);}
+  #nav-header .who{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;color:var(--parchment-dim);}
+  .hidden-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--parchment-dim);border:1px dashed var(--parchment-dim);padding:1px 5px;border-radius:2px;margin-left:6px;white-space:nowrap;}
+  .shown-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--brass-bright);border:1px solid var(--brass);padding:1px 5px;border-radius:2px;margin-left:6px;white-space:nowrap;}
+  .leaflet-popup-content .st-notes{margin-top:8px;padding-top:6px;border-top:1px dashed var(--hairline);font-size:13px;color:var(--parchment-dim);white-space:pre-wrap;}
+  .leaflet-popup-content .st-notes b{display:block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--brass);font-weight:400;}
+  .leaflet-popup-content p{white-space:pre-wrap;}
+  .list-item .desc{white-space:pre-wrap;}
+  .check-row{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:14px;color:var(--parchment);}
+  .check-row input{width:auto;}
+  .modal{max-height:92vh;overflow-y:auto;}
+  .modal input[type=email]{width:100%;background:var(--near-black);border:1px solid var(--hairline);color:var(--parchment);padding:9px 10px;font-family:'EB Garamond',serif;font-size:15px;border-radius:2px;}
+  .modal .msg{font-family:'DM Mono',monospace;font-size:11px;color:var(--parchment-dim);margin-top:10px;min-height:1em;}
+  .notice{font-size:14px;color:var(--parchment-dim);font-style:italic;line-height:1.5;border:1px dashed var(--hairline);padding:10px 12px;margin-bottom:14px;}
+  #canvas-view{touch-action:none;}
+  .token{touch-action:none;}
+  .viewer-only .token{cursor:default;}
+
+  @media (max-width:760px){
+    #nav{position:absolute;right:0;top:0;bottom:0;z-index:1500;width:min(340px,90vw);box-shadow:-8px 0 24px rgba(0,0,0,.6);}
+    #toolbar{flex-wrap:wrap;right:16px;top:60px;}
+    #toolbar button{padding:7px 9px;}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="board">
+    <div id="city-view"></div>
+    <div id="canvas-view">
+      <div id="canvas-viewport">
+        <div id="canvas-world"></div>
+      </div>
+    </div>
+    <div id="empty-state" class="empty-board" style="display:none">
+      <span style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--brass);">A CROWN OF ICE AND BONE — THE KINGDOM</span>
+      <h2>NO MAP YET</h2>
+      <p></p>
+    </div>
+    <div id="toolbar"></div>
+    <div id="zoom-readout"></div>
+    <div id="board-title"></div>
+    <button id="pane-toggle">Panel ›</button>
+  </div>
+
+  <div id="nav">
+    <div id="nav-header">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../../../../index.html">VisTectus</a></li>
+          <li><a href="../../../index.html">Vampire</a></li>
+          <li><a href="../../index.html">Hungary 1242</a></li>
+          <li><a href="../index.html">A Crown of Ice and Bone</a></li>
+          <li><a href="../resources.html">Resources</a></li>
+          <li aria-current="page">Locations</li>
+        </ol>
+      </nav>
+      <div class="eyebrow">VAMPIRE · THE DARK AGES</div>
+      <h1>LOCATIONS</h1>
+      <div class="sub">A Crown of Ice and Bone — the Kingdom of Hungary, 1242</div>
+      <div class="who" id="who"></div>
+    </div>
+    <div id="mode-tabs">
+      <div class="mode-tab active" data-mode="city" role="button" tabindex="0">Kingdom Map</div>
+      <div class="mode-tab" data-mode="area" role="button" tabindex="0">Area Map</div>
+      <div class="mode-tab" data-mode="building" role="button" tabindex="0">Building</div>
+    </div>
+    <div id="nav-body"><div class="empty-hint">Opening the map…</div></div>
+  </div>
+
+</div>
+
+<!-- Storyteller: add / edit a pin -->
+<div class="modal-overlay" id="modal-pin">
+  <div class="modal" style="width:400px;">
+    <h3 id="pin-modal-title">NEW LOCATION PIN</h3>
+    <label for="pin-name">Name (players see this once revealed)</label>
+    <input type="text" id="pin-name" maxlength="120">
+    <label for="pin-desc">Description for players</label>
+    <textarea id="pin-desc" maxlength="4000" placeholder="What the coterie knows of this place."></textarea>
+    <label for="pin-notes">Your notes (only you see these)</label>
+    <textarea id="pin-notes" maxlength="8000" placeholder="What is really going on here."></textarea>
+    <label for="pin-faction">Faction (only you see this)</label>
+    <select id="pin-faction"></select>
+    <div class="check-row"><input type="checkbox" id="pin-revealed"><label for="pin-revealed" style="margin:0;text-transform:none;letter-spacing:0;font-family:inherit;font-size:14px;color:var(--parchment);">Revealed to players</label></div>
+    <div class="check-row" id="pin-offmap-row"><input type="checkbox" id="pin-offmap"><label for="pin-offmap" style="margin:0;text-transform:none;letter-spacing:0;font-family:inherit;font-size:14px;color:var(--parchment);">Take it off the map (keep it in the list)</label></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" data-close="modal-pin">Cancel</button>
+      <button class="btn-primary" id="pin-save-btn">Place Pin</button>
+    </div>
+  </div>
+</div>
+
+<!-- Storyteller: saved setups -->
+<div class="modal-overlay" id="modal-configs">
+  <div class="modal" style="width:440px;">
+    <h3>SAVED SETUPS</h3>
+    <div id="configs-list"></div>
+    <div class="divider-or">OR</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn-secondary" id="cfg-export-btn">Export to file</button>
+      <button class="btn-secondary" id="cfg-import-btn">Import from file</button>
+      <input type="file" id="cfg-import-input" accept="application/json" style="display:none;">
+    </div>
+    <div class="modal-hint">A setup keeps every pin as it was: position, text, notes and whether it was revealed. Setups are saved online and only you can see them. An exported file holds your notes, so keep it private.</div>
+    <div class="modal-actions">
+      <button class="btn-secondary" data-close="modal-configs">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Storyteller: add an area map or building plan -->
+<div class="modal-overlay" id="modal-map">
+  <div class="modal">
+    <h3 id="modal-map-title">ADD MAP</h3>
+    <label for="map-name">Name</label>
+    <input type="text" id="map-name" maxlength="120">
+    <label for="map-file">Image</label>
+    <input type="file" id="map-file" accept="image/*">
+    <div class="check-row"><input type="checkbox" id="map-revealed"><label for="map-revealed" style="margin:0;text-transform:none;letter-spacing:0;font-family:inherit;font-size:14px;color:var(--parchment);">Revealed to players</label></div>
+    <div class="modal-hint">Castle plans, town layouts or reference drawings. Large images are scaled down to 2400 pixels.</div>
+    <div class="modal-actions">
+      <button class="btn-secondary" data-close="modal-map">Cancel</button>
+      <button class="btn-primary" id="map-save-btn">Add Map</button>
+    </div>
+  </div>
+</div>
+
+<!-- Storyteller: add a token -->
+<div class="modal-overlay" id="modal-token">
+  <div class="modal">
+    <h3>NEW TOKEN</h3>
+    <label>Type</label>
+    <div class="kind-row">
+      <div class="kind-opt picked" data-kind="player">Player</div>
+      <div class="kind-opt" data-kind="npc">NPC</div>
+      <div class="kind-opt" data-kind="general">General</div>
+    </div>
+    <label for="token-label">Label</label>
+    <input type="text" id="token-label" maxlength="40" placeholder="e.g. Ghoul, Relic">
+    <label>Colour</label>
+    <div class="color-row" id="token-colors"></div>
+    <div class="modal-hint">After saving, click the map to drop the token. Drag it to move it; double-click to remove it.</div>
+    <div class="modal-actions">
+      <button class="btn-secondary" data-close="modal-token">Cancel</button>
+      <button class="btn-primary" id="token-save-btn">Place Token</button>
+    </div>
+  </div>
+</div>
+
+<!-- Storyteller sign-in -->
+<div class="modal-overlay" id="modal-signin">
+  <div class="modal">
+    <h3>STORYTELLER SIGN IN</h3>
+    <form id="signin-form">
+      <label for="signin-email">Email</label>
+      <input type="email" id="signin-email" autocomplete="email" required>
+      <div class="msg" id="signin-msg" role="status" aria-live="polite"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" data-close="modal-signin">Cancel</button>
+        <button type="submit" class="btn-primary" id="signin-send">Send link</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../../../builders/config.js?v=20261010"></script>
+<script src="locations.js?v=20261010"></script>
+</body>
+</html>

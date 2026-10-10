@@ -1,0 +1,22 @@
+-- =====================================================================
+-- A Crown of Ice and Bone — Locations: nothing to run
+-- ---------------------------------------------------------------------
+-- This chronicle needs no SQL of its own. The shared tables, rules,
+-- storage bucket and functions created by
+--   htr/brooklyn/dead-hand/locations/setup.sql
+-- already serve it:
+--   * location_pins, location_maps and location_setups carry a
+--     `chronicle` column; this page reads and writes only rows with
+--     chronicle = 'crown-of-ice-and-bone'.
+--   * location_snapshot(p_chronicle) and
+--     apply_location_snapshot(p_chronicle, p_snapshot) take the
+--     chronicle as an argument; nothing in them is chronicle-specific.
+--   * Map images go in the same private 'location-maps' bucket, under
+--     the folder crown-of-ice-and-bone/.
+--   * location_factions has no chronicle column: its rows (including
+--     the 'neutral' one seeded there) are shared by every chronicle and
+--     seen only by Storytellers.
+--
+-- Run that file once (if it has not been run already) and do not run
+-- it again: it is not written to be re-run.
+-- =====================================================================

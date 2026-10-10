@@ -3,18 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Documents · Resources · Dead Hand · VisTectus</title>
-  <meta name="description" content="Handouts and papers found over the course of the Dead Hand chronicle.">
+  <meta name="description" content="The people the coterie has crossed paths with so far.">
 
   <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
 
   <!-- Three folders up to the hub stylesheet, one up for the world flavour. -->
-  <link rel="stylesheet" href="../../../style.css?v=20261002">
+  <link rel="stylesheet" href="../../../style.css?v=20261010">
   <link rel="stylesheet" href="../world.css">
-  <link rel="stylesheet" href="assets/css/resources.css?v=20261002">
+  <link rel="stylesheet" href="assets/css/chronicle.css?v=20261010">
 </head>
 
-<body data-page="documents" data-title="Documents">
+<body data-page="npcs" data-title="People">
 
 <a class="skip" href="#main">Skip to content</a>
 
@@ -22,8 +21,8 @@
   <a class="brand" href="../../../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
   <nav class="topnav" aria-label="Site">
     <a href="../../../dnd/index.html">D&amp;D</a>
-    <a href="../../../htr/index.html" aria-current="true">Hunter</a>
-    <a href="../../../vtda/index.html">Vampire</a>
+    <a href="../../../htr/index.html">Hunter</a>
+    <a href="../../../vtda/index.html" aria-current="true">Vampire</a>
     <a href="../../../index.html#about">About</a>
     <a href="../../../host/index.html">Host a World</a>
     <a class="nav-cta" href="../../../builders/index.html">Builders</a>
@@ -33,19 +32,18 @@
 <nav class="crumbbar" aria-label="Breadcrumb">
   <ol>
     <li><a href="../../../index.html">VisTectus</a></li>
-    <li><a href="../../../htr/index.html">Hunter</a></li>
-    <li><a href="../../../htr/brooklyn/index.html">Brooklyn Chronicles</a></li>
-    <li><a href="../../../htr/brooklyn/dead-hand/index.html">Dead Hand</a></li>
-    <li><a href="resources.html">Resources</a></li>
-    <li aria-current="page">Documents</li>
+    <li><a href="../../../vtda/index.html">Vampire</a></li>
+    <li><a href="../../../vtda/hungary-1242/index.html">Hungary 1242</a></li>
+    <li><a href="index.html">A Crown of Ice and Bone</a></li>
+    <li aria-current="page">People</li>
   </ol>
 </nav>
 
 <section class="hero hero--compact">
   <div class="hero-inner">
-    <p class="kicker">The chronicle's archive</p>
-    <h1>Documents</h1>
-    <p class="lede">Handouts and papers the cell has found. Open one to read it.</p>
+    <p class="kicker">People</p>
+    <h1>Faces of the realm</h1>
+    <p class="lede">The people the coterie has crossed paths with so far. Open a name for what you know about them &mdash; no more, no less.</p>
   </div>
 </section>
 
@@ -54,35 +52,39 @@
 <nav class="tabs" aria-label="Chronicle pages">
   <div class="tabs-inner">
     <a href="index.html">Chronicle</a>
-    <a href="players.html">The cell</a>
-    <a href="npcs.html">People</a>
-    <a href="resources.html" aria-current="page">Resources</a>
+    <a href="players.html">The coterie</a>
+    <a href="npcs.html" aria-current="page">People</a>
+    <a href="resources.html">Resources</a>
     <a href="storyteller.html">Storyteller</a>
   </div>
 </nav>
 
 <main id="main">
-  <!-- The list is built from assets/data/documents.js. To publish a document,
-       add an entry there; this page never needs editing. -->
-  <div id="collection" data-kind="documents"></div>
+  <section class="row">
+    <div class="row-head"><h2>People of the realm</h2></div>
 
-  <noscript><section class="row"><p class="prose">This page needs JavaScript.</p></section></noscript>
+    <!-- The roster renders here from assets/data/npcs.js.
+         To add or edit someone you edit that data file, never this page. -->
+    <div id="npcs-roster"></div>
+  </section>
 </main>
 
 <footer>
   <div class="footer-inner">
     <p>&copy; 2026 VisTectus</p>
     <p class="links">
-      <a href="../index.html">Brooklyn Chronicles</a>
+      <a href="../index.html">Hungary 1242</a>
       <a href="../../../index.html">Back to the hub</a>
     </p>
   </div>
 </footer>
-
-<script src="assets/data/documents.js?v=20261002"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../../builders/config.js"></script>
-<script src="assets/js/viewer.js?v=20261010"></script>
+<script src="assets/js/render.js?v=20261010"></script>
+<script src="assets/data/npcs.js?v=20261010"></script>
+<script>
+  Chronicle.renderRoster("npcs-roster", window.CROWN_NPCS, "npc", { hide: "npcs" });
+</script>
 <script src="assets/js/site.js"></script>
 </body>
 </html>

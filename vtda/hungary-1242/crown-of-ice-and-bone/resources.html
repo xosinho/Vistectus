@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Resources for A Crown of Ice and Bone: documents, maps, locations, the intrigue board and the rules.">
+
+  <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
+
+  <!-- Three folders up to the hub stylesheet, one up for the world flavour. -->
+  <link rel="stylesheet" href="../../../style.css">
+  <link rel="stylesheet" href="../world.css">
+  <link rel="stylesheet" href="assets/css/chronicle.css?v=20261010">
+</head>
+
+<body data-page="resources" data-title="Resources">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="../../../index.html"><span class="brand-mark" aria-hidden="true"></span> VisTectus</a>
+  <nav class="topnav" aria-label="Site">
+    <a href="../../../dnd/index.html">D&amp;D</a>
+    <a href="../../../htr/index.html">Hunter</a>
+    <a href="../../../vtda/index.html" aria-current="true">Vampire</a>
+    <a href="../../../index.html#about">About</a>
+    <a href="../../../host/index.html">Host a World</a>
+    <a class="nav-cta" href="../../../builders/index.html">Builders</a>
+  </nav>
+</header>
+
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../../../index.html">VisTectus</a></li>
+    <li><a href="../../../vtda/index.html">Vampire</a></li>
+    <li><a href="../../../vtda/hungary-1242/index.html">Hungary 1242</a></li>
+    <li><a href="index.html">A Crown of Ice and Bone</a></li>
+    <li aria-current="page">Resources</li>
+  </ol>
+</nav>
+
+<section class="hero hero--compact">
+  <div class="hero-inner">
+    <p class="kicker">The chronicle's archive</p>
+    <h1>Resources</h1>
+    <p class="lede">Documents, maps and locations gathered over the course of the chronicle.</p>
+  </div>
+</section>
+
+<!-- Tabs: sticky under the top bar. In-page tabs light up as the
+     reader scrolls (tabs.js); tabs to other pages carry aria-current. -->
+<nav class="tabs" aria-label="Chronicle pages">
+  <div class="tabs-inner">
+    <a href="index.html">Chronicle</a>
+    <a href="players.html">The coterie</a>
+    <a href="npcs.html">People</a>
+    <a href="resources.html" aria-current="page">Resources</a>
+    <a href="storyteller.html">Storyteller</a>
+  </div>
+</nav>
+
+<main id="main">
+  <!-- The three archives. Each has its own page and data file:
+       documents.html  <- assets/data/documents.js
+       maps.html       <- assets/data/maps.js
+       locations/      the Locations app -->
+  <section class="row">
+    <div class="row-head"><h2>The archive</h2></div>
+    <div class="entries">
+      <article class="entry">
+        <h3><a href="documents.html">Documents</a></h3>
+        <p>Letters, writs and papers the coterie has found, each opened to read in place.</p>
+      </article>
+      <article class="entry">
+        <h3><a href="maps.html">Maps</a></h3>
+        <p>Maps and plans of the places the coterie has been.</p>
+      </article>
+      <article class="entry">
+        <h3><a href="locations/index.html">Locations</a></h3>
+        <p>The places the coterie knows of, pinned on the map of the kingdom.</p>
+      </article>
+      <article class="entry">
+        <h3><a href="intrigue-board/index.html">Intrigue Board</a></h3>
+        <p>The coterie&rsquo;s web of suspicions: who serves whom, and who is lying.</p>
+      </article>
+      <article class="entry">
+        <h3><a href="rules.html">The rules</a></h3>
+        <p>Vampire: the Dark Ages, from the Storyteller&rsquo;s notes. For the coterie only: sign in to read.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Reference material from assets/data/resources.js. To add some,
+       add an entry there; this page never needs editing. -->
+  <div id="resources"></div>
+
+  <noscript>
+    <section class="row">
+      <p class="prose">The reference list below needs JavaScript.</p>
+    </section>
+  </noscript>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>&copy; 2026 VisTectus</p>
+    <p class="links">
+      <a href="../index.html">Hungary 1242</a>
+      <a href="../../../index.html">Back to the hub</a>
+    </p>
+  </div>
+</footer>
+
+<script src="assets/data/resources.js"></script>
+<script>
+(function () {
+  "use strict";
+  var list = window.CROWN_RESOURCES || [];
+  var root = document.getElementById("resources");
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text) e.textContent = text;          // never innerHTML: data stays data
+    return e;
+  }
+
+  if (!list.length) {
+    var empty = el("section", "row");
+    empty.appendChild(el("p", "empty", "Nothing published yet. Resources will appear here as the chronicle goes on."));
+    root.appendChild(empty);
+    return;
+  }
+
+  // Group by category, in the order each category first appears.
+  var order = [], groups = {};
+  list.forEach(function (r) {
+    var c = r.category || "Other";
+    if (!groups[c]) { groups[c] = []; order.push(c); }
+    groups[c].push(r);
+  });
+
+  order.forEach(function (cat) {
+    var section = el("section", "row");
+    var head = el("div", "row-head");
+    head.appendChild(el("h2", null, cat));
+    section.appendChild(head);
+
+    var entries = el("div", "entries");
+    groups[cat].forEach(function (r) {
+      var item = el("article", "entry");
+      var h3 = el("h3");
+      var a = el("a", null, r.title);
+      a.href = r.href;
+      if (r.external || /^https?:/i.test(r.href)) { a.target = "_blank"; a.rel = "noopener"; }
+      h3.appendChild(a);
+      item.appendChild(h3);
+
+      var meta = [r.kind, r.when].filter(Boolean).join(" · ");
+      if (meta) item.appendChild(el("p", "meta", meta));
+      if (r.description) item.appendChild(el("p", null, r.description));
+      entries.appendChild(item);
+    });
+    section.appendChild(entries);
+    root.appendChild(section);
+  });
+})();
+</script>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

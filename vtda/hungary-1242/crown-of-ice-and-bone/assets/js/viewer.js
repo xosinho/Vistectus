@@ -1,5 +1,5 @@
 /* =====================================================================
-   THE DEAD HAND — Documents and Maps
+   A CROWN OF ICE AND BONE — Documents and Maps
    ---------------------------------------------------------------------
    Draws the list for documents.html (from assets/data/documents.js) or
    the gallery for maps.html (from assets/data/maps.js), and opens each
@@ -14,7 +14,7 @@
   var root = document.getElementById("collection");
   if (!root) return;
   var kind = root.getAttribute("data-kind");
-  var items = (kind === "maps" ? window.DEAD_HAND_MAPS : window.DEAD_HAND_DOCUMENTS) || [];
+  var items = (kind === "maps" ? window.CROWN_MAPS : window.CROWN_DOCUMENTS) || [];
   items = items.filter(function (x) { return x && x.title && (kind === "maps" ? x.image : x.file); });
 
   function el(tag, cls, text) {
@@ -118,7 +118,7 @@
   var cfg = window.BUILDERS_CONFIG || {};
   var db = (cfg.supabaseUrl && cfg.supabaseAnonKey && window.supabase)
     ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
-  var CHRONICLE = "dead-hand";
+  var CHRONICLE = "crown-of-ice-and-bone";
   var all = items.slice();
   var hidden = {}, isST = false, signedIn = false, failed = false;
   function keyOf(x) { return kind === "maps" ? x.image : x.file; }

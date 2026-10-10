@@ -1,5 +1,5 @@
 /* =====================================================================
-   THE DEAD HAND — roster renderer
+   A CROWN OF ICE AND BONE — roster renderer
    ---------------------------------------------------------------------
    Drives BOTH the Players page and the NPC page from plain data files.
    You never edit this file to add a character — you edit the data files:
@@ -117,10 +117,10 @@
               '</div>';
     }
 
-    /* extra pages that belong to this character: case boards and the like.
-       links: [{ label: "RICO Case", href: "rico-case/index.html" }] */
+    /* extra pages that belong to this character: boards and the like.
+       links: [{ label: "Intrigue Board", href: "intrigue-board/index.html" }] */
     if (entry.links && entry.links.length) {
-      html += '<p class="detail__section-label">Case files</p><div class="detail__downloads">';
+      html += '<p class="detail__section-label">Papers</p><div class="detail__downloads">';
       entry.links.forEach(function (l) {
         if (!l || !l.href) return;
         html += '<a class="btn" href="' + esc(l.href) + '">' + esc(l.label || "Open") + '</a>';
@@ -230,7 +230,7 @@
      or blocked connection never reveals a hidden entry. Hiding takes
      the entry off the page; it does not remove it from the site's
      files. */
-  var CHRONICLE = "dead-hand";
+  var CHRONICLE = "crown-of-ice-and-bone";
   function hiddenStore(kind) {
     // Local direct-file browsing should still show roster entries immediately.
     // The hidden-item lookup depends on a remote Supabase session and is not
@@ -354,5 +354,5 @@
     });
   }
 
-  window.DeadHand = { renderRoster: renderRoster };
+  window.Chronicle = { renderRoster: renderRoster };
 })();
