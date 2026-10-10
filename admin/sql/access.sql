@@ -150,6 +150,17 @@ as $$
     from chronicles c where chronicle_role(c.id) is not null order by c.name
 $$;
 
+-- The signed-in player's own character sheets in a chronicle (the Log in page).
+create or replace function public.my_sheets(p_chronicle text)
+returns table (slug text, name text)
+language sql stable security definer set search_path = public
+as $$
+  select s.slug, s.name from character_sheets s join sheet_owners o on o.slug = s.slug
+   where s.chronicle = p_chronicle and lower(o.email) = my_email() and my_email() <> ''
+     and is_chronicle_member(p_chronicle)
+   order by s.name
+$$;
+
 
 -- -------------------------------------------------------- allocating
 
@@ -885,7 +896,7 @@ revoke execute on function
   public.set_sheet_owner(text, text), public.sheet_owners_of(text), public.save_chronicle(text, text, text, text),
   public.save_draft(bigint, text, text, jsonb, jsonb), public.submit_draft(bigint), public.withdraw_draft(bigint),
   public.delete_draft(bigint), public.approve_draft(bigint, text, text), public.reject_draft(bigint, text),
-  public.my_chronicles(), public.is_chronicle_member(text), public.is_chronicle_storyteller(text),
+  public.my_chronicles(), public.my_sheets(text), public.is_chronicle_member(text), public.is_chronicle_storyteller(text),
   public.is_world_member(text), public.is_world_storyteller(text), public.is_admin(), public.chronicle_role(text),
   public.sheet_chronicle(text), public.is_sheet_storyteller(text)
   from public, anon;
@@ -894,7 +905,7 @@ grant execute on function
   public.set_sheet_owner(text, text), public.sheet_owners_of(text), public.save_chronicle(text, text, text, text),
   public.save_draft(bigint, text, text, jsonb, jsonb), public.submit_draft(bigint), public.withdraw_draft(bigint),
   public.delete_draft(bigint), public.approve_draft(bigint, text, text), public.reject_draft(bigint, text),
-  public.my_chronicles(), public.is_chronicle_member(text), public.is_chronicle_storyteller(text),
+  public.my_chronicles(), public.my_sheets(text), public.is_chronicle_member(text), public.is_chronicle_storyteller(text),
   public.is_world_member(text), public.is_world_storyteller(text), public.is_admin(), public.chronicle_role(text),
   public.sheet_chronicle(text), public.is_sheet_storyteller(text)
   to authenticated;

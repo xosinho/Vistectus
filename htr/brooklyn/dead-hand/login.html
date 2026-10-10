@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>document.documentElement.classList.add("gate-pending")</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Open a name to read their background and open their character sheet. This is your cell &mdash; keep each other alive.">
+  <meta name="description" content="Log in to the chronicle: your characters, and the members' pages.">
 
   <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
 
@@ -13,7 +12,7 @@
   <link rel="stylesheet" href="../world.css">
 </head>
 
-<body data-page="players" data-title="The cell">
+<body data-page="login" data-title="Log in">
 
 <a class="skip" href="#main">Skip to content</a>
 
@@ -35,15 +34,15 @@
     <li><a href="../../../htr/index.html">Hunter</a></li>
     <li><a href="../../../htr/brooklyn/index.html">Brooklyn Chronicles</a></li>
     <li><a href="../../../htr/brooklyn/dead-hand/index.html">Dead Hand</a></li>
-    <li aria-current="page">The cell</li>
+    <li aria-current="page">Log in</li>
   </ol>
 </nav>
 
 <section class="hero hero--compact">
   <div class="hero-inner">
-    <p class="kicker">The cell</p>
-    <h1>The hunters of The Dead Hand</h1>
-    <p class="lede">Open a name to read their background and open their character sheet. This is your cell &mdash; keep each other alive.</p>
+    <p class="kicker">Players and Storytellers</p>
+    <h1>Log in</h1>
+    <p class="lede">Sign in with the email your Storyteller added to reach your character and the members&rsquo; pages.</p>
   </div>
 </section>
 
@@ -52,28 +51,18 @@
 <nav class="tabs" aria-label="Chronicle pages">
   <div class="tabs-inner">
     <a href="index.html">Chronicle</a>
-    <a href="players.html" aria-current="page">The cell</a>
+    <a href="players.html">The cell</a>
     <a href="npcs.html">People</a>
     <a href="resources.html">Resources</a>
-    <a href="login.html">Log in</a>
+    <a href="login.html" aria-current="page">Log in</a>
     <a href="storyteller.html">Storyteller</a>
   </div>
 </nav>
 
 <main id="main">
   <section class="row">
-    <div class="row-head"><h2>The cell</h2></div>
-
-    <!-- New hunters are made with Create Hunter and go to the
-         Storyteller for approval. -->
-    <p style="display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;margin:0 0 1.6rem">
-      <a class="btn" href="create.html?new">Create Hunter</a>
-      <span style="color:var(--ink-soft);font-size:.95rem">Build your hunter step by step; the Storyteller approves it before it joins the cell.</span>
-    </p>
-
-    <!-- The roster renders here from assets/data/players.js.
-         To add or edit someone you edit that data file, never this page. -->
-    <div id="players-roster"></div>
+    <!-- Drawn by login.js at the site root. -->
+    <div id="login"><p>Opening…</p></div>
   </section>
 </main>
 
@@ -88,12 +77,7 @@
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../../builders/config.js"></script>
-<script src="../../../gate.js" data-chronicle="dead-hand"></script>
-<script src="assets/js/render.js?v=20261011"></script>
-<script src="assets/data/players.js?v=20261002"></script>
-<script>
-  DeadHand.renderRoster("players-roster", window.DEAD_HAND_PLAYERS, "player");
-</script>
+<script src="../../../login.js?v=20261012" data-chronicle="dead-hand" data-noun="hunter" data-crew="The cell" data-create="Create Hunter" data-create-href="create.html?new"></script>
 <script src="assets/js/site.js"></script>
 </body>
 </html>
