@@ -10,6 +10,13 @@
   <link rel="stylesheet" href="../../../style.css">
   <link rel="stylesheet" href="../world.css">
   <link rel="stylesheet" href="../../assets/css/campaign.css?v=20261013">
+  <style>
+    /* The banner picture has the world's name painted at the top; on a
+       narrow screen, zoom in so the characters fill the banner instead. */
+    @media (max-width: 700px) {
+      .hero.hero--compact::before { background-size: auto 160%; background-position: center 35%; }
+    }
+  </style>
 </head>
 
 <body data-campaign="shrouded-campaign-one" data-campaign-name="The Wheel of Time" data-title="Campaign">
@@ -37,7 +44,7 @@
   </ol>
 </nav>
 
-<section class="hero hero--compact" style="--hero: url('/dnd/shrouded/art/Shrouded%20Card%20and%20Hero.jpeg'); --hero-position: top">
+<section class="hero hero--compact" style="--hero: url('/dnd/shrouded/art/Shrouded%20Card%20and%20Hero.jpeg'); --hero-position: center 22%; min-height: clamp(15rem, 44vh, 26rem)">
   <div class="hero-inner">
     <p class="kicker">Campaign</p>
     <h1>The Wheel of Time</h1>
