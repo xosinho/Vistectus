@@ -17,7 +17,15 @@
 
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function slug(s) { return "f-" + String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 50); }
-  function safeImg(url) { return /^https:\/\/[a-z0-9.-]+\/storage\/v1\/object\/public\/world-media\/[A-Za-z0-9%._\/-]+$/.test(url || "") ? url : ""; }
+  // A picture from this site's own storage (world-media), and nowhere else.
+  function ownMedia(url) {
+    var base = String((window.BUILDERS_CONFIG || {}).supabaseUrl || "").replace(/\/+$/, "");
+    if (!/^https:\/\/[a-z0-9.-]+$/i.test(base)) return false;
+    url = String(url || "");
+    return url.indexOf(base + "/storage/v1/object/public/world-media/") === 0 &&
+      /^[A-Za-z0-9%._\/-]+$/.test(url.slice(base.length + 1));
+  }
+  function safeImg(url) { return ownMedia(url) ? url : ""; }
 
   function section(f, right) {
     var goals = (f.goals || []).filter(Boolean), figs = (f.figures || []).filter(function (x) { return x && x.name; });

@@ -1,12 +1,10 @@
 /* =====================================================================
-   PLAYERS  —  the cell of "The Dead Hand"  (from DeadHand_Canon.md §2)
+   PLAYERS  —  the cell of "The Dead Hand"
    ---------------------------------------------------------------------
-   Backgrounds here are PLAYER-SAFE and describe each hunter as they
-   stood BEFORE play began: their history, people, creed and drive,
-   and nothing that has happened at the table since. ST-confidential material (secret Adversaries,
-   the Giovanni / Cenotaph plot, Kassim / Rodrigo, cross-character
-   reveals) is deliberately left OUT so this page is safe to share with
-   the whole table.
+   This file is public: anyone can read it, comments included. Keep it
+   to what every player may know: each hunter as they stood BEFORE play
+   began (history, people, creed and drive). Storyteller material never
+   goes here, not even in a comment.
 
    Edit an object below and the Players page updates itself.
    Fields: name / tagline / role / portrait / meta / background /
@@ -14,7 +12,7 @@
 
    WHERE TO PUT FILES (filenames must match the paths below):
      Portraits ...... assets/img/players/       (jpg / png / webp)
-     Sheets ......... online; first published in assets/sheets/data/
+     Sheets ......... online only (the character_sheets table)
    ===================================================================== */
 
 window.DEAD_HAND_PLAYERS = [
@@ -190,8 +188,7 @@ window.DEAD_HAND_PLAYERS = [
                  or a path to an .html/.txt file to link out to
      sheet       The character sheet's name, e.g. "vivienne": opens
                  sheet.html?c=vivienne. The sheet itself is online (see
-                 the README); assets/sheets/data/<name>.json is the copy
-                 shown when the online one cannot be reached.
+                 the README); there is no copy in the site's files.
      links       Extra pages shown as buttons under "Case files", e.g.
                  [{ label: "RICO Case", href: "rico-case/index.html" }]
    Any field except name can be omitted; missing portrait/sheets degrade

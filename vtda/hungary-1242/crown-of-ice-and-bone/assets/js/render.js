@@ -29,7 +29,7 @@
     if (!bg) return "<p><em>No background on file yet.</em></p>";
     if (Array.isArray(bg)) return bg.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("");
     if (typeof bg === "string" && /\.(html?|txt|md)$/i.test(bg.trim())) {
-      return '<p><a class="btn btn--ghost" href="' + esc(bg.trim()) +
+      return '<p><a class="btn btn--ghost" href="' + esc(safeHref(bg) || "#") +
              '" target="_blank" rel="noopener">Open full background &rsaquo;</a></p>';
     }
     return String(bg).split(/\n\s*\n/).map(function (p) {
@@ -40,6 +40,15 @@
   var PLACEHOLDER = "assets/img/placeholder.svg";
 
   /* --------------------------------------------------------- build a card */
+  // Links can come from the database (the Builder's workshop): only web
+  // addresses and plain paths get through, never javascript: and the like.
+  function safeHref(u) {
+    u = String(u == null ? "" : u).trim();
+    if (!u) return "";
+    if (/^[a-z][a-z0-9+.-]*:/i.test(u) && !/^https?:/i.test(u)) return "";
+    return u;
+  }
+
   function cardHtml(entry, i) {
     var portrait = entry.portrait || PLACEHOLDER;
     return (
@@ -112,7 +121,7 @@
               '<div class="detail__downloads">' +
                 (entry.sheet
                   ? '<a class="btn" href="sheet.html?c=' + encodeURIComponent(entry.sheet) + '">Open character sheet</a>'
-                  : '<a class="btn" href="' + esc(entry.sheetPdf) +
+                  : '<a class="btn" href="' + esc(safeHref(entry.sheetPdf) || "#") +
                     '" download target="_blank" rel="noopener">&#8681; PDF sheet</a>') +
               '</div>';
     }
@@ -122,8 +131,8 @@
     if (entry.links && entry.links.length) {
       html += '<p class="detail__section-label">Papers</p><div class="detail__downloads">';
       entry.links.forEach(function (l) {
-        if (!l || !l.href) return;
-        html += '<a class="btn" href="' + esc(l.href) + '">' + esc(l.label || "Open") + '</a>';
+        if (!l || !safeHref(l.href)) return;
+        html += '<a class="btn" href="' + esc(safeHref(l.href)) + '">' + esc(l.label || "Open") + '</a>';
       });
       html += '</div>';
     }

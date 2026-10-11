@@ -690,7 +690,7 @@
       return;
     }
     wrap.innerHTML = S.setups.map(function (c) {
-      var n = (c.snapshot && c.snapshot.pins || []).length;
+      var pins = c.snapshot && c.snapshot.pins, n = Array.isArray(pins) ? pins.length : 0;   // a number, whatever was stored
       return '<div class="cfg-row"><div><div class="cfg-name">' + esc(c.name) + '</div><div class="cfg-meta">' +
         esc(new Date(c.saved_at).toLocaleString()) + " · " + n + ' pins</div></div><div class="cfg-actions">' +
         '<button class="pin-mini" type="button" data-load="' + esc(c.id) + '">Load</button>' +

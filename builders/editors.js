@@ -235,7 +235,7 @@
             tags.push(r.placed ? '<span class="wb-tag">On the map</span>' : '<span class="wb-tag wb-tag--todo">Not on the map yet</span>');
           }
           if (o.kind === "document" && d.file) tags.push('<a class="wb-tag" href="' + esc(B.mediaUrl(d.file)) + '" target="_blank" rel="noopener">Open file</a>');
-          if (o.kind === "resource" && d.href) tags.push('<a class="wb-tag" href="' + esc(d.href) + '" target="_blank" rel="noopener noreferrer">Open link</a>');
+          if (o.kind === "resource" && /^https?:\/\//i.test(d.href || "")) tags.push('<a class="wb-tag" href="' + esc(d.href) + '" target="_blank" rel="noopener noreferrer">Open link</a>');
           return '<li class="wb-item' + (isHidden(d) ? " is-hidden" : "") + '" data-i="' + i + '">' + thumb +
             '<div class="wb-item__body"><strong>' + esc(title) + "</strong>" + (sub ? '<span class="hint">' + esc(sub) + "</span>" : "") +
             (tags.length ? '<span class="wb-tags">' + tags.join("") + "</span>" : "") + "</div>" +

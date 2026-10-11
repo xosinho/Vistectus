@@ -18,8 +18,16 @@
   var PATH = { hunter: "htr", vampire: "vtda", dnd: "dnd" }, GAMES = { htr: "hunter", vtda: "vampire", dnd: "dnd" };
 
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
-  function load(src) { return new Promise(function (ok, no) { var s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
-  function cssUrl(url) { return /^https:\/\/[a-z0-9.-]+\/storage\/v1\/object\/public\/world-media\/[A-Za-z0-9%._\/-]+$/.test(url || "") ? "url('" + url + "')" : ""; }
+  function load(src, sri) { return new Promise(function (ok, no) { var s = document.createElement("script"); s.src = src; if (sri) { s.integrity = sri; s.crossOrigin = "anonymous"; } s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
+  // A picture from this site's own storage (world-media), and nowhere else.
+  function ownMedia(url) {
+    var base = String((window.BUILDERS_CONFIG || {}).supabaseUrl || "").replace(/\/+$/, "");
+    if (!/^https:\/\/[a-z0-9.-]+$/i.test(base)) return false;
+    url = String(url || "");
+    return url.indexOf(base + "/storage/v1/object/public/world-media/") === 0 &&
+      /^[A-Za-z0-9%._\/-]+$/.test(url.slice(base.length + 1));
+  }
+  function cssUrl(url) { return ownMedia(url) ? "url('" + url + "')" : ""; }
   function media(cfg, path) {
     if (!path) return "";
     return String(cfg.supabaseUrl).replace(/\/+$/, "") + "/storage/v1/object/public/world-media/" + String(path).split("/").map(encodeURIComponent).join("/");
@@ -28,7 +36,7 @@
   async function run() {
     var box = document.querySelector(TARGET);
     if (!box) return;
-    if (!window.supabase) await load("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2");
+    if (!window.supabase) await load("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js", "sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R");
     if (!window.BUILDERS_CONFIG) await load("/builders/config.js");
     var cfg = window.BUILDERS_CONFIG || {};
     if (!cfg.supabaseUrl || !window.supabase) return;

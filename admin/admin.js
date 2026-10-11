@@ -25,7 +25,7 @@
   function setup() {
     return '<section class="xp-panel"><details><summary><strong>One-time setup in Supabase</strong> (done once; here for reference)</summary>' +
       '<ol class="admin-steps">' +
-        "<li><strong>SQL Editor</strong>: run <code>admin/sql/access.sql</code>, then <code>vtda/hungary-1242/crown-of-ice-and-bone/assets/sql/setup.sql</code>, <code>dnd/sql/setup.sql</code> and, last, <code>builders/sql/world-builder.sql</code>.</li>" +
+        "<li><strong>SQL Editor</strong>: run <code>admin/sql/access.sql</code>, then <code>vtda/hungary-1242/crown-of-ice-and-bone/assets/sql/setup.sql</code>, <code>dnd/sql/setup.sql</code> <code>builders/sql/world-builder.sql</code> and <code>builders/sql/file-drop.sql</code>.</li>" +
         "<li><strong>Authentication → Hooks</strong>: add a <em>Before User Created</em> hook of type Postgres, function <code>public.hook_before_user_created</code>. This is what lets only the emails added here create an account.</li>" +
         "<li><strong>Authentication → Sign In / Providers</strong>: turn <em>Allow new users to sign up</em> on (the hook above decides who actually may).</li>" +
         "<li><strong>Authentication → URL Configuration → Redirect URLs</strong>: <code>https://vistectus.com/**</code>, so sign-in links can come back to any page.</li>" +
@@ -67,6 +67,29 @@
     return h + '</tbody></table><p class="sheet-status" id="reviewMsg" role="status"></p></section>';
   }
 
+  // Approved worlds and chronicles their builder or Storyteller has
+  // changed since: they stay live; this is the list to look over.
+  async function changed(db) {
+    var w = await db.from("worlds").select("id,game,name,tagline,created_by,updated_at,static_path").eq("changed_since_review", true).order("updated_at", { ascending: false });
+    var c = await db.from("chronicles").select("id,name,game,world,path,tagline,created_by").eq("changed_since_review", true).order("name", { ascending: true });
+    if (w.error || c.error) return "";      // world-builder.sql not run yet: nothing to show
+    var worlds = w.data || [], chrons = c.data || [];
+    if (!worlds.length && !chrons.length) return "";
+    function row(kind, label, href, by, world, chron, note) {
+      return "<tr><td><strong>" + esc(label) + '</strong> <span class="status status-pending">' + kind + "</span>" +
+        '<span class="note">' + esc(note) + '</span><a href="' + href + '" target="_blank" rel="noopener">Open it</a></td><td>' + esc(by || "") + "</td>" +
+        '<td class="acts"><button type="button" class="btn" data-seen="1" data-world="' + esc(world) + '" data-chronicle="' + esc(chron || "") + '">Looks fine</button> ' +
+        '<button type="button" class="btn btn--ghost" data-review="0" data-world="' + esc(world) + '" data-chronicle="' + esc(chron || "") + '">Unpublish</button>' +
+        '<input class="review-note" aria-label="Note to the builder" placeholder="Note (to unpublish)" maxlength="2000"></td></tr>';
+    }
+    var h = '<section class="xp-panel" id="changed"><h2>Changed since approval</h2>' +
+      '<p class="xp-hint">These are live, and their builder or Storyteller has changed the name, pitch, overview, pictures or player options since you approved them. <em>Looks fine</em> clears the flag; <em>Unpublish</em> sends it back to them with your note.</p>' +
+      '<table class="xp-table"><thead><tr><th>What</th><th>By</th><th></th></tr></thead><tbody>';
+    worlds.forEach(function (x) { h += row("World", x.name, worldHome(x) + "index.html", x.created_by, x.id, "", (GAMES[x.game] || x.game) + (x.tagline ? " · " + x.tagline : "")); });
+    chrons.forEach(function (k) { h += row(k.game === "dnd" ? "Campaign" : "Chronicle", k.name, home(k) + "index.html", k.created_by, k.world, k.id, "in " + k.world + (k.tagline ? " · " + k.tagline : "")); });
+    return h + '</tbody></table><p class="sheet-status" id="changedMsg" role="status"></p></section>';
+  }
+
   // The people invited to build worlds.
   async function builders(db) {
     var r = await db.rpc("admin_builders");
@@ -91,7 +114,7 @@
     }
     var h = '<div class="sheet-bar"><span class="sheet-status">Signed in as ' + esc(gate.email) + ' · site admin</span><span class="spacer"></span>' +
       '<button type="button" class="btn btn--ghost" id="adminOut">Sign out</button></div>' + setup() +
-      (await reviews(db)) + (await builders(db));
+      (await reviews(db)) + (await changed(db)) + (await builders(db));
     (r.data || []).forEach(function (c) {
       h += '<section class="xp-panel"><div class="chron-head"><h2>' + esc(c.name) + '</h2><span class="meta">' +
         esc(GAMES[c.game] || c.game) + " · " + esc(c.world) + "</span>" +
@@ -122,11 +145,19 @@
       b.addEventListener("click", async function () {
         var ok = b.getAttribute("data-review") === "1";
         var note = b.closest("tr").querySelector(".review-note").value.trim();
-        var msg = document.getElementById("reviewMsg");
+        var msg = b.closest("section").querySelector('[role="status"]');
         if (!ok && !note) { msg.textContent = "Say in the note what should change before sending it back."; return; }
         b.disabled = true;
         var r = await db.rpc("admin_review", { p_world: b.getAttribute("data-world"), p_chronicle: b.getAttribute("data-chronicle") || null, p_approve: ok, p_note: note });
         if (r.error) { b.disabled = false; msg.textContent = "Not done: " + errText(r.error); return; }
+        draw(gate);
+      });
+    });
+    root.querySelectorAll("[data-seen]").forEach(function (b) {
+      b.addEventListener("click", async function () {
+        b.disabled = true;
+        var r = await db.rpc("admin_seen_changes", { p_world: b.getAttribute("data-world"), p_chronicle: b.getAttribute("data-chronicle") || null });
+        if (r.error) { b.disabled = false; document.getElementById("changedMsg").textContent = "Not done: " + errText(r.error); return; }
         draw(gate);
       });
     });

@@ -1,6 +1,6 @@
--- !! Since admin/sql/access.sql (chronicles and their members), this file's
--- !! rules are replaced there. If you ever run this file again, run
--- !! admin/sql/access.sql again straight after it.
+-- !! Since admin/sql/access.sql (chronicles and their members), this file
+-- !! only creates the table; who may read and change it is set there.
+-- !! Safe to run again: it no longer touches any access rule.
 -- =====================================================================
 -- NPC stat sheets — Storyteller only
 -- ---------------------------------------------------------------------
@@ -9,7 +9,8 @@
 -- Safe to run again.
 --
 -- NPC sheets have the same layout as the hunters' sheets, without XP.
--- Only Storytellers can read, create, change or delete them: visitors
+-- Only the chronicle's Storyteller can read, create, change or delete
+-- them (rules: admin/sql/access.sql): visitors
 -- are refused outright, and signed-in players get nothing back. The
 -- sheets live only here, never in the website's files.
 -- =====================================================================
@@ -29,8 +30,4 @@ alter table public.npc_sheets enable row level security;
 -- Visitors who are not signed in may not touch the table at all.
 revoke all on public.npc_sheets from anon;
 
-drop policy if exists "Storytellers only" on public.npc_sheets;
-create policy "Storytellers only" on public.npc_sheets
-  for all to authenticated
-  using (public.is_storyteller())
-  with check (public.is_storyteller());
+-- Access rules: admin/sql/access.sql.

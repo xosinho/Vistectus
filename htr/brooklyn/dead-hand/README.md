@@ -104,17 +104,20 @@ The costs are in the `xp_costs` table (**Table Editor → xp_costs**) and
 are shown on every sheet. Attribute: new level × 5; Skill: new level × 3;
 Specialty 3; Advantage 3 per dot; Edge 7 each; Perk 3 each.
 
-If the online sheet cannot be reached, the page shows the copy in
-`assets/sheets/data/<name>.json` read-only. Those files are the sheets
-as they stood in the old PDFs, and `sql/seed.sql` is made from them.
+The sheets live only in the database. Their original copies (the old
+PDFs, their JSON and `seed.sql`) are kept off the site, in the
+repository's `private/dead-hand/` folder, which git ignores: they name
+the players and must never be published. If the online sheet cannot be
+reached, the page says so.
 
 ### One-time setup
 
 In the Supabase dashboard:
 
 1. **SQL Editor**: run `assets/sheets/sql/setup.sql`, then
-   `assets/sheets/sql/seed.sql`. (Run the seed only once: running it
-   again resets every sheet to its original values.)
+   `private/dead-hand/sheets/sql/seed.sql` (kept off the site). Run the
+   seed only once: running it again resets every sheet to its original
+   values.
 2. **SQL Editor**: say who you are and who plays whom. Use real
    addresses here, in the dashboard only. Never put them in a file in
    this repository: it is public.
@@ -169,12 +172,15 @@ The Resources page leads to three archives:
 
 All three are public: only publish what the players have been given.
 
-**Hiding a document, map or NPC (Storyteller):** the People page works the same way, hiding a whole NPC entry.  signed in as Storyteller
-(from the Storyteller tab), each document and map shows a **Hide from
-players** button; hidden ones stay visible to you, marked. One-time
-setup: run `assets/sheets/sql/archive-hidden.sql` in Supabase. Hiding
-takes an item off the page only; the file itself is still on the site,
-so do not upload anything that must stay secret until you reveal it.
+**Hiding a document, map or NPC (Storyteller):** signed in as
+Storyteller (from the Storyteller tab), each document, map and person
+shows a **Hide from players** button; hidden ones stay visible to you,
+marked. Hiding takes an item off the page only. Anything in the site's
+files (`assets/data/*.js` and the files they list) can still be read by
+anyone who looks for it, comments included. So an NPC, handout or map
+the players have not met yet goes in the Builder's **workshop**
+(members only), not in these files; move it here, if at all, once it is
+revealed.
 
 ### Locations: one-time setup
 
@@ -230,7 +236,7 @@ refused outright and players get nothing back. Nothing about them is in
 the website's files. Each opens at `sheet.html?npc=<name>`, which shows
 non-Storytellers a "Storytellers only" message and nothing else.
 
-One-time setup: run `assets/sheets/sql/npc-sheets.sql` in Supabase.
+One-time setup: run `assets/sheets/sql/npc-sheets.sql` in Supabase (it creates the table; who may read it is set in `admin/sql/access.sql`).
 
 ## The RICO Case board
 
@@ -258,11 +264,11 @@ Until `builders/config.js` is filled in, the board still works but says
 "Not connected" when you Save or Open.
 
 **Who may save and delete:** only the players of Vivienne and Ezekiel,
-and the Storyteller,
-set by `rico-case/editors.sql` (run it once, after the sheet setup).
-It uses the `sheet_owners` table, so their emails must be linked to
-their hunters there. Anyone can still open and read the board. To change
-the list, edit `case_board_editor()` in that file and run it again.
+and the Storyteller, set by `case_board_editor()` in
+`admin/sql/access.sql`. It uses the `sheet_owners` table, so their
+emails must be linked to their hunters there. The chronicle's members
+can open and read the board. To change the list, change
+`case_board_editor()` there and run `access.sql` again.
 
 ### One-time setup
 

@@ -1,11 +1,11 @@
 /* =====================================================================
    NPCs  —  the people around the cell  (player-safe)
    ---------------------------------------------------------------------
-   Every entry describes the person as they stood BEFORE play began:
-   their place in the world, and nothing that has happened at the table.
-   ST-confidential material (true natures, the Giovanni / Cenotaph plot,
-   faction secrets) is left OUT. No stat blocks on this page — those
-   are ST-only.
+   This file is public: anyone can read it, comments included. Every
+   entry describes the person as they stood BEFORE play began, as the
+   players may know them. Storyteller material and stat blocks never go
+   here, not even in a comment. People the players have not met yet are
+   added in the Builder's workshop (members only) and revealed there.
 
    Edit an object below and the NPC page updates itself.
    Portraits -> assets/img/npcs/<file>.  (Add a "stats" object later
@@ -728,56 +728,6 @@ window.DEAD_HAND_NPCS = [
       "Weight": "~165 lbs",
       "Hair": "White, short; close-trimmed white beard",
       "Distinguishing marks": "Lean, ascetic frame; jeweller's loupe worn on a chain. Fine scarring and solvent-stained fingertips consistent with conservation work."
-    }
-  },
-
-  // Hidden from players until the Storyteller reveals them (archive_hidden).
-  {
-    name: "Rodrigo de Vasconcelos",
-    tagline: "The file no one can finish",
-    role: "Financier and collector · Lisbon",
-    portrait: "assets/img/npcs/Rodrigo.jpg",
-    meta: ["Person of interest"],
-    description:
-      "Reclusive Lisbon-born financier and collector, linked to old Iberian " +
-      "family holdings and a small number of discreet foundations. His name " +
-      "surfaces at the edges of certain transactions without his presence ever " +
-      "being confirmed. His documentary trail is unusually thin for a man of " +
-      "apparent wealth, and his file has resisted completion for reasons no one " +
-      "has adequately explained.",
-    file: {
-      "File status": "Restricted / Incomplete",
-      "Age": "Apparent mid-40s (documentary age unverified)",
-      "Status": "Alive; whereabouts unknown.",
-      "Race": "White (Portuguese national origin)",
-      "Height": "6'2\"",
-      "Weight": "~180 lbs",
-      "Hair": "Black, worn swept back; clean-shaven",
-      "Distinguishing marks": "Tall and spare. Pale, with an aristocratic stillness. Witnesses agree he is striking in person but cannot agree on his features afterward. No usable photograph or recording exists. Every image on file is distorted, smeared or corrupted, and audio of his calls is consistently degraded."
-    }
-  },
-
-  {
-    name: "Kassim ibn Rashid al-Asad",
-    tagline: "Always nearby, never involved",
-    role: "Private security and risk consultant",
-    portrait: "assets/img/npcs/Kassim.jpg",
-    meta: ["Person of interest"],
-    description:
-      "Private security and risk consultant, believed to serve a single " +
-      "high-net-worth principal. Entry records and employment history are " +
-      "sparse but in order. Has been noted in the vicinity of several open " +
-      "matters without any direct involvement being established. No criminal " +
-      "record.",
-    file: {
-      "File status": "Unclassified / Incomplete",
-      "Age": "Apparent late 30s (documentary age unverified)",
-      "Status": "Alive; whereabouts unknown.",
-      "Race": "Arab (Syrian national origin)",
-      "Height": "5'10\"",
-      "Weight": "~165 lbs",
-      "Hair": "Black, close-cropped; neatly trimmed short beard",
-      "Distinguishing marks": "Lean and still, with an economy of movement that witnesses describe as hard to keep track of. Dresses conservatively and well. Speaks formal, precise English, Arabic and French. Wears a plain silver ring engraved in Arabic script on the right hand."
     }
   }
 

@@ -34,10 +34,17 @@ key is not: never put it in any file in this repository.
 
 1. **SQL Editor**: run these files, in this order (each can be run again
    safely):
+   0. On a brand-new project only, first the Dead Hand files that create
+      the older tables: `htr/brooklyn/dead-hand/assets/sheets/sql/setup.sql`,
+      `npc-sheets.sql`, `archive-hidden.sql`, `rules.sql`, the case-files
+      block in the Dead Hand README, and `htr/brooklyn/dead-hand/locations/setup.sql`.
+      (VisTectus has run these already.)
    1. `admin/sql/access.sql`
    2. `vtda/hungary-1242/crown-of-ice-and-bone/assets/sql/setup.sql`
    3. `dnd/sql/setup.sql`
-   4. `builders/sql/world-builder.sql` (last: it builds on the others)
+   4. `builders/sql/world-builder.sql` (it builds on the others)
+   5. `builders/sql/file-drop.sql` (the dashboard's file drop; it ends by
+      showing that its folder is private)
 2. **Make yourself the site admin** (once), in the SQL Editor:
    `insert into public.site_admins (email) values ('you@example.com');`
    with your own email in place of the example.

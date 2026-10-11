@@ -56,6 +56,25 @@ update public.chronicles set path = 'vtda/hungary-1242/crown-of-ice-and-bone/' w
 -- Shrouded's first campaign was renamed.
 update public.chronicles set name = 'The Wheel of Time' where id = 'shrouded-campaign-one' and name = 'Shrouded — Campaign One';
 
+-- Chronicles made with the World Builder wait for approval (the rest of
+-- the Builder is in builders/sql/world-builder.sql; these columns are
+-- here too so that running this file again keeps drafts private).
+alter table public.chronicles add column if not exists status text not null default 'approved';
+alter table public.chronicles drop constraint if exists chronicles_status_check;
+alter table public.chronicles add constraint chronicles_status_check check (status in ('draft', 'pending', 'approved', 'rejected'));
+alter table public.chronicles add column if not exists tagline text not null default '';
+alter table public.chronicles add column if not exists premise text not null default '';
+alter table public.chronicles add column if not exists card_image text not null default '';
+alter table public.chronicles add column if not exists created_by text not null default '';
+
+-- Who may start a new world (the Admin page adds them). Also here so the
+-- sign-up check below always lets them in.
+create table if not exists public.builders (
+  email     text primary key check (email = lower(email) and email ~ '^[^@\s]+@[^@\s]+\.[^@\s]+$'),
+  added_at  timestamptz not null default now()
+);
+alter table public.builders enable row level security;
+
 create table if not exists public.chronicle_members (
   chronicle  text not null references public.chronicles (id) on delete cascade,
   email      text not null check (email = lower(email) and email ~ '^[^@\s]+@[^@\s]+\.[^@\s]+$'),
@@ -94,9 +113,7 @@ alter table public.chronicle_members enable row level security;
 alter table public.character_drafts  enable row level security;
 
 -- Who is a member is private: read only through the functions below.
--- The list of chronicles is not secret.
-drop policy if exists "Chronicles are public" on public.chronicles;
-create policy "Chronicles are public" on public.chronicles for select to anon, authenticated using (true);
+-- Which chronicles exist: see "Approved chronicles are public" below.
 
 
 -- ----------------------------------------------------------- who is who
@@ -122,6 +139,16 @@ create or replace function public.is_chronicle_member(p_chronicle text) returns 
 language sql stable security definer set search_path = public
 as $$ select chronicle_role(p_chronicle) is not null $$;
 
+-- Approved chronicles are public; one still being built (or waiting for
+-- approval) only for its maker, its members and site admins. The same
+-- rules are in builders/sql/world-builder.sql.
+drop policy if exists "Chronicles are public"           on public.chronicles;
+drop policy if exists "Approved chronicles are public"  on public.chronicles;
+drop policy if exists "Members see their chronicles"    on public.chronicles;
+create policy "Approved chronicles are public" on public.chronicles for select to anon using (status = 'approved');
+create policy "Members see their chronicles"   on public.chronicles for select to authenticated
+  using (status = 'approved' or is_admin() or (created_by <> '' and created_by = my_email()) or chronicle_role(id) is not null);
+
 -- Worlds hold chronicles: the Dark Ages rules belong to Hungary 1242.
 create or replace function public.is_world_member(p_world text) returns boolean
 language sql stable security definer set search_path = public
@@ -136,12 +163,16 @@ as $$
                                 where c.world = p_world and m.role = 'storyteller' and m.email = my_email() and my_email() <> '')
 $$;
 
--- Storyteller of any chronicle at all (shared things: the Hunter rules
--- tables, the Locations factions).
+-- May change things every chronicle shares (the Hunter rules tables, the
+-- Locations factions): a site admin, or a Storyteller of one of the
+-- site's own approved chronicles. Not a builder's Storyteller role: a
+-- builder is Storyteller of their own chronicle the moment they make it.
 create or replace function public.is_storyteller() returns boolean
 language sql stable security definer set search_path = public
 as $$
-  select is_admin() or exists (select 1 from chronicle_members where role = 'storyteller' and email = my_email() and my_email() <> '')
+  select is_admin() or exists (select 1 from chronicle_members m join chronicles c on c.id = m.chronicle
+                                where m.role = 'storyteller' and m.email = my_email() and my_email() <> ''
+                                  and c.status = 'approved' and c.created_by = '')
 $$;
 
 create or replace function public.sheet_chronicle(p_slug text) returns text
@@ -202,6 +233,11 @@ begin
   if not is_admin() then
     if not is_chronicle_storyteller(p_chronicle) then raise exception 'Only the chronicle''s Storyteller can add players.'; end if;
     if p_role <> 'player' or cur = 'storyteller' then raise exception 'Only a site admin can add or change Storytellers.'; end if;
+    -- Adding an email is an invitation to sign up: not before the site's
+    -- admin has approved the chronicle.
+    if (select status from chronicles where id = p_chronicle) <> 'approved' then
+      raise exception 'Players can be invited once the site''s admin has approved this chronicle.';
+    end if;
   end if;
   insert into chronicle_members (chronicle, email, role, added_by) values (p_chronicle, p_email, p_role, my_email())
     on conflict (chronicle, email) do update set role = excluded.role;
@@ -827,7 +863,12 @@ create policy "Storytellers only" on public.location_notes for all to authentica
 drop policy if exists "Storytellers only" on public.location_setups;
 create policy "Storytellers only" on public.location_setups for all to authenticated
   using (is_chronicle_storyteller(chronicle)) with check (is_chronicle_storyteller(chronicle));
--- location_factions stays shared by every chronicle's Storytellers.
+-- A saved setup is {"pins": [...]}: nothing else is accepted.
+alter table public.location_setups drop constraint if exists location_setups_snapshot_check;
+alter table public.location_setups add constraint location_setups_snapshot_check
+  check (jsonb_typeof(snapshot) = 'object' and jsonb_typeof(snapshot -> 'pins') = 'array') not valid;
+-- location_factions stays shared by the site's own Storytellers
+-- (is_storyteller() above).
 
 drop policy if exists "Revealed location maps can be seen" on storage.objects;
 drop policy if exists "Storytellers upload location maps"  on storage.objects;
@@ -887,7 +928,8 @@ end $$;
 -- ---------------------------------------------- the sign-up check
 -- Adding an email to a chronicle is its invitation: with this hook
 -- switched on, an account can only be created for an email that is in
--- a chronicle (or a site admin, or a Storyteller from before). Switch
+-- a chronicle (or a site admin, an invited builder, or a Storyteller
+-- from before). Switch
 -- it on in Supabase: Authentication -> Hooks -> "Before User Created"
 -- -> Postgres -> public.hook_before_user_created. Also Authentication
 -- -> Sign In / Providers -> "Allow new users to sign up" must be ON.
@@ -898,6 +940,7 @@ declare e text := lower(btrim(coalesce(event -> 'user' ->> 'email', '')));
 begin
   if e <> '' and (exists (select 1 from chronicle_members where email = e)
                   or exists (select 1 from site_admins where lower(email) = e)
+                  or exists (select 1 from builders where email = e)
                   or exists (select 1 from storytellers where lower(email) = e)) then
     return '{}'::jsonb;
   end if;

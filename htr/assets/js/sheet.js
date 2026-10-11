@@ -26,6 +26,7 @@
   var CHRONICLE = document.body.getAttribute("data-chronicle") || "";
   var CHRONICLE_NAME = document.body.getAttribute("data-chronicle-name") || "Hunter";
   var PDF_LIB = "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js";
+  var PDF_LIB_SRI = "sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI";
 
   var ATTRS = [
     ["Physical", ["strength", "dexterity", "stamina"]],
@@ -106,6 +107,7 @@
     return new Promise(function (resolve, reject) {
       var s = document.createElement("script");
       s.src = src; s.onload = resolve;
+      if (src === PDF_LIB) { s.integrity = PDF_LIB_SRI; s.crossOrigin = "anonymous"; }
       s.onerror = function () { reject(new Error("Could not load " + src)); };
       document.head.appendChild(s);
     });

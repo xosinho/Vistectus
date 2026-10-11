@@ -79,6 +79,11 @@ alter table public.chronicles add column if not exists premise text not null def
 alter table public.chronicles add column if not exists card_image text not null default '';
 alter table public.chronicles add column if not exists created_by text not null default '';
 
+-- An approved world or chronicle its builder/Storyteller has changed
+-- since: it stays live, and the Admin page lists it for a look.
+alter table public.worlds     add column if not exists changed_since_review boolean not null default false;
+alter table public.chronicles add column if not exists changed_since_review boolean not null default false;
+
 create table if not exists public.chronicle_items (
   id          uuid primary key default gen_random_uuid(),
   chronicle   text not null references public.chronicles (id) on delete cascade,
@@ -90,6 +95,24 @@ create table if not exists public.chronicle_items (
   updated_at  timestamptz not null default now()
 );
 create index if not exists chronicle_items_chronicle on public.chronicle_items (chronicle, kind, sort);
+
+-- Every link or file in an item is a web address (http/https) or a
+-- storage path: never javascript:, data: or any other kind of address,
+-- whatever the page that saved it checked.
+create or replace function public.item_links_safe(d jsonb) returns boolean
+language sql immutable set search_path = public
+as $$
+  select not exists (
+    select 1 from (
+      select d ->> k as v from unnest(array['href', 'file', 'pdf', 'image', 'portrait', 'sheetPdf']) k
+      union all
+      select l ->> 'href' from jsonb_array_elements(case when jsonb_typeof(d -> 'links') = 'array' then d -> 'links' else '[]'::jsonb end) l
+    ) x
+    where x.v ~* '^\s*[a-z][a-z0-9+.-]*:' and x.v !~* '^\s*https?://'
+  )
+$$;
+alter table public.chronicle_items drop constraint if exists chronicle_items_links_check;
+alter table public.chronicle_items add constraint chronicle_items_links_check check (item_links_safe(data)) not valid;
 
 
 -- ------------------------------------------------------------ helpers
@@ -170,12 +193,28 @@ insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_typ
 values ('world-media', 'world-media', true, 10485760,
         array['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf', 'text/plain', 'text/markdown'])
 on conflict (id) do nothing;
+-- '<world>/<chronicle>/...' belongs to that chronicle: only its
+-- Storyteller/DM (or the world's builder, or a site admin) changes it.
+-- Anything else under '<world>/' is the world's own (art, factions).
+create or replace function public.can_edit_media(p_name text) returns boolean
+language plpgsql stable security definer set search_path = public
+as $$
+declare w text := split_part(p_name, '/', 1); c text := split_part(p_name, '/', 2);
+begin
+  if not is_world_editor(w) then return false; end if;
+  if exists (select 1 from chronicles where id = c and world = w) then
+    return is_chronicle_storyteller(c) or exists (select 1 from worlds where id = w and created_by = my_email() and my_email() <> '');
+  end if;
+  return true;
+end $$;
+grant execute on function public.can_edit_media(text) to authenticated;
+
 drop policy if exists "World editors add media"    on storage.objects;
 drop policy if exists "World editors remove media" on storage.objects;
 create policy "World editors add media" on storage.objects for insert to authenticated
-  with check (bucket_id = 'world-media' and public.is_world_editor(split_part(name, '/', 1)));
+  with check (bucket_id = 'world-media' and public.can_edit_media(name));
 create policy "World editors remove media" on storage.objects for delete to authenticated
-  using (bucket_id = 'world-media' and public.is_world_editor(split_part(name, '/', 1)));
+  using (bucket_id = 'world-media' and public.can_edit_media(name));
 
 
 -- ------------------------------------------------- building a world
@@ -215,6 +254,11 @@ begin
          options = coalesce(p_options, '{}'::jsonb), updated_at = now(),
          status = case when status = 'rejected' then 'draft' else status end
    where id = p_id;
+  -- Changed after approval (and not by a site admin): flag it for a look.
+  update worlds set changed_since_review = true
+   where id = p_id and status = 'approved' and not is_admin()
+     and (name, tagline, overview, card_image, hero_image, options) is distinct from
+         (w.name, w.tagline, w.overview, w.card_image, w.hero_image, w.options);
 end $$;
 
 -- A chronicle (D&D: campaign) in a world the account may edit. Its
@@ -234,7 +278,10 @@ begin
   select * into c from chronicles where id = p_id for update;
   if not found then
     if p_id !~ '^[a-z0-9][a-z0-9-]{1,58}[a-z0-9]$' then raise exception 'The short name may use a-z, 0-9 and dashes (3 to 60 characters).'; end if;
-    if p_id in ('assets', 'art', 'factions', 'options', 'rules', 'index', 'locations') or p_id like '\_%' then raise exception 'That short name is reserved.'; end if;
+    if p_id in ('assets', 'art', 'factions', 'options', 'rules', 'index', 'locations', 'board', 'quest-board',
+                'races-and-classes', 'creeds', 'clans-of-the-damned', 'campaign-one', 'images') or p_id like '\_%' then
+      raise exception 'That short name is reserved.';
+    end if;
     insert into chronicles (id, name, game, world, path, status, tagline, premise, card_image, created_by)
     values (p_id, left(btrim(coalesce(p_name, '')), 120), w.game, p_world, world_path(w.game) || '/' || p_world || '/' || p_id || '/',
             case when is_admin() and w.status = 'approved' then 'approved' else 'draft' end,
@@ -252,6 +299,9 @@ begin
          premise = left(coalesce(p_premise, ''), 20000), card_image = coalesce(p_card_image, ''),
          status = case when status = 'rejected' then 'draft' else status end
    where id = p_id;
+  update chronicles set changed_since_review = true
+   where id = p_id and status = 'approved' and not is_admin()
+     and (name, tagline, premise, card_image) is distinct from (c.name, c.tagline, c.premise, c.card_image);
 end $$;
 
 -- The builder sends a world (with its chronicles) or a chronicle in an
@@ -281,13 +331,29 @@ declare st text := case when p_approve then 'approved' else 'rejected' end;
 begin
   if not is_admin() then raise exception 'Only a site admin can approve worlds.'; end if;
   if p_chronicle is null then
-    update worlds set status = st, review_note = left(coalesce(p_note, ''), 2000), updated_at = now() where id = p_world and static_path is null;
+    update worlds set status = st, review_note = left(coalesce(p_note, ''), 2000), updated_at = now(),
+           changed_since_review = false where id = p_world and static_path is null;
     if not found then raise exception 'There is no such world to review.'; end if;
-    update chronicles set status = st where world = p_world and status = 'pending';
+    update chronicles set status = st, changed_since_review = false where world = p_world and status = 'pending';
   else
-    update chronicles set status = st where id = p_chronicle and world = p_world;
+    update chronicles set status = st, changed_since_review = false where id = p_chronicle and world = p_world;
     if not found then raise exception 'There is no such chronicle.'; end if;
     update worlds set review_note = left(coalesce(p_note, ''), 2000) where id = p_world and not p_approve;
+  end if;
+end $$;
+
+-- Site admin: an approved world or chronicle changed since approval
+-- has been looked at (it stays as it is).
+create or replace function public.admin_seen_changes(p_world text, p_chronicle text default null)
+returns void
+language plpgsql security definer set search_path = public
+as $$
+begin
+  if not is_admin() then raise exception 'Only a site admin can do that.'; end if;
+  if p_chronicle is null then
+    update worlds set changed_since_review = false where id = p_world;
+  else
+    update chronicles set changed_since_review = false where id = p_chronicle and world = p_world;
   end if;
 end $$;
 
@@ -362,14 +428,15 @@ revoke execute on function
   public.builder_save_world(text, text, text, text, text, text, text, jsonb),
   public.builder_save_chronicle(text, text, text, text, text, text),
   public.builder_submit(text, text), public.admin_review(text, text, boolean, text),
-  public.builder_delete_world(text), public.admin_set_builder(text, boolean), public.admin_builders()
+  public.builder_delete_world(text), public.admin_set_builder(text, boolean), public.admin_builders(),
+  public.admin_seen_changes(text, text)
   from public, anon;
 grant execute on function
   public.builder_save_world(text, text, text, text, text, text, text, jsonb),
   public.builder_save_chronicle(text, text, text, text, text, text),
   public.builder_submit(text, text), public.admin_review(text, text, boolean, text),
   public.builder_delete_world(text), public.admin_set_builder(text, boolean), public.admin_builders(),
-  public.is_builder()
+  public.admin_seen_changes(text, text), public.is_builder()
   to authenticated;
 -- Used inside the row rules, which anonymous visitors also go through.
 grant execute on function public.world_visible(text), public.is_world_editor(text) to anon, authenticated;

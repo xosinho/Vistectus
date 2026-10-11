@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <script>document.documentElement.classList.add("gate-pending")</script>
+  <style>html.gate-pending main, html.gate-pending.gate-all body > *:not(.gate-box) { visibility: hidden !important; }</style>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="The people you have crossed paths with so far. Open a name for what you know about them &mdash; no more, no less.">
@@ -79,12 +80,12 @@
     </p>
   </div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R" crossorigin="anonymous"></script>
 <script src="../../../builders/config.js"></script>
-<script src="../../../gate.js" data-chronicle="dead-hand"></script>
+<script src="../../../gate.js?v=20261016" data-chronicle="dead-hand"></script>
 <script src="../../../content.js?v=20261015"></script>
-<script src="assets/js/render.js?v=20261011"></script>
-<script src="assets/data/npcs.js?v=20261011b"></script>
+<script src="assets/js/render.js?v=20261016"></script>
+<script src="assets/data/npcs.js?v=20261016"></script>
 <script>
   ChronicleContent.merge("npc", window.DEAD_HAND_NPCS, "dead-hand").then(function (list) {
     DeadHand.renderRoster("npcs-roster", list, "npc", { hide: "npcs" });

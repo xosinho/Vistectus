@@ -4,9 +4,8 @@
    sheet.html?c=<slug> shows one hunter's sheet, laid out like the PDF.
 
    The sheet lives in the site's Supabase project (setup: the chronicle
-   README and assets/sheets/sql/). If that cannot be reached, or the
-   sheet is not online yet, the page shows the sheet as first published
-   from assets/sheets/data/<slug>.json, read-only.
+   README and assets/sheets/sql/). There is no copy in the site's files:
+   if the database cannot be reached, the page says so.
 
    Who may change what is decided by the database, not by this file:
      - anyone reads;
@@ -20,6 +19,7 @@
 
   var TEMPLATE_PDF = "assets/sheets/pdf/blank-character-sheet.pdf";
   var PDF_LIB = "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js";
+  var PDF_LIB_SRI = "sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI";
 
   var ATTRS = [
     ["Physical", ["strength", "dexterity", "stamina"]],
@@ -101,6 +101,7 @@
     return new Promise(function (resolve, reject) {
       var s = document.createElement("script");
       s.src = src; s.onload = resolve;
+      if (src === PDF_LIB) { s.integrity = PDF_LIB_SRI; s.crossOrigin = "anonymous"; }
       s.onerror = function () { reject(new Error("Could not load " + src)); };
       document.head.appendChild(s);
     });
@@ -741,15 +742,6 @@
     $("sheet").innerHTML = '<div class="sheet-notice">' + msg + "</div>";
   }
 
-  async function fetchPublished() {
-    var res = await fetch("assets/sheets/data/" + slug + ".json", { cache: "no-cache" });
-    if (!res.ok) return false;
-    var j = await res.json();
-    S.sheet = normalise({ slug: slug, name: j.data && j.data.name, data: j.data, play: j.play });
-    S.online = false;
-    return true;
-  }
-
   async function load() {
     if (!/^[a-z0-9-]{1,40}$/.test(slug)) return NPC ? storytellerOnly(false) : notFound();
     setStatus("Opening the sheet…");
@@ -764,21 +756,15 @@
       render();
       return;
     }
-    var ok = false, reason = "";
+    var ok = false, failed = false;
     if (db) {
-      try { ok = await fetchOnline(); if (!ok) reason = "This sheet is not online yet."; }
-      catch (e) { console.error(e); reason = "The online sheet could not be reached."; }
+      try { ok = await fetchOnline(); }
+      catch (e) { console.error(e); failed = true; }
     } else {
-      reason = "Online sheets are not connected.";
+      failed = true;
     }
-    if (!ok) {
-      try { ok = await fetchPublished(); } catch (e) { console.error(e); }
-      if (!ok) return notFound();
-      $("sheetNotice").hidden = false;
-      $("sheetNotice").textContent = reason + " Showing the sheet as first published; it cannot be changed here.";
-    } else {
-      $("sheetNotice").hidden = true;
-    }
+    if (!ok) return failed ? unreachable() : notFound();
+    $("sheetNotice").hidden = true;
     setStatus("");
     render();
     // A link to #xpTitle (from the Storyteller page) arrives before the sheet is drawn.
@@ -791,6 +777,12 @@
     try { await fetchOnline(); }
     catch (e) { console.error(e); toast("Could not refresh the sheet: " + errText(e)); }
     render();
+  }
+
+  function unreachable() {
+    setStatus("");
+    $("sheetTitle").textContent = "Character sheet";
+    $("sheet").innerHTML = '<div class="sheet-notice">The character sheets could not be reached just now. Try again in a moment.</div>';
   }
 
   function notFound() {

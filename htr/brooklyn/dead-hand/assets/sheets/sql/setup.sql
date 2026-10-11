@@ -5,7 +5,8 @@
 -- Character sheets and experience — one-time setup
 -- ---------------------------------------------------------------------
 -- Run this whole file once in Supabase: SQL Editor -> New query.
--- Then run seed.sql, which loads the hunters' current sheets.
+-- Then run seed.sql (kept off the site, in private/dead-hand/sheets/sql/),
+-- which loads the hunters' sheets as first published.
 --
 -- Who may do what (enforced here, by the database, not by the page):
 --   * Anyone can read the sheets, the XP costs, awards and purchases.

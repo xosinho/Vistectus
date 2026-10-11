@@ -6,7 +6,8 @@
      The board itself is vtda/assets/intrigue-board/ (script and styles). -->
 <html lang="en">
 <head>
-  <script>document.documentElement.classList.add("gate-pending")</script>
+  <script>document.documentElement.classList.add("gate-pending", "gate-all")</script>
+  <style>html.gate-pending main, html.gate-pending.gate-all body > *:not(.gate-box) { visibility: hidden !important; }</style>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Intrigue Board · {{CHRONICLE_NAME}} · VisTectus</title>
@@ -96,9 +97,9 @@
      The Person / Place / Document pickers offer the chronicle's NPCs,
      Maps and Documents from the workshop; hidden ones are left out. -->
 <script>window.VAMPIRE_NPCS = []; window.VAMPIRE_MAPS = []; window.VAMPIRE_DOCUMENTS = [];</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R" crossorigin="anonymous"></script>
 <script src="../../../../builders/config.js?v=20261015"></script>
-<script src="../../../../gate.js?v=20261015" data-chronicle="{{CHRONICLE_ID}}"></script>
+<script src="../../../../gate.js?v=20261016" data-chronicle="{{CHRONICLE_ID}}"></script>
 <script src="../../../../content.js?v=20261015"></script>
 <script src="../../../assets/intrigue-board/intrigue-board.js?v=20261015"></script>
 </body>

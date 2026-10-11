@@ -39,9 +39,17 @@
     return String(text || "").split(/\n\s*\n/).map(function (p) { return p.trim(); }).filter(Boolean)
       .map(function (p) { return "<p>" + esc(p).replace(/\n/g, "<br>") + "</p>"; }).join("");
   }
+  // A picture from this site's own storage (world-media), and nowhere else.
+  function ownMedia(url) {
+    var base = String((window.BUILDERS_CONFIG || {}).supabaseUrl || "").replace(/\/+$/, "");
+    if (!/^https:\/\/[a-z0-9.-]+$/i.test(base)) return false;
+    url = String(url || "");
+    return url.indexOf(base + "/storage/v1/object/public/world-media/") === 0 &&
+      /^[A-Za-z0-9%._\/-]+$/.test(url.slice(base.length + 1));
+  }
   // A picture URL as a CSS value, safely: only our own storage links.
   function cssUrl(url) {
-    return /^https:\/\/[a-z0-9.-]+\/storage\/v1\/object\/public\/world-media\/[A-Za-z0-9%._\/-]+$/.test(url || "") ? "url('" + url + "')" : "";
+    return ownMedia(url) ? "url('" + url + "')" : "";
   }
   function card(o) {
     var art = o.image ? ' style="--art: ' + cssUrl(o.image) + '"' : "";

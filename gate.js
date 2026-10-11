@@ -9,9 +9,14 @@
      <script src="..." data-chronicle="dead-hand" data-need="storyteller"></script>
      <script src="../gate.js" data-need="admin"></script>        (site admins)
 
-   and put this first thing in <head>, so nothing shows before the check:
+   and put these first thing in <head>, so nothing shows before the check
+   (gate.js itself only loads at the end of the page):
 
      <script>document.documentElement.classList.add("gate-pending")</script>
+     <style>html.gate-pending main, html.gate-pending.gate-all body > *:not(.gate-box) { visibility: hidden !important; }</style>
+
+   On a page without a <main> (a board, Locations), add "gate-all" too:
+   classList.add("gate-pending", "gate-all").
 
    The page's <main> stays hidden until the signed-in account is shown
    to be a member (or the chronicle's Storyteller, with

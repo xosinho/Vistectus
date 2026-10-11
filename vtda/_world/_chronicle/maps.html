@@ -7,6 +7,7 @@
 <html lang="en">
 <head>
   <script>document.documentElement.classList.add("gate-pending")</script>
+  <style>html.gate-pending main, html.gate-pending.gate-all body > *:not(.gate-box) { visibility: hidden !important; }</style>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Maps · Resources · {{CHRONICLE_NAME}} · VisTectus</title>
@@ -88,9 +89,9 @@
 </footer>
 
 <script>window.VAMPIRE_MAPS = [];</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R" crossorigin="anonymous"></script>
 <script src="../../../builders/config.js?v=20261015"></script>
-<script src="../../../gate.js?v=20261015" data-chronicle="{{CHRONICLE_ID}}"></script>
+<script src="../../../gate.js?v=20261016" data-chronicle="{{CHRONICLE_ID}}"></script>
 <script src="../../../content.js?v=20261015"></script>
 <script src="../../assets/js/viewer.js?v=20261015"></script>
 <script src="../../assets/js/site.js?v=20261015"></script>

@@ -30,9 +30,13 @@
 
   async function route() {
     var path = window.location.pathname;
-    var segs = path.split("/").filter(Boolean).map(decodeURIComponent);
+    var segs;
+    try { segs = path.split("/").filter(Boolean).map(decodeURIComponent); } catch (e) { return notFound(); }
     var sys = segs[0], game = SYSTEMS[sys];
     if (!game || segs.length < 2 || segs[1].charAt(0) === "_") return notFound();
+    // Only plain names (a world, a chronicle, a page or folder of one):
+    // nothing like "..", so no address can reach any other file.
+    if (!segs.slice(1).every(function (x) { return /^[a-z0-9][a-z0-9-]*(\.html)?$/i.test(x); })) return notFound();
     // A folder address needs its trailing slash, or relative links break.
     var last = segs[segs.length - 1];
     if (!/\.html$/i.test(last) && !/\/$/.test(path)) { window.location.replace(path + "/" + window.location.search + window.location.hash); return; }

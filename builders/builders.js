@@ -233,7 +233,8 @@
   /* ---- pictures and files ----------------------------------------- */
   function mediaUrl(path) {
     if (!path) return "";
-    if (/^(blob:|data:)/.test(path)) return path;
+    // Local previews only: a picture being chosen (blob:) or an image data URL.
+    if (/^(blob:|data:image\/)/i.test(path)) return path;
     return window.ChronicleContent ? window.ChronicleContent.mediaUrl(path) : path;
   }
   function removeMedia(path) {

@@ -1,6 +1,6 @@
--- !! Since admin/sql/access.sql (chronicles and their members), this file's
--- !! rules are replaced there. If you ever run this file again, run
--- !! admin/sql/access.sql again straight after it.
+-- !! Since admin/sql/access.sql (chronicles and their members), this file
+-- !! only creates the table; who may read and change it is set there.
+-- !! Safe to run again: it no longer touches any access rule.
 -- =====================================================================
 -- Documents, Maps and People: items the Storyteller has hidden
 -- ---------------------------------------------------------------------
@@ -9,8 +9,9 @@
 -- Safe to run again.
 --
 -- Each row hides one document or map (by its file path) or one NPC
--- (by name) from the Documents, Maps or People page. Anyone can read the list, so the pages know
--- what to leave out; only a Storyteller can add or remove rows.
+-- (by name) from the Documents, Maps or People page. The chronicle's
+-- members read the list, so the pages know what to leave out; only its
+-- Storyteller adds or removes rows (rules: admin/sql/access.sql).
 -- Hiding takes an item off the page. It does not make the file secret:
 -- the file itself is still on the website.
 -- =====================================================================
@@ -31,13 +32,4 @@ alter table public.archive_hidden add constraint archive_hidden_kind_check
 
 alter table public.archive_hidden enable row level security;
 
-drop policy if exists "Anyone reads the hidden list" on public.archive_hidden;
-drop policy if exists "Storytellers hide items"      on public.archive_hidden;
-drop policy if exists "Storytellers show items"      on public.archive_hidden;
-
-create policy "Anyone reads the hidden list" on public.archive_hidden
-  for select to anon, authenticated using (true);
-create policy "Storytellers hide items" on public.archive_hidden
-  for insert to authenticated with check (public.is_storyteller());
-create policy "Storytellers show items" on public.archive_hidden
-  for delete to authenticated using (public.is_storyteller());
+-- Access rules: admin/sql/access.sql.
