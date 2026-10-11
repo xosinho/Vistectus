@@ -1,4 +1,4 @@
-/* Flavour for THIS world only. See dnd/world-one/world.css for the
+/* Flavour for THIS world only. See dnd/_world/world.css for the
    fully commented version of this file. */
 
 :root {
@@ -10,7 +10,7 @@
   --bg-sunken:  #09060e;
   --line:       #2f2140;
 
-  /* --logo: url('/vtda/hungary-1242/logo.svg'); */
+  /* --logo: url('/vtda/hungary-1242/logo.png'); */
   /* --font-display: "Cormorant Garamond", Georgia, serif; */
 
   --hero: linear-gradient(160deg, #2f1b3d 0%, #0e0a15 60%, #34142a 100%);

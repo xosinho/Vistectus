@@ -20,7 +20,7 @@
     var p = c.path || ((c.game === "hunter" ? "htr" : c.game === "vampire" ? "vtda" : "dnd") + "/" + c.world + "/" + c.id + "/");
     return "../" + p.split("/").map(encodeURIComponent).join("/");
   }
-  var GAMES = { hunter: "Hunter: the Reckoning", vampire: "Vampire: the Dark Ages", dnd: "Dungeons & Dragons 5e" };
+  var GAMES = { hunter: "Hunter: The Reckoning", vampire: "Vampire: The Dark Ages", dnd: "Dungeons & Dragons 5e" };
 
   function setup() {
     return '<section class="xp-panel"><details><summary><strong>One-time setup in Supabase</strong> (done once; here for reference)</summary>' +
@@ -127,7 +127,7 @@
       '<form class="xp-form" id="chronNew">' +
         '<label>Short name<input name="cid" required pattern="[a-z0-9-]{1,60}" placeholder="e.g. winter-court"></label>' +
         '<label style="flex:1">Name<input name="cname" required maxlength="120" placeholder="e.g. The Winter Court" style="width:100%"></label>' +
-        '<label>Game<select name="game"><option value="vampire">Vampire: the Dark Ages</option><option value="hunter">Hunter: the Reckoning</option><option value="dnd">Dungeons &amp; Dragons 5e</option></select></label>' +
+        '<label>Game<select name="game"><option value="vampire">Vampire: The Dark Ages</option><option value="hunter">Hunter: The Reckoning</option><option value="dnd">Dungeons &amp; Dragons 5e</option></select></label>' +
         '<label>World<input name="world" required pattern="[a-z0-9-]{1,60}" placeholder="e.g. hungary-1242"></label>' +
         '<label>Folder (optional)<input name="cpath" pattern="[a-z0-9/-]{1,200}/" placeholder="e.g. dnd/shrouded/campaign-two/"></label>' +
         '<button class="btn" type="submit">Add</button></form>' +

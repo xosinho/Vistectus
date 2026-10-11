@@ -5,17 +5,17 @@
   <style>html.gate-pending main, html.gate-pending.gate-all body > *:not(.gate-box) { visibility: hidden !important; }</style>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Create Hunter · Dead Hand · VisTectus</title>
+  <title>Create Hunter · The Dead Hand · VisTectus</title>
   <meta name="robots" content="noindex">
   <meta name="description" content="Make a new hunter for the Dead Hand chronicle step by step, then send it to the Storyteller for approval.">
 
-  <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
+  <link rel="icon" href="/art/logo.png" type="image/png">
 
   <!-- Three folders up to the hub stylesheet, one up for the world flavour,
        then the character sheet's own look (the wizard fills in that sheet). -->
-  <link rel="stylesheet" href="../../../style.css?v=20261011">
-  <link rel="stylesheet" href="../world.css">
-  <link rel="stylesheet" href="assets/css/sheet.css?v=20261011">
+  <link rel="stylesheet" href="../../../style.css?v=202610111600">
+  <link rel="stylesheet" href="../world.css?v=202610111600">
+  <link rel="stylesheet" href="../../assets/css/sheet.css?v=202610111600">
 
   <style>
     /* Create Hunter only: the step bar, the tallies and the checklist.
@@ -137,7 +137,9 @@
   </style>
 </head>
 
-<body data-page="create" data-title="Create Hunter">
+<body data-page="create" data-title="Create Hunter"
+      data-world="brooklyn" data-world-name="Brooklyn"
+      data-chronicle="dead-hand" data-chronicle-name="The Dead Hand">
 
 <a class="skip" href="#main">Skip to content</a>
 
@@ -158,7 +160,8 @@
     <li><a href="../../../index.html">VisTectus</a></li>
     <li><a href="../../../htr/index.html">Hunter</a></li>
     <li><a href="../../../htr/brooklyn/index.html">Brooklyn Chronicles</a></li>
-    <li><a href="../../../htr/brooklyn/dead-hand/index.html">Dead Hand</a></li>
+    <li><a href="../../../htr/brooklyn/dead-hand/index.html">The Dead Hand</a></li>
+    <li><a href="players.html">The cell</a></li>
     <li aria-current="page">Create Hunter</li>
   </ol>
 </nav>
@@ -178,13 +181,13 @@
     <a href="players.html" aria-current="page">The cell</a>
     <a href="npcs.html">People</a>
     <a href="resources.html">Resources</a>
-    <a href="login.html">Log in</a>
+    <a href="login.html">Sign in</a>
     <a href="storyteller.html">Storyteller</a>
   </div>
 </nav>
 
 <main id="main" class="sheet-wrap">
-  <!-- Drawn by assets/js/create.js once the members' gate (gate.js) has
+  <!-- Drawn by htr/assets/js/create.js once the members' gate (gate.js) has
        let the visitor in. Drafts live in the character_drafts table and
        change only through its functions (admin/sql/access.sql). -->
   <div id="create"><p class="sheet-status">Opening&hellip;</p></div>
@@ -204,8 +207,9 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R" crossorigin="anonymous"></script>
-<script src="../../../builders/config.js"></script>
-<script src="../../../gate.js?v=20261016" data-chronicle="dead-hand"></script>
-<script src="assets/js/create.js?v=20261011"></script>
+<script src="../../../builders/config.js?v=202610111600"></script>
+<script src="../../../gate.js?v=202610111600" data-chronicle="dead-hand"></script>
+<script src="../../../content.js?v=202610111600"></script>
+<script src="../../assets/js/create.js?v=202610111600"></script>
 </body>
 </html>

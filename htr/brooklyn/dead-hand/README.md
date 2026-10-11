@@ -1,12 +1,12 @@
-# Dead Hand Chronicle — how to add content
+# The Dead Hand — how to add content
 
-Part of **Vistectus → Hunter → Brooklyn Chronicles → Dead Hand Chronicle**.
+Part of **VisTectus → Hunter → Brooklyn Chronicles → The Dead Hand**.
 
 ## Members only
 
 Every page but the front page (`index.html`) is for the chronicle's
 members: it opens after signing in, and only for an email added to
-Dead Hand. Storytellers are added on the site's Admin page (`/admin/`);
+The Dead Hand. Storytellers are added on the site's Admin page (`/admin/`);
 players by the Storyteller, under *Players* on `storyteller.html`.
 Adding an email is the invitation: the person signs in with it on any
 of the chronicle's pages, and the first link creates their account.
@@ -23,36 +23,69 @@ further down, which are kept here for reference).
 ```
 assets/data/players.js   the cell
 assets/data/npcs.js      people of Red Hook
-assets/js/site.js        the menu, if you add a whole page
 ```
+
+People, handouts and maps can also be added in the Builder's
+**workshop** (the Storyteller page links to it); the pages show both.
 
 Copy an existing block, fill it in, drop the files where its paths point:
 
 ```
-portrait  -> assets/img/players/   or   assets/img/npcs/    (lowercase filenames)
+portrait  -> assets/img/players/   or   assets/img/npcs/
 sheet     -> online; see "Character sheets and XP" below
 ```
 
-Any field but `name` may be left out. No portrait falls back to
-`assets/img/placeholder.svg`; no `sheet` hides the sheet button;
-NPCs without `stats` simply show no stat block.
+Any field but `name` may be left out. No portrait falls back to the
+shared `shared/img/placeholder.svg`; no `sheet` hides the sheet
+button; NPCs without `stats` simply show no stat block.
 
-**Use lowercase filenames.** Windows does not care, but a web host does,
-and a portrait named `Payne.jpg` will not load from a path that says
-`payne.jpg`.
+**Match the file name exactly, capitals included.** Windows does not
+care, but the live site does: a portrait saved as `Payne.jpg` will not
+load from a path that says `payne.jpg`.
 
-## Styling
+## Scripts and styles: shared with every Hunter chronicle
 
-There is none in this folder, on purpose. The pages use:
+There are none in this folder, on purpose. The Dead Hand runs on the same
+scripts as the chronicles made with the Builder (their pages are the
+templates in `htr/_world/_chronicle/`):
 
 ```
-../../../style.css   the shared Vistectus wireframe
+../../assets/js/render.js          The cell and People (window.HunterChronicle)
+../../assets/js/viewer.js          Documents and Maps
+../../assets/js/sheet.js           the character and NPC sheets
+../../assets/js/storyteller.js     the Storyteller page
+../../assets/js/create.js          Create Hunter
+../../assets/js/site.js            the page title
+../../assets/css/sheet.css         the sheets, the Storyteller page, Create Hunter
+../../../shared/css/resources.css  Documents and Maps (one copy for every system)
+../../assets/case-board/           the RICO Case board
+```
+
+They learn which chronicle they serve from the `<body>` of each page:
+
+```html
+<body data-world="brooklyn" data-world-name="Brooklyn"
+      data-chronicle="dead-hand" data-chronicle-name="The Dead Hand">
+```
+
+Keep those four on every page, spelled exactly so. The data files set
+`window.HUNTER_PLAYERS`, `HUNTER_NPCS`, `HUNTER_DOCUMENTS`, `HUNTER_MAPS`
+and `HUNTER_RESOURCES`, the names the shared scripts read; the scripts
+add what the Storyteller put in the workshop (`/content.js`).
+
+A change to a shared script changes every Hunter chronicle. Change it
+there, never by copying it into this folder, then run
+`python tools/set-version.py` so every page asks for the new copy.
+
+The look comes from:
+
+```
+../../../style.css   the shared VisTectus wireframe
 ../world.css         Brooklyn Chronicles flavour: blood accent, Garamond, bone text
 ```
 
 To restyle the whole world — every chronicle in it — edit `../world.css`.
-Nothing here needs to change. The previous standalone stylesheet is kept
-at `../_legacy/style.old.css` for reference.
+Nothing here needs to change.
 
 ## Pages
 
@@ -62,6 +95,12 @@ at `../_legacy/style.old.css` for reference.
 | `players.html` | The cell |
 | `npcs.html` | People of Red Hook |
 | `resources.html` | Documents, handouts and references from the chronicle |
+| `documents.html`, `maps.html` | The handouts and the maps |
+| `sheet.html` | A hunter's or an NPC's sheet |
+| `create.html` | Create Hunter |
+| `login.html` | Sign in |
+| `storyteller.html` | The Storyteller page |
+| `rico-case/` | The RICO Case board |
 | `compendium.html` | Redirects to `resources.html` (kept so old links work) |
 
 ## Resources
@@ -75,9 +114,7 @@ assets/resources/          put the files themselves here
 ```
 
 Copy an entry, fill it in, and the page lists it under its category.
-Only `title` and `href` are required. The Compendium is one entry among
-the others: replace `assets/compendium/compendium.html` with the real
-document, keeping the filename, and its link keeps working.
+Only `title` and `href` are required.
 
 ## Character sheets and XP
 
@@ -109,6 +146,10 @@ PDFs, their JSON and `seed.sql`) are kept off the site, in the
 repository's `private/dead-hand/` folder, which git ignores: they name
 the players and must never be published. If the online sheet cannot be
 reached, the page says so.
+
+**Download PDF** fills in the shared blank sheet,
+`htr/assets/sheets/blank-character-sheet.pdf`. The copy in
+`assets/sheets/pdf/` stays because the Resources list links to it.
 
 ### One-time setup
 
@@ -169,6 +210,11 @@ The Resources page leads to three archives:
   tab), you also see your private notes and factions, and can add,
   drag, edit, reveal, hide and delete pins, upload area maps and
   building plans, place tokens, and save or load setups.
+  `locations/index.html` is only a shell: the app is the shared real-map
+  one (`/shared/locations/real-map.js` and `.css`, also used by the
+  A Crown of Ice and Bone). The page sets the map's centre and zoom, the
+  wording and the colours, and lists the real reference landmarks (for
+  you only) in a small JSON block.
 
 All three are public: only publish what the players have been given.
 
@@ -242,6 +288,19 @@ One-time setup: run `assets/sheets/sql/npc-sheets.sql` in Supabase (it creates t
 
 `rico-case/` is the case board, opened from the **RICO Case** button in
 Vivienne's dossier (the `links` field on her entry in `players.js`).
+It is the shared Hunter case board (`htr/assets/case-board/`, the same
+one every Builder-made chronicle has); `rico-case/index.html` holds only
+its markup and names it on its `<body>`:
+
+```html
+<body ... data-board-name="RICO Case"
+      data-board-editors="Vivienne’s and Ezekiel’s players and the Storyteller">
+```
+
+`data-board-name` is the case file the page opens (stored as
+`rico-case`; do not rename it, or the saved versions are no longer the
+one it opens). `data-board-editors` only says on the page who may save;
+the database decides.
 
 Case files are kept online, in the same Supabase project as the Builders
 area (the board reads its address and key from `builders/config.js`).
@@ -258,17 +317,21 @@ area (the board reads its address and key from `builders/config.js`).
   from the board with an email link. Nothing on the board is private,
   so keep the chronicle's secrets off it.
 - Photos are uploaded when the board is saved, so versions share them
-  instead of each carrying a copy.
+  instead of each carrying a copy. They go to the `case-photos` bucket
+  as `dead-hand/<hash>.<ext>`; boards saved before that hold links to
+  photos at the top of the bucket, which keep working.
 
 Until `builders/config.js` is filled in, the board still works but says
 "Not connected" when you Save or Open.
 
 **Who may save and delete:** only the players of Vivienne and Ezekiel,
 and the Storyteller, set by `case_board_editor()` in
-`admin/sql/access.sql`. It uses the `sheet_owners` table, so their
-emails must be linked to their hunters there. The chronicle's members
-can open and read the board. To change the list, change
-`case_board_editor()` there and run `access.sql` again.
+`admin/sql/access.sql` (the board asks `board_editor('dead-hand')`,
+which hands The Dead Hand to `case_board_editor()`). It uses the
+`sheet_owners` table, so their emails must be linked to their hunters
+there. The chronicle's members can open and read the board. To change
+the list, change `case_board_editor()` there and run `access.sql`
+again, and the `data-board-editors` wording on `rico-case/index.html`.
 
 ### One-time setup
 

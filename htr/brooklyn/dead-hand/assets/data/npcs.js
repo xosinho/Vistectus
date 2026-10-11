@@ -12,7 +12,7 @@
    only if you want an ST/stat view — omit it for player-facing.)
    ===================================================================== */
 
-window.DEAD_HAND_NPCS = [
+window.HUNTER_NPCS = [
 
   {
     name: "Elias Thorne",
@@ -182,7 +182,7 @@ window.DEAD_HAND_NPCS = [
     name: "Vincenzo Pellegrino",
     tagline: "Third generation of the family trade",
     role: "Owner · Pellegrino & Sons Funeral Home",
-    portrait: "assets/img/npcs/Vicenzo Pellegrino.jpg",
+    portrait: "assets/img/npcs/Vincenzo Pellegrino.jpg",
     meta: ["The Family & its holdings"],
     description:
       "Third-generation owner-operator of Pellegrino & Sons Funeral Home, " +
@@ -595,7 +595,7 @@ window.DEAD_HAND_NPCS = [
     name: "Dr. Francisco Lehder",
     tagline: "Takes Adelina’s calls at any hour",
     role: "Senior Surgeon · Ferris-Whitlock Memorial",
-    portrait: "assets/img/npcs/Dr. Francisco Ledher.jpg",
+    portrait: "assets/img/npcs/Dr. Francisco Lehder.jpg",
     meta: ["Cartel & street"],
     description:
       "Senior surgeon at Ferris-Whitlock Memorial, widely respected in his " +
@@ -690,7 +690,7 @@ window.DEAD_HAND_NPCS = [
     name: "Matthew",
     tagline: "The coach who shaped him",
     role: "College athletics coach · Jack’s mentor",
-    portrait: "assets/img/npcs/Mathew.jpg",
+    portrait: "assets/img/npcs/Matthew.jpg",
     meta: ["Associate"],
     description:
       "College athletics coach and former semi-professional athlete. Mentor " +

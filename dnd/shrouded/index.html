@@ -6,9 +6,9 @@
   <title>Shrouded &middot; VisTectus</title>
   <meta name="description" content="Shrouded: a Dungeons &amp; Dragons world.">
 
-  <link rel="icon" href="../../art/VisTectus Logo 1.jpg" type="image/jpeg">
-  <link rel="stylesheet" href="../../style.css">
-  <link rel="stylesheet" href="world.css">
+  <link rel="icon" href="/art/logo.png" type="image/png">
+  <link rel="stylesheet" href="../../style.css?v=202610111600">
+  <link rel="stylesheet" href="world.css?v=202610111600">
 </head>
 
 <body>
@@ -84,7 +84,7 @@
         <a class="card-art" href="https://dnd5e.wikidot.com/" target="_blank" rel="noopener"><span class="card-badge">Reference</span></a>
         <div class="card-body">
           <h3><a href="https://dnd5e.wikidot.com/" target="_blank" rel="noopener">D&amp;D 5e Wiki</a></h3>
-          <p class="meta">The rules</p>
+          <p class="meta">The Rules</p>
           <p>Species, classes, backgrounds, feats and spells: the D&amp;D 5th edition wiki. Opens in a new tab.</p>
         </div>
       </article>
@@ -93,16 +93,16 @@
 
   <!-- ---- Campaigns ---------------------------------------------
        One card per campaign; each has its own folder (see dnd/README.md).
-       To add one: copy campaign-one, rename it, set its id in every
+       To add one: copy the-wheel-of-time, rename it, set its id in every
        page's <body data-campaign="...">, add it on the Admin page, and
        copy a card below. -->
   <section class="row" id="campaigns">
     <div class="row-head"><h2>Campaigns</h2></div>
     <div class="cards">
       <article class="card">
-        <a class="card-art" href="campaign-one/index.html" style="--art: url('/dnd/shrouded/art/Shrouded%20Card%20and%20Hero.jpeg'); --art-pos: top"><span class="card-badge">Running</span></a>
+        <a class="card-art" href="the-wheel-of-time/index.html" style="--art: url('/dnd/shrouded/art/Shrouded%20Card%20and%20Hero.jpeg'); --art-pos: top"><span class="card-badge">Running</span></a>
         <div class="card-body">
-          <h3><a href="campaign-one/index.html">The Wheel of Time</a></h3>
+          <h3><a href="the-wheel-of-time/index.html">The Wheel of Time</a></h3>
           <p class="meta">Shrouded</p>
           <p>The party, the people they have met, and the campaign&rsquo;s resources.</p>
         </div>
@@ -114,7 +114,11 @@
     <div class="row-head"><h2>Overview</h2></div>
     <div class="prose">
       <!-- The pitch for the WORLD, not one campaign. -->
-      <p>The world of Shrouded. Its overview will appear here.</p>
+      <p>
+        Shrouded is a world of old kingdoms and older secrets, where the past
+        has been deliberately forgotten and the few who remember are not
+        trusted.
+      </p>
     </div>
   </section>
 
@@ -130,8 +134,8 @@
   </div>
 </footer>
 
-<script src="../../tabs.js" defer></script>
+<script src="../../tabs.js?v=202610111600" defer></script>
 <!-- Worlds and chronicles made with the Builder join the list above. -->
-<script src="/listings.js?v=20261016" data-chronicles="shrouded" data-target="#campaigns .cards"></script>
+<script src="/listings.js?v=202610111600" data-chronicles="shrouded" data-target="#campaigns .cards"></script>
 </body>
 </html>

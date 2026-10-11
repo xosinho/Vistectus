@@ -9,7 +9,7 @@ ample.
     The Bohemian Court.jpg      The Bohemian Court        - the patient rival
     The Shadow Horde.jpg        The Shadow Horde & Cumans - the eyes left behind
     The Empty Seat.jpg          The Papal States          - the faith of the kingdom
-    The Holy Roma Empire.jpg    The Holy Roman Empire     - the pressure from every side
+    The Holy Roman Empire.jpg    The Holy Roman Empire     - the pressure from every side
     Byzantium.jpg               The Eastern Empire        - the undefended flank
     The Priors.jpg              The Rus Nosferatu         - the price of knowing
 

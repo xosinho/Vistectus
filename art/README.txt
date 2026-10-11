@@ -12,9 +12,9 @@ WHERE TO PUT A PICTURE
 Keep each picture next to the pages that use it. The only files that
 belong in this top folder are ones the whole site shares.
 
-logo.svg is the site logo. Replace it with your own and every page picks
-it up, including the browser-tab icon. A PNG or JPG works too: drop it
-in here and change the one --logo line near the top of ../style.css.
+logo.png is the site logo and the browser-tab icon: a 128 x 128 copy of
+"VisTectus Logo 1.jpg" (the full-size original, kept here). To change
+it, replace logo.png (keep it small and square); every page picks it up.
 
 
 HOW A PAGE USES A PICTURE

@@ -12,7 +12,7 @@
    given.
    ===================================================================== */
 
-window.DEAD_HAND_DOCUMENTS = [
+window.HUNTER_DOCUMENTS = [
 
   {
     title: "Registro delle Provenienze, f. 47 v.",

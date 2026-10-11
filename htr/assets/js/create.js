@@ -1035,7 +1035,7 @@
     else if (key === "review") {
       h += '<section class="page">' + stepHead(i, "This is your hunter as the Storyteller will see it. Go back to any step to change something. When every rule below is ticked, send it.") + "</section>";
       h += sheetHtml(d, p);
-      h += '<section class="xp-panel" aria-labelledby="clTitle"><h2 id="clTitle">The rules</h2><div id="wzChecklist"></div></section>';
+      h += '<section class="xp-panel" aria-labelledby="clTitle"><h2 id="clTitle">The Rules</h2><div id="wzChecklist"></div></section>';
     }
     return h;
   }

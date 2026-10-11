@@ -13,7 +13,7 @@
    (the Storyteller, signed in).
    ===================================================================== */
 
-window.CROWN_DOCUMENTS = [
+window.VAMPIRE_DOCUMENTS = [
 
   /* Example — copy, fill in, and remove the comment marks:
   {

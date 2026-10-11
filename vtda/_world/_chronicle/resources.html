@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Template for every Vampire: the Dark Ages chronicle made with the
+<!-- Template for every Vampire: The Dark Ages chronicle made with the
      World Builder. The router (/router.js on /404.html) serves it at
      /vtda/<world>/<chronicle>/resources.html with {{WORLD_ID}} {{WORLD_NAME}}
      {{CHRONICLE_ID}} {{CHRONICLE_NAME}} filled in (HTML-escaped).
@@ -13,14 +13,14 @@
   <title>Resources · {{CHRONICLE_NAME}} · VisTectus</title>
   <meta name="description" content="Resources for {{CHRONICLE_NAME}}: documents, maps, locations, the intrigue board and the rules.">
 
-  <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
+  <link rel="icon" href="/art/logo.png" type="image/png">
 
   <!-- The hub stylesheet (site root, three folders up), the Vampire
        default colours, then the world's own, then the shared chronicle styles. -->
-  <link rel="stylesheet" href="../../../style.css?v=20261015">
-  <link rel="stylesheet" href="../../_world/world.css?v=20261015">
-  <link rel="stylesheet" href="../world.css?v=20261015">
-  <link rel="stylesheet" href="../../assets/css/chronicle.css?v=20261015">
+  <link rel="stylesheet" href="../../../style.css?v=202610111600">
+  <link rel="stylesheet" href="../../_world/world.css?v=202610111600">
+  <link rel="stylesheet" href="../world.css?v=202610111600">
+  <link rel="stylesheet" href="../../assets/css/chronicle.css?v=202610111600">
 </head>
 
 <body data-page="resources" data-title="Resources" data-world="{{WORLD_ID}}" data-world-name="{{WORLD_NAME}}" data-chronicle="{{CHRONICLE_ID}}" data-chronicle-name="{{CHRONICLE_NAME}}">
@@ -63,7 +63,7 @@
     <a href="players.html">The coterie</a>
     <a href="npcs.html">People</a>
     <a href="resources.html" aria-current="page">Resources</a>
-    <a href="login.html">Log in</a>
+    <a href="login.html">Sign in</a>
     <a href="storyteller.html">Storyteller</a>
   </div>
 </nav>
@@ -89,8 +89,8 @@
         <p>The coterie&rsquo;s web of suspicions: who serves whom, and who is lying.</p>
       </article>
       <article class="entry">
-        <h3><a href="../rules.html">The rules</a></h3>
-        <p>Vampire: the Dark Ages, from the Storytellers&rsquo; notes in Obsidian. For the players of {{WORLD_NAME}} only.</p>
+        <h3><a href="../rules.html">The Rules</a></h3>
+        <p>Vampire: The Dark Ages, from the Storytellers&rsquo; notes in Obsidian. For the players of {{WORLD_NAME}} only.</p>
       </article>
     </div>
   </section>
@@ -116,73 +116,10 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R" crossorigin="anonymous"></script>
-<script src="../../../builders/config.js?v=20261015"></script>
-<script src="../../../gate.js?v=20261016" data-chronicle="{{CHRONICLE_ID}}"></script>
-<script src="../../../content.js?v=20261015"></script>
-<script>
-/* The reference list: links the Storyteller added in the workshop
-   (chronicle_items, kind "resource"), grouped by category. */
-(function () {
-  "use strict";
-  window.VAMPIRE_RESOURCES = [];
-  var root = document.getElementById("resources");
-  var chronicle = document.body.getAttribute("data-chronicle");
-
-  function el(tag, cls, text) {
-    var e = document.createElement(tag);
-    if (cls) e.className = cls;
-    if (text) e.textContent = text;          // never innerHTML: data stays data
-    return e;
-  }
-  // Only web addresses and plain paths.
-  function safeHref(u) {
-    u = String(u == null ? "" : u).trim();
-    return (/^[a-z][a-z0-9+.-]*:/i.test(u) && !/^https?:/i.test(u)) ? "" : u;
-  }
-
-  ChronicleContent.merge("resource", window.VAMPIRE_RESOURCES, chronicle).then(function (list) {
-    list = (list || []).filter(function (r) { return r && r.title; });
-    if (!list.length) {
-      var empty = el("section", "row");
-      empty.appendChild(el("p", "empty", "No reference material yet. It will appear here as the chronicle goes on."));
-      root.appendChild(empty);
-      return;
-    }
-    // Group by category, in the order each category first appears.
-    var order = [], groups = {};
-    list.forEach(function (r) {
-      var c = r.category || "Reference";
-      if (!groups[c]) { groups[c] = []; order.push(c); }
-      groups[c].push(r);
-    });
-    order.forEach(function (cat) {
-      var section = el("section", "row");
-      var head = el("div", "row-head");
-      head.appendChild(el("h2", null, cat));
-      section.appendChild(head);
-      var entries = el("div", "entries");
-      groups[cat].forEach(function (r) {
-        var item = el("article", "entry");
-        var h3 = el("h3");
-        var href = safeHref(r.href);
-        if (href) {
-          var a = el("a", null, r.title);
-          a.href = href;
-          if (r.external || /^https?:/i.test(href)) { a.target = "_blank"; a.rel = "noopener"; }
-          h3.appendChild(a);
-        } else h3.textContent = r.title;
-        item.appendChild(h3);
-        var meta = [r.kind, r.when].filter(Boolean).join(" · ");
-        if (meta) item.appendChild(el("p", "meta", meta));
-        if (r.description) item.appendChild(el("p", null, r.description));
-        entries.appendChild(item);
-      });
-      section.appendChild(entries);
-      root.appendChild(section);
-    });
-  });
-})();
-</script>
-<script src="../../assets/js/site.js?v=20261015"></script>
+<script src="../../../builders/config.js?v=202610111600"></script>
+<script src="../../../gate.js?v=202610111600" data-chronicle="{{CHRONICLE_ID}}"></script>
+<script src="../../../content.js?v=202610111600"></script>
+<script src="../../../shared/resources-list.js?v=202610111600" data-unit="chronicle"></script>
+<script src="../../assets/js/site.js?v=202610111600"></script>
 </body>
 </html>

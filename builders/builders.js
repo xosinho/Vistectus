@@ -31,12 +31,20 @@
      dashboard, together with the worlds the account can edit. */
   var WORLDS = [
     {
-      id: "brooklyn", name: "Brooklyn Chronicles", system: "Hunter: the Reckoning",
-      chronicles: [{ id: "dead-hand", name: "Dead Hand" }]
+      id: "brooklyn", name: "Brooklyn Chronicles", system: "Hunter: The Reckoning",
+      chronicles: [{ id: "dead-hand", name: "The Dead Hand" }]
     },
     {
-      id: "hungary-1242", name: "Hungary 1242", system: "Vampire: the Dark Ages",
+      id: "hungary-1242", name: "Hungary 1242", system: "Vampire: The Dark Ages",
       chronicles: [{ id: "crown-of-ice-and-bone", name: "A Crown of Ice and Bone" }]
+    },
+    {
+      id: "shrouded", name: "Shrouded", system: "Dungeons & Dragons",
+      chronicles: [{ id: "shrouded-campaign-one", name: "The Wheel of Time" }]
+    },
+    {
+      id: "the-last-garden", name: "The Last Garden", system: "Dungeons & Dragons",
+      chronicles: [{ id: "the-last-garden-campaign-one", name: "Last Garden" }]
     }
   ];
 
@@ -64,15 +72,15 @@
   /* ---- the three games and their words ---------------------------- */
   var GAMES = {
     hunter: {
-      id: "hunter", name: "Hunter: the Reckoning", short: "Hunter", path: "htr",
+      id: "hunter", name: "Hunter: The Reckoning", short: "Hunter", path: "htr",
       unit: "chronicle", Unit: "Chronicle", st: "Storyteller", stShort: "Storyteller", crew: "cell",
       stPage: "storyteller.html", stPageLabel: "Storyteller page",
       blurb: "Modern horror. Ordinary people who have seen what hides in the dark, and hunt it.",
-      wiki: "https://htr.paradoxwikis.com/Hunter_The_Reckoning_Wiki", wikiLabel: "the Hunter: the Reckoning wiki",
+      wiki: "https://htr.paradoxwikis.com/Hunter_The_Reckoning_Wiki", wikiLabel: "the Hunter: The Reckoning wiki",
       optionsLabel: "Creeds"
     },
     vampire: {
-      id: "vampire", name: "Vampire: the Dark Ages", short: "Vampire", path: "vtda",
+      id: "vampire", name: "Vampire: The Dark Ages", short: "Vampire", path: "vtda",
       unit: "chronicle", Unit: "Chronicle", st: "Storyteller", stShort: "Storyteller", crew: "coterie",
       stPage: "storyteller.html", stPageLabel: "Storyteller page",
       blurb: "Gothic horror in the Middle Ages. The undead Cainites scheme among princes, churches and each other.",

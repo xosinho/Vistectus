@@ -15,7 +15,7 @@
      Sheets ......... online only (the character_sheets table)
    ===================================================================== */
 
-window.DEAD_HAND_PLAYERS = [
+window.HUNTER_PLAYERS = [
 
   {
     name: "Major Payne",

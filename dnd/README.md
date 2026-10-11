@@ -26,13 +26,19 @@ dnd/
   sql/setup.sql                   D&D tables and functions (run after admin/sql/access.sql)
   assets/                         shared by every campaign (campaign pages read their id
     data/rules-5e.js              from <body data-campaign="...">)
-    js/  sheet.js dm.js render.js viewer.js site.js create.js levelup.js
-    css/ sheet.css campaign.css
-    locations/                    the Locations app (shared code)
+    js/  sheet.js dm.js render.js viewer.js site.js create.js levelup.js available.js
+    css/ sheet.css campaign.css available.css wizard.css
+    locations/                    the Locations app for invented worlds (uploaded map),
+                                  also used by Builder-made Hunter and Vampire chronicles
     quest-board/                  the Quest Board (shared code)
+  _world/                         the templates for D&D worlds made with the Builder
+                                  (see builders/ARCHITECTURE.md)
+  tools/make_rules_5e.py          builds assets/data/rules-5e.js from the wiki
   shrouded/                       a world
     index.html  world.css  art/
-    campaign-one/                 a campaign: id "shrouded-campaign-one"
+    factions/index.html           its factions (and those added in the Builder's workshop)
+    races-and-classes/            the races and classes allowed in this world
+    the-wheel-of-time/            a campaign: id "shrouded-campaign-one"
       index.html                  front page (public)
       players.html                The Party            (members only)
       npcs.html                   NPCs                 (members only)
@@ -42,13 +48,13 @@ dnd/
       create.html                 Create a Character   (members only)
       levelup.html                ?c=<slug> Level up   (the player, members only)
       dm.html                     DM Screen            (the campaign's DMs only)
-      login.html                  Log in               (public)
+      login.html                  Sign in               (public)
       locations/index.html        Locations            (members only)
       quest-board/index.html      Quest Board          (members only)
       assets/data/  players.js npcs.js documents.js maps.js resources.js
       assets/img/npcs/ assets/img/players/ assets/resources/Documents/ assets/resources/Maps/
   the-last-garden/                a world
-    campaign-one/                 id "the-last-garden-campaign-one"
+    last-garden/                  id "the-last-garden-campaign-one"
 ```
 
 Campaign pages set `<body data-campaign="<id>">`; every shared script
@@ -56,12 +62,20 @@ reads it from there. Data files define `window.CAMPAIGN_PLAYERS`,
 `CAMPAIGN_NPCS`, `CAMPAIGN_DOCUMENTS`, `CAMPAIGN_MAPS`, `CAMPAIGN_RESOURCES`.
 
 Campaign tabs: Campaign (index.html) · The Party (players.html) ·
-NPCs (npcs.html) · Resources (resources.html) · Log in (login.html) ·
-DM Screen (dm.html). World tabs: Campaigns · Overview · The Rules
-(https://dnd5e.wikidot.com/, opens in a new tab).
+NPCs (npcs.html) · Resources (resources.html) · Sign in (login.html) ·
+DM Screen (dm.html). World tabs: Campaigns · Overview · Factions ·
+Races & Classes · D&D 5e Wiki (https://dnd5e.wikidot.com/, opens in a
+new tab).
+
+Shared with the other systems: the Resources page's reference list
+(`/shared/resources-list.js`), the handout and map pages' look
+(`/shared/css/resources.css`) and the blank portrait
+(`/shared/img/placeholder.svg`). NPCs, handouts, maps, reference links
+and places added in the Builder's workshop (linked from the DM Screen)
+appear beside what the data files hold.
 
 Members-only pages use the site's gate (`/gate.js`) with
-`data-chronicle="<campaign id>"` and `data-dm-label="DM"`; the DM Screen
+`data-chronicle="<campaign id>"` and `data-dm-label="Dungeon Master"`; the DM Screen
 adds `data-need="storyteller"`. In the database the role is still called
 `storyteller`; the pages say Dungeon Master / DM.
 

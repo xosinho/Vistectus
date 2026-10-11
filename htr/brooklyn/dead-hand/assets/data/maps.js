@@ -13,7 +13,7 @@
    given.
    ===================================================================== */
 
-window.DEAD_HAND_MAPS = [
+window.HUNTER_MAPS = [
 
   {
     title: "74 Degraw",

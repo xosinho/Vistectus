@@ -14,7 +14,9 @@
    computer, so a Storyteller copies the notes up from this page: the
    "Update from Obsidian" box (the world's Storytellers only) reads the
    chosen folder of the vault in the browser and sends every note to the
-   database. Do it again after changing the notes in Obsidian.
+   database. Do it again after changing the notes in Obsidian. A page
+   that knows where the world's notes are in the vault names the folder
+   in the box's steps: <body data-vault-folder="Vault › RPG › dark-ages">.
 
    Obsidian's [[links]] work: [[abilities]], [[../factions/brujah|Brujah]]
    and [[the-roads#Road of Kings]] open the note they name.
@@ -24,6 +26,8 @@
 
   var WORLD = document.body.getAttribute("data-world") || "";
   var WORLD_NAME = document.body.getAttribute("data-world-name") || WORLD;
+  // Where the world's notes are in the vault, if the page says (for the upload steps).
+  var VAULT_FOLDER = (document.body.getAttribute("data-vault-folder") || "").trim();
   var HOME = "index";
   var db = null;
   var root = document.getElementById("rules");
@@ -159,7 +163,7 @@
     article.innerHTML = '<p class="rules-crumb">' + (crumbs || "&nbsp;") + "</p>" +
       (/^\s*#\s/.test(n.body) ? "" : "<h1>" + esc(n.title) + "</h1>") +
       '<div class="rules-body">' + html + "</div>" +
-      '<p class="rules-foot">From the Storytellers&rsquo; notes on <em>Vampire: the Dark Ages</em>, for the players of ' + esc(WORLD_NAME) + ' only. Please do not copy or share them.</p>';
+      '<p class="rules-foot">From the Storytellers&rsquo; notes on <em>Vampire: The Dark Ages</em>, for the players of ' + esc(WORLD_NAME) + ' only. Please do not copy or share them.</p>';
     document.title = n.title + " · The rules · " + WORLD_NAME + " · VisTectus";
     // Headings get ids, so [[note#Heading]] lands on them.
     article.querySelectorAll(".rules-body h1, .rules-body h2, .rules-body h3, .rules-body h4").forEach(function (h) { h.id = anchorId(h.textContent); });
@@ -202,8 +206,11 @@
     box.innerHTML = "<details" + (open ? " open" : "") + '><summary>Update from Obsidian <small>(Storytellers only)</small></summary>' +
       '<p class="rules-status">' + state + "</p>" +
       "<ol class=\"rules-steps\">" +
-        "<li>Make your changes in Obsidian as usual, in the folder of your vault that holds this world&rsquo;s Dark Ages rules (one note per page; its <code>index</code> note opens first).</li>" +
-        "<li>Here, press <strong>Choose folder</strong> and pick that folder. Your browser may ask whether to upload the files: they are only read by this page and sent to the rules database.</li>" +
+        (VAULT_FOLDER
+          ? "<li>Make your changes in Obsidian as usual. The Dark Ages notes are in the folder <code>" + esc(VAULT_FOLDER) + "</code>.</li>" +
+            "<li>Here, press <strong>Choose folder</strong> and pick that <code>" + esc(VAULT_FOLDER.split(/\s*[›\/\\]\s*/).pop()) + "</code> folder. Your browser may ask whether to upload the files: they are only read by this page and sent to the rules database.</li>"
+          : "<li>Make your changes in Obsidian as usual, in the folder of your vault that holds this world&rsquo;s Dark Ages rules (one note per page; its <code>index</code> note opens first).</li>" +
+            "<li>Here, press <strong>Choose folder</strong> and pick that folder. Your browser may ask whether to upload the files: they are only read by this page and sent to the rules database.</li>") +
         "<li>Press <strong>Upload</strong>. Every note is copied, notes you have deleted in Obsidian are removed here, and players see the new version straight away.</li>" +
       "</ol>" +
       '<form class="rules-form" id="vaultForm"><label class="btn btn--ghost" for="vaultDir">Choose folder</label>' +

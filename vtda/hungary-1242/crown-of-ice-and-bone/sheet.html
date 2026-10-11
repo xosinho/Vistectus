@@ -9,14 +9,18 @@
   <meta name="robots" content="noindex">
   <meta name="description" content="A Cainite's character sheet for A Crown of Ice and Bone, with experience and purchases.">
 
-  <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
-  <link rel="stylesheet" href="../../../style.css">
-  <link rel="stylesheet" href="../world.css">
-  <link rel="stylesheet" href="assets/css/chronicle.css?v=20261010">
-  <link rel="stylesheet" href="assets/css/sheet.css?v=20261011b">
+  <link rel="icon" href="/art/logo.png" type="image/png">
+  <!-- The hub stylesheet (site root, three folders up), the Vampire
+       default colours, then the world's own, then the shared chronicle
+       styles (vtda/assets/). -->
+  <link rel="stylesheet" href="../../../style.css?v=202610111600">
+  <link rel="stylesheet" href="../../_world/world.css?v=202610111600">
+  <link rel="stylesheet" href="../world.css?v=202610111600">
+  <link rel="stylesheet" href="../../assets/css/chronicle.css?v=202610111600">
+  <link rel="stylesheet" href="../../assets/css/sheet.css?v=202610111600">
 </head>
 
-<body data-page="sheet">
+<body data-page="sheet" data-title="Character sheet" data-world="hungary-1242" data-world-name="Hungary 1242" data-chronicle="crown-of-ice-and-bone" data-chronicle-name="A Crown of Ice and Bone">
 
 <a class="skip" href="#main">Skip to content</a>
 
@@ -56,13 +60,13 @@
     <a href="players.html" aria-current="page">The coterie</a>
     <a href="npcs.html">People</a>
     <a href="resources.html">Resources</a>
-    <a href="login.html">Log in</a>
+    <a href="login.html">Sign in</a>
     <a href="storyteller.html">Storyteller</a>
   </div>
 </nav>
 
 <main id="main" class="sheet-wrap">
-  <!-- Everything below is drawn by assets/js/sheet.js from the sheet
+  <!-- Everything below is drawn by ../../assets/js/sheet.js from the sheet
        online (the character_sheets table). -->
   <div class="sheet-bar">
     <a class="btn btn--ghost" href="players.html">&larr; The coterie</a>
@@ -109,9 +113,9 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R" crossorigin="anonymous"></script>
-<script src="../../../builders/config.js"></script>
-<script src="../../../gate.js?v=20261016" data-chronicle="crown-of-ice-and-bone"></script>
-<script src="assets/data/rules-data.js?v=20261010"></script>
-<script src="assets/js/sheet.js?v=20261011"></script>
+<script src="../../../builders/config.js?v=202610111600"></script>
+<script src="../../../gate.js?v=202610111600" data-chronicle="crown-of-ice-and-bone"></script>
+<script src="../../assets/data/rules-data.js?v=202610111600"></script>
+<script src="../../assets/js/sheet.js?v=202610111600"></script>
 </body>
 </html>

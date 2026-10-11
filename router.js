@@ -18,6 +18,12 @@
   "use strict";
 
   var SYSTEMS = { htr: "hunter", vtda: "vampire", dnd: "dnd" };
+  // Folders of the site's own chronicles that have moved: any address
+  // under the old folder goes to the same page in the new one.
+  var MOVED = {
+    "/dnd/shrouded/campaign-one/": "/dnd/shrouded/the-wheel-of-time/",
+    "/dnd/the-last-garden/campaign-one/": "/dnd/the-last-garden/last-garden/"
+  };
   var WORLD_PAGES = { factions: 1, options: 1 };
   var box = document.getElementById("routing");
 
@@ -30,6 +36,12 @@
 
   async function route() {
     var path = window.location.pathname;
+    for (var from in MOVED) {
+      if ((path + "/").indexOf(from) === 0) {
+        window.location.replace(MOVED[from] + path.slice(from.length) + window.location.search + window.location.hash);
+        return;
+      }
+    }
     var segs;
     try { segs = path.split("/").filter(Boolean).map(decodeURIComponent); } catch (e) { return notFound(); }
     var sys = segs[0], game = SYSTEMS[sys];

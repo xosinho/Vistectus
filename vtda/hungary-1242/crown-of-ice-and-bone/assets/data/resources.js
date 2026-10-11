@@ -19,6 +19,6 @@
      assets/resources/        (any file type)
    ===================================================================== */
 
-window.CROWN_RESOURCES = [
+window.VAMPIRE_RESOURCES = [
 
 ];

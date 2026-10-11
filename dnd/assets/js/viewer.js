@@ -202,7 +202,7 @@
       return;
     }
     renderList();
-    // Signing in happens on the Log in page; the session carries over.
+    // Signing in happens on the Sign in page; the session carries over.
     if (db && !signedIn) {
       var p = el("p", "archive-signin");
       p.appendChild(document.createTextNode("Dungeon Master? "));

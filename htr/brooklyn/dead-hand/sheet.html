@@ -5,17 +5,19 @@
   <style>html.gate-pending main, html.gate-pending.gate-all body > *:not(.gate-box) { visibility: hidden !important; }</style>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Character sheet · Dead Hand · VisTectus</title>
+  <title>Character sheet · The Dead Hand · VisTectus</title>
   <meta name="robots" content="noindex">
   <meta name="description" content="A hunter's character sheet for the Dead Hand chronicle, with experience and purchases.">
 
-  <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
-  <link rel="stylesheet" href="../../../style.css">
-  <link rel="stylesheet" href="../world.css">
-  <link rel="stylesheet" href="assets/css/sheet.css?v=20261004">
+  <link rel="icon" href="/art/logo.png" type="image/png">
+  <link rel="stylesheet" href="../../../style.css?v=202610111600">
+  <link rel="stylesheet" href="../world.css?v=202610111600">
+  <link rel="stylesheet" href="../../assets/css/sheet.css?v=202610111600">
 </head>
 
-<body data-page="sheet">
+<body data-page="sheet"
+      data-world="brooklyn" data-world-name="Brooklyn"
+      data-chronicle="dead-hand" data-chronicle-name="The Dead Hand">
 
 <a class="skip" href="#main">Skip to content</a>
 
@@ -36,7 +38,7 @@
     <li><a href="../../../index.html">VisTectus</a></li>
     <li><a href="../../../htr/index.html">Hunter</a></li>
     <li><a href="../../../htr/brooklyn/index.html">Brooklyn Chronicles</a></li>
-    <li><a href="index.html">Dead Hand</a></li>
+    <li><a href="index.html">The Dead Hand</a></li>
     <li><a href="players.html">The cell</a></li>
     <li aria-current="page" id="crumbName">Character sheet</li>
   </ol>
@@ -55,14 +57,14 @@
     <a href="players.html" aria-current="page">The cell</a>
     <a href="npcs.html">People</a>
     <a href="resources.html">Resources</a>
-    <a href="login.html">Log in</a>
+    <a href="login.html">Sign in</a>
     <a href="storyteller.html">Storyteller</a>
   </div>
 </nav>
 
 <main id="main" class="sheet-wrap">
-  <!-- Everything below is drawn by assets/js/sheet.js from the sheet
-       online (the character_sheets table). -->
+  <!-- Everything below is drawn by htr/assets/js/sheet.js from the
+       sheet online (the character_sheets table). -->
   <div class="sheet-bar">
     <a class="btn btn--ghost" href="players.html">&larr; The cell</a>
     <span class="sheet-status" id="sheetStatus" role="status" aria-live="polite"></span>
@@ -108,8 +110,8 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R" crossorigin="anonymous"></script>
-<script src="../../../builders/config.js"></script>
-<script src="../../../gate.js?v=20261016" data-chronicle="dead-hand"></script>
-<script src="assets/js/sheet.js?v=20261016"></script>
+<script src="../../../builders/config.js?v=202610111600"></script>
+<script src="../../../gate.js?v=202610111600" data-chronicle="dead-hand"></script>
+<script src="../../assets/js/sheet.js?v=202610111600"></script>
 </body>
 </html>

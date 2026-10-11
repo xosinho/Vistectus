@@ -5,19 +5,21 @@
   <style>html.gate-pending main, html.gate-pending.gate-all body > *:not(.gate-box) { visibility: hidden !important; }</style>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>The rules · Hungary 1242 · VisTectus</title>
-  <meta name="description" content="The rules of Vampire: the Dark Ages, from the Storytellers' notes. For the players of Hungary 1242.">
+  <title>The Rules · Hungary 1242 · VisTectus</title>
+  <meta name="description" content="The rules of Vampire: The Dark Ages, from the Storytellers' notes. For the players of Hungary 1242.">
   <meta name="robots" content="noindex">
 
-  <link rel="icon" href="../../art/VisTectus Logo 1.jpg" type="image/jpeg">
+  <link rel="icon" href="/art/logo.png" type="image/png">
 
-  <!-- Two folders up to the hub stylesheet; the world flavour sits beside this page. -->
-  <link rel="stylesheet" href="../../style.css">
-  <link rel="stylesheet" href="world.css">
-  <link rel="stylesheet" href="rules.css?v=20261011">
+  <!-- The hub stylesheet (two folders up), the Vampire default colours,
+       then the world's own, then the shared rules pages' styles. -->
+  <link rel="stylesheet" href="../../style.css?v=202610111600">
+  <link rel="stylesheet" href="../_world/world.css?v=202610111600">
+  <link rel="stylesheet" href="world.css?v=202610111600">
+  <link rel="stylesheet" href="../assets/css/rules.css?v=202610111600">
 </head>
 
-<body data-page="rules" data-title="The rules">
+<body data-page="rules" data-title="The Rules" data-world="hungary-1242" data-world-name="Hungary 1242" data-vault-folder="Obsidian Vault › RPG › wiki › dark-ages">
 
 <a class="skip" href="#main">Skip to content</a>
 
@@ -38,15 +40,15 @@
     <li><a href="../../index.html">VisTectus</a></li>
     <li><a href="../index.html">Vampire</a></li>
     <li><a href="index.html">Hungary 1242</a></li>
-    <li aria-current="page">The rules</li>
+    <li aria-current="page">The Rules</li>
   </ol>
 </nav>
 
 <section class="hero hero--compact">
   <div class="hero-inner">
     <p class="kicker">For the players of Hungary 1242</p>
-    <h1>The rules</h1>
-    <p class="lede">Vampire: the Dark Ages, from the Storytellers&rsquo; notes in Obsidian.</p>
+    <h1>The Rules</h1>
+    <p class="lede">Vampire: The Dark Ages, from the Storytellers&rsquo; notes in Obsidian.</p>
   </div>
 </section>
 
@@ -55,12 +57,13 @@
     <a href="index.html#chronicles">Chronicles</a>
     <a href="index.html#overview">Overview</a>
     <a href="factions/index.html">Factions</a>
-    <a href="rules.html" aria-current="page">The rules</a>
+    <a href="clans-of-the-damned/index.html">Clans &amp; Bloodlines</a>
+    <a href="rules.html" aria-current="page">The Rules</a>
   </div>
 </nav>
 
 <main id="main">
-  <!-- Drawn by rules.js. The notes are uploaded from the Obsidian
+  <!-- Drawn by ../assets/js/rules.js. The notes are uploaded from the Obsidian
        vault on this page, by a Storyteller, and kept in the database,
        where only the players and Storytellers of Hungary 1242's
        chronicles can read them: nothing of the rules is in this
@@ -82,8 +85,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js" integrity="sha384-/TQbtLCAerC3jgaim+N78RZSDYV7ryeoBCVqTuzRrFec2akfBkHS7ACQ3PQhvMVi" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js" integrity="sha384-+VfUPEb0PdtChMwmBcBmykRMDd+v6D/oFmB3rZM/puCMDYcIvF968OimRh4KQY9a" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R" crossorigin="anonymous"></script>
-<script src="../../builders/config.js"></script>
-<script src="../../gate.js?v=20261016" data-world="hungary-1242"></script>
-<script src="rules.js?v=20261011"></script>
+<script src="../../builders/config.js?v=202610111600"></script>
+<script src="../../gate.js?v=202610111600" data-world="hungary-1242"></script>
+<script src="../assets/js/rules.js?v=202610111600"></script>
 </body>
 </html>

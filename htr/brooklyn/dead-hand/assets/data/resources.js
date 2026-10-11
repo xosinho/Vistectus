@@ -15,15 +15,15 @@
      Or link anywhere on the web with external: true.
    ===================================================================== */
 
-window.DEAD_HAND_RESOURCES = [
+window.HUNTER_RESOURCES = [
 
   {
     title: "Blank character sheet",
     category: "Reference",
     kind: "PDF",
     when: "",
-    description: "The fillable Hunter: the Reckoning 5th Edition sheet the cell's own sheets are built on.",
-    href: "assets/sheets/pdf/blank-character-sheet.pdf"
+    description: "The fillable Hunter: The Reckoning 5th Edition sheet the cell's own sheets are built on.",
+    href: "../../assets/sheets/blank-character-sheet.pdf"
   }
 
 ];

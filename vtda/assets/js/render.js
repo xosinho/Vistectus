@@ -41,8 +41,8 @@
   // The placeholder portrait sits beside this script's folder (vtda/assets/img/).
   var ME = document.currentScript;
   var PLACEHOLDER = (function () {
-    try { return new URL("../img/placeholder.svg", ME && ME.src ? ME.src : window.location.href).href; }
-    catch (e) { return "../../assets/img/placeholder.svg"; }
+    try { return new URL("../../../shared/img/placeholder.svg", ME && ME.src ? ME.src : window.location.href).href; }
+    catch (e) { return "../../../shared/img/placeholder.svg"; }
   })();
 
   /* Links and pictures from the database: only web addresses and plain

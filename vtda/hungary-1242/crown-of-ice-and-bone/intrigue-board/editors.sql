@@ -1,3 +1,0 @@
--- The Intrigue Board's database rules (who may save and delete boards)
--- are part of the site-wide admin/sql/access.sql. There is nothing to
--- run here.

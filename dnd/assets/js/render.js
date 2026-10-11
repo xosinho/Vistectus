@@ -49,7 +49,7 @@
     }).join("");
   }
 
-  var PLACEHOLDER = "../../assets/img/placeholder.svg";
+  var PLACEHOLDER = "../../../shared/img/placeholder.svg";   // from the campaign's page
 
   /* --------------------------------------------------------- build a card */
   function cardHtml(entry, i) {
@@ -328,7 +328,7 @@
     if (store && store.db && !store.signedIn && !hint) {
       hint = document.createElement("p");
       hint.className = "roster-signin";
-      hint.innerHTML = 'Dungeon Master? <a href="login.html">Log in</a> to hide or show people, then come back to this page.';
+      hint.innerHTML = 'Dungeon Master? <a href="login.html">Sign in</a> to hide or show people, then come back to this page.';
       el.parentNode.insertBefore(hint, el.nextSibling);
     }
 

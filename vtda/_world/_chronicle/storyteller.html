@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Template for every Vampire: the Dark Ages chronicle made with the
+<!-- Template for every Vampire: The Dark Ages chronicle made with the
      World Builder. The router (/router.js on /404.html) serves it at
      /vtda/<world>/<chronicle>/storyteller.html with {{WORLD_ID}} {{WORLD_NAME}}
      {{CHRONICLE_ID}} {{CHRONICLE_NAME}} filled in (HTML-escaped).
@@ -14,15 +14,15 @@
   <meta name="robots" content="noindex">
   <meta name="description" content="The Storyteller's page for {{CHRONICLE_NAME}}.">
 
-  <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
+  <link rel="icon" href="/art/logo.png" type="image/png">
 
   <!-- The hub stylesheet (site root, three folders up), the Vampire
        default colours, then the world's own, then the shared chronicle styles. -->
-  <link rel="stylesheet" href="../../../style.css?v=20261015">
-  <link rel="stylesheet" href="../../_world/world.css?v=20261015">
-  <link rel="stylesheet" href="../world.css?v=20261015">
-  <link rel="stylesheet" href="../../assets/css/chronicle.css?v=20261015">
-  <link rel="stylesheet" href="../../assets/css/sheet.css?v=20261015">
+  <link rel="stylesheet" href="../../../style.css?v=202610111600">
+  <link rel="stylesheet" href="../../_world/world.css?v=202610111600">
+  <link rel="stylesheet" href="../world.css?v=202610111600">
+  <link rel="stylesheet" href="../../assets/css/chronicle.css?v=202610111600">
+  <link rel="stylesheet" href="../../assets/css/sheet.css?v=202610111600">
 </head>
 
 <body data-page="storyteller" data-title="Storyteller" data-world="{{WORLD_ID}}" data-world-name="{{WORLD_NAME}}" data-chronicle="{{CHRONICLE_ID}}" data-chronicle-name="{{CHRONICLE_NAME}}">
@@ -64,7 +64,7 @@
     <a href="players.html">The coterie</a>
     <a href="npcs.html">People</a>
     <a href="resources.html">Resources</a>
-    <a href="login.html">Log in</a>
+    <a href="login.html">Sign in</a>
     <a href="storyteller.html" aria-current="page">Storyteller</a>
   </div>
 </nav>
@@ -89,12 +89,12 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R" crossorigin="anonymous"></script>
-<script src="../../../builders/config.js?v=20261015"></script>
-<script src="../../../gate.js?v=20261016" data-chronicle="{{CHRONICLE_ID}}" data-need="storyteller"></script>
-<script src="../../../content.js?v=20261015"></script>
-<script src="../../../members.js?v=20261015"></script>
+<script src="../../../builders/config.js?v=202610111600"></script>
+<script src="../../../gate.js?v=202610111600" data-chronicle="{{CHRONICLE_ID}}" data-need="storyteller"></script>
+<script src="../../../content.js?v=202610111600"></script>
+<script src="../../../members.js?v=202610111600"></script>
 <script>window.VAMPIRE_NPCS = [];</script>
-<script src="../../assets/data/rules-data.js?v=20261015"></script>
-<script src="../../assets/js/storyteller.js?v=20261015"></script>
+<script src="../../assets/data/rules-data.js?v=202610111600"></script>
+<script src="../../assets/js/storyteller.js?v=202610111600"></script>
 </body>
 </html>

@@ -14,7 +14,7 @@
    Storyteller, signed in).
    ===================================================================== */
 
-window.CROWN_MAPS = [
+window.VAMPIRE_MAPS = [
 
   /* Example — copy, fill in, and remove the comment marks:
   {

@@ -14,7 +14,7 @@
                       sheet.html?c=istvan
    ===================================================================== */
 
-window.CROWN_PLAYERS = [
+window.VAMPIRE_PLAYERS = [
 
   /* Example — copy, fill in, and remove the comment marks:
   {

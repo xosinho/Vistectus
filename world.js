@@ -26,7 +26,7 @@
                        text: "The official Hunter: The Reckoning wiki from Paradox: rules, Creeds, Edges and the world of the Hunt. Opens in a new tab." } },
     vampire: { path: "vtda", unit: "chronicle", Units: "Chronicles", crew: "The coterie", crewWho: "Cainite", people: "People", peopleMeta: "Dossiers",
                options: "Clans & Bloodlines", optionsMeta: "Player options", optionsText: "The clans and bloodlines of Caine allowed in this world.",
-               rules: { label: "The rules", href: "rules.html", ext: false, meta: "Vampire: the Dark Ages, members only",
+               rules: { label: "The rules", href: "rules.html", ext: false, meta: "Vampire: The Dark Ages, members only",
                         text: "The rules of the Dark Ages from the Storytellers' notes, searchable and linked. For the players and Storytellers of this world: sign in to read." } },
     dnd: { path: "dnd", unit: "campaign", Units: "Campaigns", crew: "The Party", crewWho: "adventurer", people: "NPCs", peopleMeta: "Dramatis personae",
            options: "Available Races & Classes", optionsMeta: "Player options", optionsText: "The species and classes allowed in this world, each linked to the wiki.",
@@ -115,10 +115,18 @@
     el.innerHTML = h;
   }
 
+  // The page asked for a section (index.html#overview): it exists now.
+  function toHash() {
+    var id = "";
+    try { id = decodeURIComponent(window.location.hash.slice(1)); } catch (e) { return; }
+    var target = id && document.getElementById(id);
+    if (target) target.scrollIntoView();
+  }
+
   function start() {
     var w = document.getElementById("world-page"), c = document.getElementById("chronicle-front");
     var run = w ? worldPage(w) : c ? chronicleFront(c) : null;
-    if (run) run.catch(function (e) { console.error(e); (w || c).innerHTML = '<section class="row"><p class="prose">This page could not be loaded just now. Try again in a moment.</p></section>'; });
+    if (run) run.then(toHash).catch(function (e) { console.error(e); (w || c).innerHTML = '<section class="row"><p class="prose">This page could not be loaded just now. Try again in a moment.</p></section>'; });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
   window.WorldPages = { SYSTEMS: SYS };

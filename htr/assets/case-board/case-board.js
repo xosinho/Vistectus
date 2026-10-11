@@ -1,13 +1,21 @@
 /* =====================================================================
    HUNTER CHRONICLES (made with the Builder) — the case board
    ---------------------------------------------------------------------
-   One copy for every Builder-made Hunter chronicle; the same board as
-   Dead Hand's RICO Case (htr/brooklyn/dead-hand/rico-case/), made
-   generic. The page (htr/_world/_chronicle/board/index.html) is a thin
-   shell: it sets <body data-chronicle="..." data-chronicle-name="...">,
-   holds the board's markup, starts window.HUNTER_NPCS, HUNTER_MAPS and
+   One copy for every Builder-made Hunter chronicle, and for The Dead Hand's
+   RICO Case (htr/brooklyn/dead-hand/rico-case/), where it began. The
+   page (htr/_world/_chronicle/board/index.html) is a thin shell: it
+   sets <body data-chronicle="..." data-chronicle-name="...">, holds
+   the board's markup, starts window.HUNTER_NPCS, HUNTER_MAPS and
    HUNTER_DOCUMENTS empty, and loads supabase-js, builders/config.js,
    /gate.js, /content.js, case-board.css and this file.
+
+   A page may also name its board and say who may save it:
+     <body data-board-name="RICO Case"
+           data-board-editors="the cell's players and the Storyteller">
+   With a name, the page opens that case file (its id is the name made
+   into an address: "rico-case") rather than the most recent one, and a
+   new board starts under that name. The editors' words only change what
+   the page says; the database still decides.
 
    Case files live in the case_files table (chronicle = the chronicle's
    id); every Save is a new numbered version. Who may save and delete is
@@ -26,9 +34,15 @@
   /* ================= online storage =================
      CHRONICLE groups this chronicle's case files. The page opens the
      most recently saved case file, or a blank DEFAULT_BOARD when none
-     has been saved yet. */
+     has been saved yet; a page that names its board (data-board-name)
+     opens that one instead. The board's id is stored with every save,
+     so do not rename a named board once it has been saved. */
   var CHRONICLE = document.body.getAttribute('data-chronicle') || '';
-  var DEFAULT_BOARD = 'case-board', DEFAULT_NAME = 'Case Board';
+  var BOARD_NAME = (document.body.getAttribute('data-board-name') || '').trim().slice(0,60);
+  var DEFAULT_NAME = BOARD_NAME || 'Case Board';
+  var DEFAULT_BOARD = BOARD_NAME ? slugify(BOARD_NAME) : 'case-board';
+  // Who may save, in words, for the page's messages (data-board-editors).
+  var EDITORS = (document.body.getAttribute('data-board-editors') || '').trim();
   var CASE_TABLE = 'case_files', PHOTO_BUCKET = 'case-photos';
   var db = null;          // the gate's client, once it has let the visitor in
   var session = null;
@@ -236,9 +250,13 @@
 
   /* Who may save and delete is decided by the database
      (board_editor in admin/sql/access.sql). The page asks the same
-     question only to decide what to offer. */
+     question only to decide what to offer, and names the editors when
+     the page says who they are (data-board-editors). Plain text. */
   var canEdit = false;
-  var EDITORS_TEXT = "This account cannot save or delete this chronicle's case files. You can still open and read every saved version.";
+  var EDITORS_TEXT = (EDITORS
+    ? 'Only ' + EDITORS + ' can save or delete case files.'
+    : "This account cannot save or delete this chronicle's case files.") +
+    ' You can still open and read every saved version.';
   async function checkEditor(){
     canEdit = false;
     if(!db || !session) return;
@@ -254,7 +272,7 @@
   function openSignIn(){
     showModal(
       '<h3>Sign in to save</h3>' +
-      '<p class="hint">Saving is for the chronicle’s players and Storyteller. Enter your email and a sign-in link will be sent to it. Keep this tab open: after using the link, come back here and press Save again.</p>' +
+      '<p class="hint">Saving is for ' + escapeHtml(EDITORS || 'the chronicle’s players and Storyteller') + '. Enter your email and a sign-in link will be sent to it. Keep this tab open: after using the link, come back here and press Save again.</p>' +
       '<form id="signInForm">' +
         '<input id="signInEmail" type="email" autocomplete="email" placeholder="you@example.com" required/>' +
         '<p class="hint" id="signInMsg" role="status"></p>' +
@@ -389,7 +407,7 @@
     }
     showModal(
       '<h3>Case Files</h3>' +
-      '<p class="hint">Every save is kept. Pick a case file and a version to open.' + (canEdit ? '' : ' ' + EDITORS_TEXT) + '</p>' +
+      '<p class="hint">Every save is kept. Pick a case file and a version to open.' + (canEdit ? '' : ' ' + escapeHtml(EDITORS_TEXT)) + '</p>' +
       statusLine +
       '<div class="load-list">' + rows + '</div>' +
       '<hr class="modal-divider"/>' +
@@ -1488,8 +1506,9 @@
 
   /* ================= boot ================= */
   /* Once the gate has let the visitor in: gathers the pickers' lists,
-     then opens the latest version of the most recently saved case file,
-     or a blank board if none has been saved yet. */
+     then opens the latest version of the page's own case file
+     (data-board-name) or else of the most recently saved one, or a blank
+     board if none has been saved yet. */
   async function boot(g){
     db = (g && g.db) || null;
     if(!db || !CHRONICLE){ state = blankCase(DEFAULT_BOARD, DEFAULT_NAME); renderAll(); return; }
@@ -1508,9 +1527,8 @@
       LISTS = { npcs: window.HUNTER_NPCS || [], maps: window.HUNTER_MAPS || [], documents: window.HUNTER_DOCUMENTS || [] };
     }
     try{
-      var files = await fetchCaseList();
-      var first = files[0];
-      if(!(first && await loadCase(first.board))){ state = blankCase(DEFAULT_BOARD, DEFAULT_NAME); renderAll(); }
+      var board = BOARD_NAME ? DEFAULT_BOARD : ((await fetchCaseList())[0] || {}).board;
+      if(!(board && await loadCase(board))){ state = blankCase(DEFAULT_BOARD, DEFAULT_NAME); renderAll(); }
     }catch(e){
       console.error(e);
       state = blankCase(DEFAULT_BOARD, DEFAULT_NAME);

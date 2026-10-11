@@ -7,7 +7,7 @@
    back in the same shape as the data files, so the existing pages can
    show both:
 
-     ChronicleContent.merge("npc", window.CROWN_NPCS, "crown-of-ice-and-bone")
+     ChronicleContent.merge("npc", window.VAMPIRE_NPCS, "crown-of-ice-and-bone")
        .then(function (list) { ...render list... });
 
    kinds: "player", "npc", "document", "map", "resource".

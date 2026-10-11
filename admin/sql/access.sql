@@ -3,8 +3,8 @@
 -- ---------------------------------------------------------------------
 -- Run this whole file once in Supabase: SQL Editor -> New query -> Run.
 -- Safe to run again. Run it AFTER the Dead Hand files (sheets setup,
--- npc-sheets, archive-hidden, the case files block, rico-case/editors,
--- locations/setup) and BEFORE the Vampire chronicle's setup.sql.
+-- npc-sheets, archive-hidden, the case files block, locations/setup)
+-- and BEFORE the Vampire chronicle's setup.sql.
 --
 -- What it does:
 --   * chronicles: the list of chronicles (Dead Hand; A Crown of Ice and
@@ -34,7 +34,7 @@ create table if not exists public.site_admins (
 );
 
 -- A chronicle (D&D: a campaign). `path` is where its pages live on the
--- site, e.g. 'dnd/shrouded/campaign-one/'.
+-- site, e.g. 'dnd/shrouded/the-wheel-of-time/'.
 create table if not exists public.chronicles (
   id          text primary key check (id ~ '^[a-z0-9-]{1,60}$'),
   name        text not null,
@@ -46,15 +46,20 @@ alter table public.chronicles add column if not exists path text;
 alter table public.chronicles drop constraint if exists chronicles_game_check;
 alter table public.chronicles add constraint chronicles_game_check check (game in ('hunter', 'vampire', 'dnd'));
 insert into public.chronicles (id, name, game, world, path) values
-  ('dead-hand', 'Dead Hand', 'hunter', 'brooklyn', 'htr/brooklyn/dead-hand/'),
+  ('dead-hand', 'The Dead Hand', 'hunter', 'brooklyn', 'htr/brooklyn/dead-hand/'),
   ('crown-of-ice-and-bone', 'A Crown of Ice and Bone', 'vampire', 'hungary-1242', 'vtda/hungary-1242/crown-of-ice-and-bone/'),
-  ('shrouded-campaign-one', 'The Wheel of Time', 'dnd', 'shrouded', 'dnd/shrouded/campaign-one/'),
-  ('the-last-garden-campaign-one', 'The Last Garden — Campaign One', 'dnd', 'the-last-garden', 'dnd/the-last-garden/campaign-one/')
+  ('shrouded-campaign-one', 'The Wheel of Time', 'dnd', 'shrouded', 'dnd/shrouded/the-wheel-of-time/'),
+  ('the-last-garden-campaign-one', 'Last Garden', 'dnd', 'the-last-garden', 'dnd/the-last-garden/last-garden/')
 on conflict (id) do nothing;
 update public.chronicles set path = 'htr/brooklyn/dead-hand/' where id = 'dead-hand' and path is null;
 update public.chronicles set path = 'vtda/hungary-1242/crown-of-ice-and-bone/' where id = 'crown-of-ice-and-bone' and path is null;
--- Shrouded's first campaign was renamed.
+-- Names and folders changed since: the ids stay (everything is filed
+-- under them), the names and the folders follow.
 update public.chronicles set name = 'The Wheel of Time' where id = 'shrouded-campaign-one' and name = 'Shrouded — Campaign One';
+update public.chronicles set name = 'The Dead Hand' where id = 'dead-hand' and name = 'Dead Hand';
+update public.chronicles set name = 'Last Garden' where id = 'the-last-garden-campaign-one' and name = 'The Last Garden — Campaign One';
+update public.chronicles set path = 'dnd/shrouded/the-wheel-of-time/' where id = 'shrouded-campaign-one' and path = 'dnd/shrouded/campaign-one/';
+update public.chronicles set path = 'dnd/the-last-garden/last-garden/' where id = 'the-last-garden-campaign-one' and path = 'dnd/the-last-garden/campaign-one/';
 
 -- Chronicles made with the World Builder wait for approval (the rest of
 -- the Builder is in builders/sql/world-builder.sql; these columns are

@@ -279,7 +279,8 @@ begin
   if not found then
     if p_id !~ '^[a-z0-9][a-z0-9-]{1,58}[a-z0-9]$' then raise exception 'The short name may use a-z, 0-9 and dashes (3 to 60 characters).'; end if;
     if p_id in ('assets', 'art', 'factions', 'options', 'rules', 'index', 'locations', 'board', 'quest-board',
-                'races-and-classes', 'creeds', 'clans-of-the-damned', 'campaign-one', 'images') or p_id like '\_%' then
+                'races-and-classes', 'creeds', 'clans-of-the-damned', 'campaign-one', 'the-wheel-of-time',
+                'last-garden', 'images') or p_id like '\_%' then
       raise exception 'That short name is reserved.';
     end if;
     insert into chronicles (id, name, game, world, path, status, tagline, premise, card_image, created_by)

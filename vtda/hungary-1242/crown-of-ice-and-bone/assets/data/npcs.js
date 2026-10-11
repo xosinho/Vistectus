@@ -13,7 +13,7 @@
    Portraits -> assets/img/npcs/<file>  (jpg / png / webp)
    ===================================================================== */
 
-window.CROWN_NPCS = [
+window.VAMPIRE_NPCS = [
 
   /* Example — copy, fill in, and remove the comment marks:
   {

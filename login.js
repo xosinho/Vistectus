@@ -1,5 +1,5 @@
 /* =====================================================================
-   VISTECTUS — a chronicle's Log in page
+   VISTECTUS — a chronicle's Sign in page
    ---------------------------------------------------------------------
    login.html in each chronicle. Open to everyone (no gate): signed out,
    it asks for the email the Storyteller added; signed in, it shows the
@@ -55,7 +55,7 @@
     ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
 
   function signedOut() {
-    root.innerHTML = '<section class="login-box"><h2>Log in</h2>' +
+    root.innerHTML = '<section class="login-box"><h2>Sign in</h2>' +
       "<p>Players and " + DM + "s of this " + UNIT + " sign in here with the email the " + DM + " added. A link is sent to it; open it and you come back here, signed in. The first time, that link also creates your account.</p>" +
       '<form class="login-form"><input type="email" required autocomplete="email" placeholder="you@example.com" aria-label="Email">' +
       '<button class="btn" type="submit">Send link</button></form><p class="login-msg" role="status" aria-live="polite"></p>' +
@@ -92,9 +92,9 @@
     if (role.error) throw role.error;
     if (!role.data) {
       root.innerHTML = '<section class="login-box"><h2>Not in this ' + esc(UNIT) + "</h2>" +
-        '<p class="login-who">Logged in as ' + esc(email) + "</p>" +
+        '<p class="login-who">Signed in as ' + esc(email) + "</p>" +
         "<p>This email has not been added to this " + UNIT + ". If it should be, ask the " + DM + " to add it.</p>" +
-        '<div class="login-actions"><button type="button" class="btn btn--ghost login-out">Log out</button></div></section>';
+        '<div class="login-actions"><button type="button" class="btn btn--ghost login-out">Sign out</button></div></section>';
       signOutButton();
       return;
     }
@@ -107,7 +107,7 @@
     var drafts = (got[1].data || []).filter(function (d) { return d.email === String(email).toLowerCase() && d.status !== "approved"; });
     var STATUS = { draft: "Being made", submitted: "With the " + DM, rejected: "Sent back" };
     var h = '<section class="login-box"><h2>Welcome</h2>' +
-      '<p class="login-who">Logged in as ' + esc(email) + " · " + (st ? esc(DM) : "Player") + "</p>" +
+      '<p class="login-who">Signed in as ' + esc(email) + " · " + (st ? esc(DM) : "Player") + "</p>" +
       "<h3>Your " + esc(NOUN) + (sheets.length === 1 ? "" : "s") + "</h3>";
     h += sheets.length
       ? '<ul class="login-list">' + sheets.map(function (s) {
@@ -122,7 +122,7 @@
     h += '<div class="login-actions"><a class="btn" href="' + esc(CREATE_HREF) + '">' + esc(CREATE) + "</a>" +
       '<a class="btn btn--ghost" href="players.html">' + esc(CREW) + "</a>" +
       (st ? '<a class="btn btn--ghost" href="' + esc(DM_HREF) + '">' + esc(DM_PAGE) + "</a>" : "") +
-      '<button type="button" class="btn btn--ghost login-out">Log out</button></div></section>';
+      '<button type="button" class="btn btn--ghost login-out">Sign out</button></div></section>';
     root.innerHTML = h;
     signOutButton();
   }

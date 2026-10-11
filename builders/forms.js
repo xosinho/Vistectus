@@ -114,7 +114,7 @@
     var ids = { name: fid(), id: fid(), tag: fid(), pre: fid() };
     el.innerHTML =
       '<div class="form wb-form">' +
-      textField(ids.name, "Name of the " + u, c ? c.name : "", { max: 120, hint: "As it appears on the site: “Dead Hand”, “A Crown of Ice and Bone”." }) +
+      textField(ids.name, "Name of the " + u, c ? c.name : "", { max: 120, hint: "As it appears on the site: “The Dead Hand”, “A Crown of Ice and Bone”." }) +
       textField(ids.id, "Short name (its address)", c ? c.id : "", { max: 60, mono: true, readonly: !!c,
         hint: c ? "The " + u + "’s address: <code>/" + esc(g.path) + "/" + esc(wr.id) + "/" + esc(c.id) + "/</code>. It cannot change."
                 : "Used in the address: <code>/" + esc(g.path) + "/" + esc(wr.id) + "/<em>short-name</em>/</code>. Small letters a-z, numbers and dashes. It must not be used by any other " + u + " on the site." }) +

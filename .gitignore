@@ -2,3 +2,6 @@
 # Storyteller material, original sheets and anything else that must not
 # be on the public site goes in private/.
 /private/
+
+# Editor settings: personal, not part of the site.
+.vscode/

@@ -5,17 +5,21 @@
   <style>html.gate-pending main, html.gate-pending.gate-all body > *:not(.gate-box) { visibility: hidden !important; }</style>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>People · A Crown of Ice and Bone · VisTectus</title>
   <meta name="description" content="The people the coterie has crossed paths with so far.">
 
-  <link rel="icon" href="../../../art/VisTectus Logo 1.jpg" type="image/jpeg">
+  <link rel="icon" href="/art/logo.png" type="image/png">
 
-  <!-- Three folders up to the hub stylesheet, one up for the world flavour. -->
-  <link rel="stylesheet" href="../../../style.css?v=20261010">
-  <link rel="stylesheet" href="../world.css">
-  <link rel="stylesheet" href="assets/css/chronicle.css?v=20261010">
+  <!-- The hub stylesheet (site root, three folders up), the Vampire
+       default colours, then the world's own, then the shared chronicle
+       styles (vtda/assets/). -->
+  <link rel="stylesheet" href="../../../style.css?v=202610111600">
+  <link rel="stylesheet" href="../../_world/world.css?v=202610111600">
+  <link rel="stylesheet" href="../world.css?v=202610111600">
+  <link rel="stylesheet" href="../../assets/css/chronicle.css?v=202610111600">
 </head>
 
-<body data-page="npcs" data-title="People">
+<body data-page="npcs" data-title="People" data-world="hungary-1242" data-world-name="Hungary 1242" data-chronicle="crown-of-ice-and-bone" data-chronicle-name="A Crown of Ice and Bone">
 
 <a class="skip" href="#main">Skip to content</a>
 
@@ -57,7 +61,7 @@
     <a href="players.html">The coterie</a>
     <a href="npcs.html" aria-current="page">People</a>
     <a href="resources.html">Resources</a>
-    <a href="login.html">Log in</a>
+    <a href="login.html">Sign in</a>
     <a href="storyteller.html">Storyteller</a>
   </div>
 </nav>
@@ -82,16 +86,15 @@
   </div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R" crossorigin="anonymous"></script>
-<script src="../../../builders/config.js"></script>
-<script src="../../../gate.js?v=20261016" data-chronicle="crown-of-ice-and-bone"></script>
-<script src="../../../content.js?v=20261015"></script>
-<script src="assets/js/render.js?v=20261016"></script>
-<script src="assets/data/npcs.js?v=20261010"></script>
+<script src="../../../builders/config.js?v=202610111600"></script>
+<script src="../../../gate.js?v=202610111600" data-chronicle="crown-of-ice-and-bone"></script>
+<script src="../../../content.js?v=202610111600"></script>
+<script src="../../assets/js/render.js?v=202610111600"></script>
+<script src="assets/data/npcs.js?v=202610111600"></script>
 <script>
-  ChronicleContent.merge("npc", window.CROWN_NPCS, "crown-of-ice-and-bone").then(function (list) {
-    Chronicle.renderRoster("npcs-roster", list, "npc", { hide: "npcs" });
-  });
+  Chronicle.renderRoster("npcs-roster",
+    ChronicleContent.merge("npc", window.VAMPIRE_NPCS, document.body.getAttribute("data-chronicle")), "npc", { hide: "npcs" });
 </script>
-<script src="assets/js/site.js"></script>
+<script src="../../assets/js/site.js?v=202610111600"></script>
 </body>
 </html>

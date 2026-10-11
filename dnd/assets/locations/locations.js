@@ -3,8 +3,8 @@
    Vampire chronicles made with the Builder: see WORDING below)
    ---------------------------------------------------------------------
    The world map with pins, plus area maps and building plans with
-   tokens. The same app as the Vampire and Hunter Locations boards
-   (vtda/hungary-1242/crown-of-ice-and-bone/locations), for invented
+   tokens. The sister of the real-map app (shared/locations/real-map.js,
+   used by the Dead Hand and the Crown of Ice and Bone), for invented
    worlds: instead of a real-world street map, the Dungeon Master
    uploads a picture of the world and the pins sit on that.
 

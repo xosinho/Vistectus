@@ -34,7 +34,7 @@
     if (system === "dnd") {
       window.WORLD_AVAILABLE = { species: opts.species || null, classes: opts.classes || null, note: "" };
       el.id = "available";
-      await load("../../assets/js/available.js?v=20261015");
+      await load("../../assets/js/available.js?v=202610111600");
       return;
     }
     if (system === "hunter") {
@@ -48,8 +48,8 @@
       return;
     }
     // Vampire: clans and bloodlines from the rules data.
-    var R = window.VAMPIRE_RULES || window.CROWN_RULES;
-    if (!R) { await load("/vtda/assets/data/rules-data.js").catch(function () { return load("/vtda/hungary-1242/crown-of-ice-and-bone/assets/data/rules-data.js"); }); R = window.VAMPIRE_RULES || window.CROWN_RULES; }
+    if (!window.VAMPIRE_RULES) await load("/vtda/assets/data/rules-data.js?v=202610111600");
+    var R = window.VAMPIRE_RULES;
     var clans = allowed((R && R.clans) || [], opts.clans);
     function group(kind, title) {
       var list = clans.filter(function (c) { return c.kind === kind; });

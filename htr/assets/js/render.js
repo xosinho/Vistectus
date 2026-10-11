@@ -48,7 +48,7 @@
     }).join("");
   }
 
-  var PLACEHOLDER = "../../assets/img/placeholder.svg";
+  var PLACEHOLDER = "../../../shared/img/placeholder.svg";   // from the chronicle's page
 
   /* --------------------------------------------------------- build a card */
   function cardHtml(entry, i) {

@@ -9,7 +9,7 @@
    than edit by hand.
    ===================================================================== */
 window.VAMPIRE_RULES = {
- "source": "Vampire: the Dark Ages (V20) — names and costs from the Storyteller's notes; full rules in the members-only rules pages.",
+ "source": "Vampire: The Dark Ages (V20) — names and costs from the Storyteller's notes; full rules in the members-only rules pages.",
  "abilities": {
   "Talents": [
    "Alertness",

@@ -4,15 +4,15 @@ VisTectus has three games, each with worlds, and chronicles (D&D:
 campaigns) inside the worlds:
 
 ```
-htr/<world>/<chronicle>/     Hunter: the Reckoning     (chronicle, Storyteller, the cell)
-vtda/<world>/<chronicle>/    Vampire: the Dark Ages     (chronicle, Storyteller, the coterie)
+htr/<world>/<chronicle>/     Hunter: The Reckoning     (chronicle, Storyteller, the cell)
+vtda/<world>/<chronicle>/    Vampire: The Dark Ages     (chronicle, Storyteller, the coterie)
 dnd/<world>/<campaign>/      Dungeons & Dragons 5e      (campaign, Dungeon Master, the party)
 ```
 
 Two kinds of world and chronicle live side by side:
 
-- **In the site's files** (Brooklyn/Dead Hand, Hungary 1242/A Crown of
-  Ice and Bone, Shrouded/The Wheel of Time, The Last Garden/Campaign 1):
+- **In the site's files** (Brooklyn/The Dead Hand, Hungary 1242/A Crown of
+  Ice and Bone, Shrouded/The Wheel of Time, The Last Garden/Last Garden):
   real HTML pages and data files in the repository.
 - **Made with the Builder**: no files at all. They live in the database
   and their pages are drawn from shared templates (below).
@@ -65,8 +65,20 @@ Who may do what (the database enforces it):
 | `/content.js` | `ChronicleContent`: `merge(kind, staticList, chronicleId)` → Promise of the list plus the database's items (same shape as data-file entries; picture/file paths turned into links), `items(db, chronicle, kind)`, `factions(worldId)`, `world(id)`, `chronicles(worldId)`, `upload([world, chronicle?], folder, blob, name)` → stored path, `remove(path)`, `mediaUrl(path)` |
 | `/cropper.js` | `ImageCropper.open(file, {aspect: "card"|"portrait", title})` → Promise of a JPEG Blob (16:9 at up to 1600×900, or 3:4 at up to 900×1200) or null |
 | `/members.js` | `ChronicleMembers.render(el, {db, chronicle, admin, unit, dm})` |
-| `/login.js` | the Log in page |
+| `/login.js` | the Sign in page |
 | `/world.js`, `/factions-view.js`, `/options-view.js`, `/listings.js` | world pages, faction pages, player-option pages, and the lists of Builder-made worlds/chronicles on the file pages |
+
+Shared by every system, in `/shared/`:
+
+| File | What |
+|---|---|
+| `/shared/resources-list.js` | the Resources page's reference list (`data-list`, `data-unit` on its script tag) |
+| `/shared/locations/real-map.js`, `real-map.css` | Locations on a real-world street map (the Dead Hand, the Crown of Ice and Bone): chronicle, centre, zoom and wording from `<body>`, reference landmarks from a JSON block |
+
+Each system's own shared code (sheets, rosters, viewers, boards, the
+Storyteller page or DM Screen) is in `/htr/assets/`, `/vtda/assets/` and
+`/dnd/assets/`; the chronicles in the site's files and the Builder's
+templates both use it, so a fix reaches every chronicle of that system.
 
 ## Pages for Builder-made worlds and chronicles: `404.html` + `router.js`
 
@@ -106,7 +118,8 @@ every relative link in it (`../../assets/js/...`, `../../../style.css`,
 
 Locations on Builder-made chronicles use the uploaded-map app
 (`dnd/assets/locations/`, wording from data attributes), since a made-up
-or unknown place has no street map.
+or unknown place has no street map. Chronicles set in real places use
+the real-map app (`/shared/locations/`).
 
 ## Pictures
 
