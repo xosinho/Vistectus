@@ -57,6 +57,24 @@
     return name + " " + r.from_level + " → " + r.to_level;
   }
 
+  /* What happened to one character's XP: awards and purchases, for the
+     History row under it (/shared/xp-history.js). */
+  function historyOf(slug, awards, reqs) {
+    var out = [];
+    awards.forEach(function (a) {
+      if (a.slug !== slug) return;
+      out.push({ at: a.awarded_at, amount: (a.amount > 0 ? "+" : "−") + Math.abs(a.amount),
+                 text: a.amount > 0 ? "XP awarded" : "XP taken back", note: a.note });
+    });
+    reqs.forEach(function (q) {
+      if (q.slug !== slug) return;
+      out.push({ at: q.decided_at || q.requested_at, amount: "−" + q.cost, text: describe(q), status: q.status, note: q.note });
+    });
+    return out;
+  }
+  function historyButton(slug, list) { return window.XpHistory ? window.XpHistory.button(slug, list) : ""; }
+  function historyRow(slug, list, cols) { return window.XpHistory ? window.XpHistory.row(slug, list, cols) : ""; }
+
   /* -------------------------------------------------------- signed in */
   function workshopHtml() {
     return '<p class="workshop-link"><a class="btn" href="' + esc(WORKSHOP) + '">Open the workshop</a>' +
@@ -77,7 +95,7 @@
   async function overview(session) {
     var r = await Promise.all([
       db.from("character_sheets").select("slug,name").eq("chronicle", CHRONICLE).order("name", { ascending: true }),
-      db.from("vtda_xp_awards").select("slug,amount"),
+      db.from("vtda_xp_awards").select("slug,amount,note,awarded_at"),
       db.from("vtda_xp_requests").select("*").order("requested_at", { ascending: true }),
       db.rpc("sheet_owners_of", { p_chronicle: CHRONICLE }),
       db.rpc("members_of", { p_chronicle: CHRONICLE }),
@@ -100,13 +118,13 @@
 
     var h = accountBar(session, "Storyteller") +
       '<section class="xp-panel"><h2>The coterie</h2>' +
-      '<p class="xp-hint">Open a Cainite to award XP, approve or refund purchases, or edit the sheet. Choose who plays each one from the chronicle&rsquo;s players (add players under <strong>Players</strong>, below). Players can also make their own Cainite with <a href="create.html">Create Kindred</a>; it comes to you below for approval.</p>';
+      '<p class="xp-hint">Open a Cainite to award XP, approve or refund purchases, or edit the sheet. <strong>History</strong> shows every award and purchase. Choose who plays each one from the chronicle&rsquo;s players (add players under <strong>Players</strong>, below). Players can also make their own Cainite with <a href="create.html">Create Kindred</a>; it comes to you below for approval.</p>';
     if (!sheets.length) h += '<p class="empty-line">No sheets yet. Create the first one below.</p>';
     else {
       h += '<table class="xp-table"><tr><th>Cainite</th><th class="num">Awarded</th><th class="num">Spent</th>' +
         '<th class="num">Available</th><th class="num">Waiting</th><th>Player</th><th></th></tr>';
       sheets.forEach(function (s) {
-        var total = 0, spent = 0, pending = 0, waiting = 0;
+        var total = 0, spent = 0, pending = 0, waiting = 0, hist = historyOf(s.slug, awards, reqs);
         awards.forEach(function (a) { if (a.slug === s.slug) total += a.amount; });
         reqs.forEach(function (q) {
           if (q.slug !== s.slug) return;
@@ -118,7 +136,9 @@
           (waiting ? '<span class="status status-pending">' + waiting + "</span>" : "0") + "</td>" +
           "<td>" + ownerPicker(s.slug, owners[s.slug], members) + "</td>" +
           '<td class="acts"><a class="btn btn--ghost" href="sheet.html?c=' + encodeURIComponent(s.slug) + '">Open sheet</a> ' +
-          '<button type="button" class="btn btn--ghost" data-delsheet="' + esc(s.slug) + '" data-name="' + esc(s.name) + '">Delete</button></td></tr>';
+          historyButton(s.slug, hist) + " " +
+          '<button type="button" class="btn btn--ghost" data-delsheet="' + esc(s.slug) + '" data-name="' + esc(s.name) + '">Delete</button></td></tr>' +
+          historyRow(s.slug, hist, 7);
       });
       h += "</table>";
     }
@@ -147,6 +167,7 @@
       xpAwardsHtml() + '<div id="npcSheets"></div>';
     wireSignOut();
     wireCoterie(sheets);
+    if (window.XpHistory) window.XpHistory.wire(root);
     window.ChronicleMembers.render(document.getElementById("members"), { db: db, chronicle: CHRONICLE, admin: false, onChange: function () { render(); } });
     npcSheets();
   }

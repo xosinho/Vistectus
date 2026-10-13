@@ -34,7 +34,7 @@
     if (system === "dnd") {
       window.WORLD_AVAILABLE = { species: opts.species || null, classes: opts.classes || null, note: "" };
       el.id = "available";
-      await load("../../assets/js/available.js?v=202610111600");
+      await load("../../assets/js/available.js?v=202610131552");
       return;
     }
     if (system === "hunter") {
@@ -48,7 +48,7 @@
       return;
     }
     // Vampire: clans and bloodlines from the rules data.
-    if (!window.VAMPIRE_RULES) await load("/vtda/assets/data/rules-data.js?v=202610111600");
+    if (!window.VAMPIRE_RULES) await load("/vtda/assets/data/rules-data.js?v=202610131552");
     var R = window.VAMPIRE_RULES;
     var clans = allowed((R && R.clans) || [], opts.clans);
     function group(kind, title) {

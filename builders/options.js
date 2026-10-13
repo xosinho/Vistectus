@@ -18,7 +18,7 @@
 
   var B = window.Builders;
   var esc = B.esc;
-  var VAMPIRE_DATA = "../vtda/assets/data/rules-data.js?v=202610111600";          // window.VAMPIRE_RULES
+  var VAMPIRE_DATA = "../vtda/assets/data/rules-data.js?v=202610131552";          // window.VAMPIRE_RULES
   var DND_DATA = "../dnd/assets/data/rules-5e.js";
   var PHB = "Player's Handbook";
 

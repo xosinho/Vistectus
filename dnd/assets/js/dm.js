@@ -43,11 +43,29 @@
     return ((d && d.classes) || []).map(function (c) { return (c.name || c.key) + " " + c.level; }).join(" / ");
   }
 
+  /* What happened to one adventurer: awards and level-ups, for the
+     History row under it (/shared/xp-history.js). */
+  function historyOf(slug, awards, levelups) {
+    var out = [];
+    awards.forEach(function (a) {
+      if (a.slug !== slug) return;
+      var parts = [];
+      if (a.xp) parts.push((a.xp > 0 ? "+" : "−") + Math.abs(a.xp).toLocaleString() + " XP");
+      if (a.levels) parts.push((a.levels > 0 ? "+" : "−") + Math.abs(a.levels) + (Math.abs(a.levels) === 1 ? " level" : " levels"));
+      out.push({ at: a.awarded_at, amount: parts.join(" "), text: a.levels && !a.xp ? "Milestone" : "Award", note: a.note });
+    });
+    levelups.forEach(function (l) {
+      if (l.slug !== slug) return;
+      out.push({ at: l.decided_at || l.requested_at, amount: "", text: "Level up " + l.from_level + " → " + l.to_level, status: l.status, note: l.note });
+    });
+    return out;
+  }
+
   async function overview() {
     var r = await Promise.all([
       db.from("character_sheets").select("slug,name,data").eq("chronicle", CAMPAIGN).order("name", { ascending: true }),
-      db.from("dnd_awards").select("slug,xp,levels"),
-      db.from("dnd_levelups").select("id,slug,from_level,to_level,status,requested_at").eq("status", "pending").order("requested_at", { ascending: true }),
+      db.from("dnd_awards").select("slug,xp,levels,note,awarded_at"),
+      db.from("dnd_levelups").select("id,slug,from_level,to_level,status,note,requested_at,decided_at").order("requested_at", { ascending: true }),
       db.from("campaign_settings").select("*").eq("chronicle", CAMPAIGN).maybeSingle(),
       db.rpc("sheet_owners_of", { p_chronicle: CAMPAIGN }),
       db.rpc("members_of", { p_chronicle: CAMPAIGN }),
@@ -95,12 +113,12 @@
 
     // ---- the party
     h += '<section class="xp-panel"><h2>The Party</h2>' +
-      '<p class="xp-hint">Open an adventurer to award them alone, see their level-ups, or edit the sheet. Choose who plays each one from the campaign&rsquo;s players (add players under <strong>Players</strong>, below). Players make their own with <a href="create.html">Create a Character</a>; it comes to you below for approval.</p>';
+      '<p class="xp-hint">Open an adventurer to award them alone, see their level-ups, or edit the sheet. <strong>History</strong> shows every award and level-up. Choose who plays each one from the campaign&rsquo;s players (add players under <strong>Players</strong>, below). Players make their own with <a href="create.html">Create a Character</a>; it comes to you below for approval.</p>';
     if (!sheets.length) h += '<p class="empty-line">No adventurers yet.</p>';
     else {
       h += '<table class="xp-table"><tr><th>Adventurer</th><th>Class</th><th class="num">Level</th><th class="num">' + (mile ? "Granted" : "XP") + "</th><th>Played by</th><th></th></tr>";
       sheets.forEach(function (s) {
-        var xp = 0, lv = 0;
+        var xp = 0, lv = 0, hist = historyOf(s.slug, awards, levelups);
         awards.forEach(function (a) { if (a.slug === s.slug) { xp += a.xp || 0; lv += a.levels || 0; } });
         var cur = level(s.data), reach = mile ? Math.min(20, (settings.start_level || 1) + lv) : XP_T.filter(function (t) { return xp >= t; }).length;
         reach = Math.max(reach, settings.start_level || 1);
@@ -108,12 +126,14 @@
           '</td><td class="num">' + cur + (reach > cur ? ' <span class="status status-pending" title="May level up">→ ' + reach + "</span>" : "") +
           '</td><td class="num">' + (mile ? "+" + lv : xp.toLocaleString()) + "</td><td>" + ownerPicker(s.slug, owners[s.slug], members) + "</td>" +
           '<td class="acts"><a class="btn btn--ghost" href="sheet.html?c=' + encodeURIComponent(s.slug) + '">Open sheet</a> ' +
-          '<button type="button" class="btn btn--ghost" data-delsheet="' + esc(s.slug) + '" data-name="' + esc(s.name) + '">Delete</button></td></tr>';
+          (window.XpHistory ? window.XpHistory.button(s.slug, hist) + " " : "") +
+          '<button type="button" class="btn btn--ghost" data-delsheet="' + esc(s.slug) + '" data-name="' + esc(s.name) + '">Delete</button></td></tr>' +
+          (window.XpHistory ? window.XpHistory.row(s.slug, hist, 6) : "");
       });
       h += "</table>";
     }
     h += "<h3>Level-ups waiting for you</h3>";
-    var lu = levelups.filter(function (l) { return bySlug[l.slug]; });
+    var lu = levelups.filter(function (l) { return l.status === "pending" && bySlug[l.slug]; });
     if (!lu.length) h += '<p class="empty-line">None waiting.</p>';
     else {
       h += '<table class="xp-table"><tr><th>Sent</th><th>Adventurer</th><th>Level</th><th></th></tr>' + lu.map(function (l) {
@@ -133,6 +153,7 @@
     h += '<section class="xp-panel"><h2>Players</h2><div id="members"></div></section><div id="npcSheets"></div>';
     root.innerHTML = h;
     wireSignOut();
+    if (window.XpHistory) window.XpHistory.wire(root);
     wireForms(sheets, mile);
     window.ChronicleMembers.render(document.getElementById("members"), { db: db, chronicle: CAMPAIGN, admin: false,
       unit: "campaign", dm: "Dungeon Master", onChange: function () { render(); } });

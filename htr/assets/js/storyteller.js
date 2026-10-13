@@ -56,10 +56,28 @@
     });
   }
 
+  /* What happened to one character's XP: awards and purchases, for the
+     History row under it (/shared/xp-history.js). */
+  function historyOf(slug, awards, reqs) {
+    var out = [];
+    awards.forEach(function (a) {
+      if (a.slug !== slug) return;
+      out.push({ at: a.awarded_at, amount: (a.amount > 0 ? "+" : "−") + Math.abs(a.amount),
+                 text: a.amount > 0 ? "XP awarded" : "XP taken back", note: a.note });
+    });
+    reqs.forEach(function (q) {
+      if (q.slug !== slug) return;
+      out.push({ at: q.decided_at || q.requested_at, amount: "−" + q.cost, text: describe(q), status: q.status, note: q.note });
+    });
+    return out;
+  }
+  function historyButton(slug, list) { return window.XpHistory ? window.XpHistory.button(slug, list) : ""; }
+  function historyRow(slug, list, cols) { return window.XpHistory ? window.XpHistory.row(slug, list, cols) : ""; }
+
   async function overview(session) {
     var r = await Promise.all([
       db.from("character_sheets").select("slug,name").eq("chronicle", CHRONICLE).order("name", { ascending: true }),
-      db.from("xp_awards").select("slug,amount"),
+      db.from("xp_awards").select("slug,amount,note,awarded_at"),
       db.from("xp_requests").select("*").order("requested_at", { ascending: true }),
       db.rpc("sheet_owners_of", { p_chronicle: CHRONICLE }),
       db.rpc("members_of", { p_chronicle: CHRONICLE }),
@@ -77,11 +95,11 @@
       '<p class="xp-hint">Add and change this chronicle&rsquo;s NPCs, handouts, maps, reference links, places and its world&rsquo;s factions.</p>' +
       '<p><a class="btn" href="' + esc(WORKSHOP) + '">Open the workshop</a></p></section>' +
       '<section class="xp-panel"><h2>The cell</h2>' +
-      '<p class="xp-hint">Open a hunter to award XP, approve or refund purchases, or edit the sheet. Choose who plays each hunter from the chronicle&rsquo;s players (add players under <strong>Players</strong>, below).</p>' +
+      '<p class="xp-hint">Open a hunter to award XP, approve or refund purchases, or edit the sheet. <strong>History</strong> shows every award and purchase. Choose who plays each hunter from the chronicle&rsquo;s players (add players under <strong>Players</strong>, below).</p>' +
       '<table class="xp-table"><tr><th>Hunter</th><th class="num">Awarded</th><th class="num">Spent</th>' +
       '<th class="num">Available</th><th class="num">Waiting</th><th>Played by</th><th></th></tr>';
     sheets.forEach(function (s) {
-      var total = 0, spent = 0, pending = 0, waiting = 0;
+      var total = 0, spent = 0, pending = 0, waiting = 0, hist = historyOf(s.slug, awards, reqs);
       awards.forEach(function (a) { if (a.slug === s.slug) total += a.amount; });
       reqs.forEach(function (q) {
         if (q.slug !== s.slug) return;
@@ -92,7 +110,8 @@
         '</td><td class="num">' + (total - spent - pending) + '</td><td class="num">' +
         (waiting ? '<span class="status status-pending">' + waiting + "</span>" : "0") + "</td>" +
         "<td>" + ownerPicker(s.slug, owners[s.slug], members) + "</td>" +
-        '<td class="acts"><a class="btn btn--ghost" href="sheet.html?c=' + encodeURIComponent(s.slug) + '">Open sheet</a></td></tr>';
+        '<td class="acts"><a class="btn btn--ghost" href="sheet.html?c=' + encodeURIComponent(s.slug) + '">Open sheet</a> ' +
+        historyButton(s.slug, hist) + "</td></tr>" + historyRow(s.slug, hist, 7);
     });
     h += "</table>";
 
@@ -114,6 +133,7 @@
       xpAwardsHtml() + '<div id="npcSheets"></div>';
     wireSignOut();
     wireOwners();
+    if (window.XpHistory) window.XpHistory.wire(root);
     window.ChronicleMembers.render(document.getElementById("members"), { db: db, chronicle: CHRONICLE, admin: false, onChange: function () { render(); } });
     npcSheets();
   }
