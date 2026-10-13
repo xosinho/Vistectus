@@ -16,13 +16,18 @@
 
 window.VAMPIRE_MAPS = [
 
-  /* Example — copy, fill in, and remove the comment marks:
   {
-    title: "Esztergom and the castle hill",
-    when: "",
-    description: "One line on what it shows.",
-    image: "assets/resources/Maps/Esztergom.jpg"
+    title: "Europe, 1242",
+    when: "Chronicle era",
+    description: "A broad political map of the European theater in the years of the dark ages, useful for travel and faction movement.",
+    image: "assets/resources/Maps/europe_1242.svg"
   },
-  */
+
+  {
+    title: "The Cainite World, 1242",
+    when: "Chronicle era",
+    description: "The domains, cities, and bloodlines most relevant to the Cainite power structure in central and eastern Europe.",
+    image: "assets/resources/Maps/cainite_1242.svg"
+  }
 
 ];
