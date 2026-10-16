@@ -93,7 +93,7 @@ Nothing here needs to change.
 |------|------------|
 | `index.html` | Chronicle landing, spoiler-free |
 | `players.html` | The cell |
-| `npcs.html` | People of Red Hook |
+| `npcs.html` | People the Cell Has Encountered |
 | `resources.html` | Documents, handouts and references from the chronicle |
 | `documents.html`, `maps.html` | The handouts and the maps |
 | `sheet.html` | A hunter's or an NPC's sheet |
