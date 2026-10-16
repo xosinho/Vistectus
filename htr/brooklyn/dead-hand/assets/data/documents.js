@@ -15,6 +15,22 @@
 window.HUNTER_DOCUMENTS = [
 
   {
+    title: "DA Memo — Hecate Holdings Investigation",
+    type: "RICO Evidence",
+    when: "24 November 2022",
+    description: "A confidential memo from District Attorney Harold Voss assigning ADA Vivienne Okafor to lead the Enterprise Corruption investigation into Hecate Holdings and Cannaregio Holdings.",
+    file: "assets/resources/Documents/DeadHand_DA_Memo_Hecate.png"
+  },
+
+  {
+    title: "Entity Structure — Working Copy",
+    type: "RICO Evidence",
+    when: "",
+    description: "M. Vega's chart of Hecate Holdings, Cannaregio Holdings and the four companies beneath them, printed from her personal file and annotated by hand.",
+    file: "assets/resources/Documents/DeadHand_Entity_Structure_Vega.png"
+  },
+
+  {
     title: "Registro delle Provenienze, f. 47 v.",
     type: "Documents",
     when: "",
