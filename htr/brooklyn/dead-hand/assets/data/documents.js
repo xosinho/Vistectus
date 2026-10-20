@@ -31,6 +31,46 @@ window.HUNTER_DOCUMENTS = [
   },
 
   {
+    title: "Q3 Personal — Tax",
+    type: "RICO Evidence",
+    when: "July – October 2022",
+    description: "One sheet of a three-sheet spreadsheet export, stamped unsworn: payments from Rialto Facilities and Castello Asset Management to Capt. S. Reed, Dr. A. Feldman and Cllr. A. Devlin, each paired with what it bought.",
+    file: "assets/resources/Documents/Deadhand Giovanni Payments.jpg"
+  },
+
+  {
+    title: "Surrogate's Court — Estate of Elias Thorne",
+    type: "RICO Evidence",
+    when: "16 – 23 November 2022",
+    description: "The docket history of Elias Thorne's estate, from his death to the decree sending 74 Degraw Street to escheat a week later, annotated by hand.",
+    file: "assets/resources/Documents/Deadhand Degraw 74 Movement.jpg"
+  },
+
+  {
+    title: "Medical Examiner's Summary — Silas Reed",
+    type: "RICO Evidence",
+    when: "23 November 2022",
+    description: "The Brooklyn medical examiner's summary on the death of Capt. Silas Reed, ruled a suicide and signed by Dr. A. Feldman, annotated by hand.",
+    file: "assets/resources/Documents/Deadhand Feldman TOD note.jpg"
+  },
+
+  {
+    title: "S. Reed — Note (copy)",
+    type: "RICO Evidence",
+    when: "23 November 2022",
+    description: "A copy of the handwritten note recovered beside Capt. Silas Reed.",
+    file: "assets/resources/Documents/Deadhand Reed Suicide Note.jpg"
+  },
+
+  {
+    title: "Order to Preserve Evidence — St. Jude's Hospital",
+    type: "RICO Evidence",
+    when: "",
+    description: "A Supreme Court order, on ADA Okafor's application, directing St. Jude's Hospital to preserve its records on Margaret Gable and Elias Thorne, its transfer-of-remains paperwork and its security logs for 13–16 November 2022.",
+    file: "assets/resources/Documents/Deadhand Order of Evidence Preservation.jpg"
+  },
+
+  {
     title: "Registro delle Provenienze, f. 47 v.",
     type: "Documents",
     when: "",
