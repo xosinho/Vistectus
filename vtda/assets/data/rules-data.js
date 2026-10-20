@@ -421,8 +421,16 @@ window.VAMPIRE_RULES = {
    "page": "disciplines/abyss-mysticism"
   },
   {
+   "name": "Akhu",
+   "page": "disciplines/akhu"
+  },
+  {
    "name": "Animalism",
    "page": "disciplines/animalism"
+  },
+  {
+   "name": "Assamite Sorcery",
+   "page": "disciplines/assamite-sorcery"
   },
   {
    "name": "Auspex",
@@ -431,6 +439,10 @@ window.VAMPIRE_RULES = {
   {
    "name": "Bardo",
    "page": "disciplines/bardo"
+  },
+  {
+   "name": "Biblical Necromancy",
+   "page": "disciplines/biblical-necromancy"
   },
   {
    "name": "Celerity",
@@ -443,6 +455,10 @@ window.VAMPIRE_RULES = {
   {
    "name": "Daimonion",
    "page": "disciplines/daimonion"
+  },
+  {
+   "name": "Dark Thaumaturgy",
+   "page": "disciplines/dark-thaumaturgy"
   },
   {
    "name": "Dementation",
@@ -577,6 +593,11 @@ window.VAMPIRE_RULES = {
    "page": "disciplines/necromancy/path-of-haunting"
   },
   {
+   "name": "Path of Skulls",
+   "sorcery": "Necromancy",
+   "page": "disciplines/necromancy/path-of-skulls"
+  },
+  {
    "name": "Path of the Cenotaph",
    "sorcery": "Necromancy",
    "page": "disciplines/necromancy/path-of-the-cenotaph"
@@ -597,6 +618,11 @@ window.VAMPIRE_RULES = {
    "page": "disciplines/necromancy/path-of-the-twilight-garden"
   },
   {
+   "name": "Path of Woe",
+   "sorcery": "Necromancy",
+   "page": "disciplines/necromancy/path-of-woe"
+  },
+  {
    "name": "The Grave's Decay",
    "sorcery": "Necromancy",
    "page": "disciplines/necromancy/the-graves-decay"
@@ -614,7 +640,8 @@ window.VAMPIRE_RULES = {
     "Conviction",
     "Instinct"
    ],
-   "page": "concepts/roads/road-of-the-beast"
+   "page": "concepts/roads/road-of-the-beast",
+   "aura": "Menace"
   },
   {
    "name": "Road of Heaven",
@@ -622,7 +649,8 @@ window.VAMPIRE_RULES = {
     "Conscience",
     "Self-Control"
    ],
-   "page": "concepts/roads/road-of-heaven"
+   "page": "concepts/roads/road-of-heaven",
+   "aura": "Holiness"
   },
   {
    "name": "Road of Humanity",
@@ -630,7 +658,8 @@ window.VAMPIRE_RULES = {
     "Conscience",
     "Self-Control"
    ],
-   "page": "concepts/roads/road-of-humanity"
+   "page": "concepts/roads/road-of-humanity",
+   "aura": ""
   },
   {
    "name": "Road of Kings",
@@ -638,7 +667,8 @@ window.VAMPIRE_RULES = {
     "Conviction",
     "Self-Control"
    ],
-   "page": "concepts/roads/road-of-kings"
+   "page": "concepts/roads/road-of-kings",
+   "aura": "Command"
   },
   {
    "name": "Road of Lilith",
@@ -646,7 +676,8 @@ window.VAMPIRE_RULES = {
     "Conviction",
     "Instinct"
    ],
-   "page": "concepts/roads/road-of-lilith"
+   "page": "concepts/roads/road-of-lilith",
+   "aura": ""
   },
   {
    "name": "Road of Metamorphosis",
@@ -654,7 +685,8 @@ window.VAMPIRE_RULES = {
     "Conviction",
     "Instinct"
    ],
-   "page": "concepts/roads/road-of-metamorphosis"
+   "page": "concepts/roads/road-of-metamorphosis",
+   "aura": "Inhumanity"
   },
   {
    "name": "Road of Sin",
@@ -662,7 +694,8 @@ window.VAMPIRE_RULES = {
     "Conviction",
     "Instinct"
    ],
-   "page": "concepts/roads/road-of-sin"
+   "page": "concepts/roads/road-of-sin",
+   "aura": "Temptation"
   },
   {
    "name": "Road of Bones",
@@ -670,7 +703,8 @@ window.VAMPIRE_RULES = {
     "Conviction",
     "Self-Control"
    ],
-   "page": "concepts/minor-roads"
+   "page": "concepts/minor-roads",
+   "aura": "Silence"
   },
   {
    "name": "Road of Yasa",
@@ -678,7 +712,8 @@ window.VAMPIRE_RULES = {
     "Conviction",
     "Self-Control"
    ],
-   "page": "concepts/minor-roads"
+   "page": "concepts/minor-roads",
+   "aura": "Trust"
   }
  ],
  "archetypes": [
@@ -738,7 +773,9 @@ window.VAMPIRE_RULES = {
   "Mentor",
   "Resources",
   "Retainers",
-  "Status"
+  "Status",
+  "Oubliette",
+  "Martial Training"
  ],
  "merits": [
   {
@@ -1224,6 +1261,60 @@ window.VAMPIRE_RULES = {
   {
    "name": "Weak Blood",
    "cost": "5",
+   "type": "Flaw",
+   "group": "Supernatural"
+  },
+  {
+   "name": "Heretical Sympathizer",
+   "cost": "2",
+   "type": "Merit",
+   "group": "Social"
+  },
+  {
+   "name": "Vassal",
+   "cost": "1–5 (Special)",
+   "type": "Merit",
+   "group": "Social"
+  },
+  {
+   "name": "Hunted by the Hierophants",
+   "cost": "4",
+   "type": "Flaw",
+   "group": "Social"
+  },
+  {
+   "name": "Incantation",
+   "cost": "2",
+   "type": "Merit",
+   "group": "Supernatural"
+  },
+  {
+   "name": "Postulant of Echidna",
+   "cost": "3",
+   "type": "Merit",
+   "group": "Supernatural"
+  },
+  {
+   "name": "Blasphemous Pact",
+   "cost": "6",
+   "type": "Merit",
+   "group": "Supernatural"
+  },
+  {
+   "name": "Demonic Patron",
+   "cost": "5",
+   "type": "Merit",
+   "group": "Supernatural"
+  },
+  {
+   "name": "Profane Trappings",
+   "cost": "4",
+   "type": "Merit",
+   "group": "Supernatural"
+  },
+  {
+   "name": "Unholy Stain",
+   "cost": "3",
    "type": "Flaw",
    "group": "Supernatural"
   },

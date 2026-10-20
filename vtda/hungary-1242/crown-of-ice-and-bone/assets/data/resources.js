@@ -21,4 +21,13 @@
 
 window.VAMPIRE_RESOURCES = [
 
+  {
+    title: "Blank character sheet",
+    category: "Reference",
+    kind: "PDF",
+    when: "",
+    description: "The official four-page Vampire: The Dark Ages sheet, fillable. The coterie's online sheets follow it, and their Download PDF fills it in.",
+    href: "../../assets/sheets/blank-character-sheet.pdf"
+  }
+
 ];

@@ -313,3 +313,38 @@ button.box:hover { box-shadow: 0 0 0 2px rgba(142,27,43,.45); }
   .sheet-wrap { max-width: none; padding: 0; }
   .page { box-shadow: none; margin: 0 0 1rem; break-after: page; }
 }
+
+/* ------------------------------------------- the four printed pages
+   Pages two to four of the official sheet: Merits and Flaws, Other
+   Traits, Rituals and Paths, Experience, Combat; Expanded Backgrounds,
+   Possessions, Haven; History and Description. */
+.sheet-ident.cols-down { grid-auto-flow: column; grid-template-rows: repeat(3, auto); }
+.page-no { font-family: var(--sheet-head); font-size: .75rem; letter-spacing: .3em; text-transform: uppercase; color: var(--paper-soft); }
+.split > .rituals-col { order: -1; }
+.mf-table th:first-child { width: 55%; }
+.mf-table td.num { text-align: center; width: 3.5rem; }
+.combat { display: grid; grid-template-columns: 1fr 15rem; gap: 1.2rem; align-items: start; }
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.combat-table { min-width: 34rem; }
+.combat-table th { font-size: .75rem; }
+.combat-table td { padding: 0; height: 1.9rem; }
+.combat-table td input { width: 100%; border: 0; background: transparent; padding: .3rem .4rem; }
+.armor h4 { text-align: left; }
+.armor .field { margin-bottom: .25rem; }
+.eb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.2rem; }
+.eb-grid > .labelled { border-top: 1px solid var(--paper-ink); margin-bottom: .6rem; }
+.eb-grid textarea { min-height: 4.2rem; }
+.line-list { display: grid; }
+.line-list > * { border-bottom: 1px dotted var(--paper-line); min-height: 1.6rem; padding: .15rem 0; }
+.line-list > input { border: 0; border-bottom: 1px dotted var(--paper-line); background: transparent; }
+.haven { display: grid; grid-template-columns: 1fr 2fr; gap: 0 1.2rem; }
+.desc-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 0 1.2rem; align-items: start; }
+.desc-grid .labelled > span { display: block; min-height: 1.3rem; }
+@media (max-width: 760px) {
+  .sheet-ident.cols-down { grid-auto-flow: row; grid-template-rows: none; }
+  .combat, .eb-grid, .haven, .desc-grid { grid-template-columns: 1fr; }
+}
+@media print {
+  .table-scroll { overflow: visible; }
+  .combat-table { min-width: 0; }
+}

@@ -1337,10 +1337,11 @@
     var gen = int(d.generation, 12, 3, 13), g = genRow(gen), max = Math.max(5, g.maxTrait || 5);
     var clan = findByName(RULES.clans, d.clan), road = findByName(RULES.roads, d.road);
     var h = '<section class="page" aria-label="Character sheet, page one">';
-    h += '<div class="sheet-head"><div class="sheet-band"><strong>Vampire</strong><span>The Dark Ages</span></div><div class="sheet-ident">' +
-      rfield("Name", d.name) + rfield("Nature", d.nature) + rfield("Clan", d.clan, clan && clan.page) +
-      rfield("Concept", d.concept) + rfield("Demeanor", d.demeanor) + rfield("Generation", genName(gen), "concepts/generation") +
-      rfield("Sire", d.sire) + rfield("Road", d.road, road && road.page) + rfield("Haven", d.haven) + "</div></div>";
+    // Laid out like the printed sheet (and sheet.js): who, what kind of person, what blood.
+    h += '<div class="sheet-head"><div class="sheet-band"><strong>Vampire</strong><span>The Dark Ages</span></div><div class="sheet-ident cols-down">' +
+      rfield("Name", d.name) + rfield("Player", d.player || "") + rfield("Chronicle", document.body.getAttribute("data-chronicle-name") || CHRONICLE) +
+      rfield("Nature", d.nature) + rfield("Demeanor", d.demeanor) + rfield("Concept", d.concept) +
+      rfield("Clan", d.clan, clan && clan.page) + rfield("Generation", genName(gen), "concepts/generation") + rfield("Sire", d.sire) + "</div></div>";
     h += '<h3>Attributes</h3><div class="cols3">';
     ATTRS.forEach(function (gr) {
       h += "<div><h4>" + gr[0] + "</h4>";
@@ -1374,27 +1375,14 @@
     var pair = virtuePair(d);
     pair.forEach(function (k) { h += rtrait(rulesLink("concepts/virtues-and-willpower", VIRTUES[k]), "", int(virt[k], 1, 0, 10), 5); });
     h += "</div></div>";
-    var paths = Array.isArray(d.paths) ? d.paths : [], rits = Array.isArray(d.rituals) ? d.rituals : [];
-    if (paths.length || rits.length) {
-      h += '<h3>Paths and Rituals</h3><div class="split"><div><h4>Paths</h4>';
-      if (!paths.length) h += '<p class="empty-line">None.</p>';
-      paths.forEach(function (x) {
-        x = obj(x);
-        var rule = pathRule(x.name);
-        h += rtrait(rule ? rulesLink(rule.page, x.name) : esc(x.name), str(x.sorcery, 20) + (x.primary ? ", primary" : ""), int(x.dots, 0, 0, 10), 5);
-      });
-      h += "</div><div><h4>Rituals</h4>";
-      if (!rits.length) h += '<p class="empty-line">None.</p>';
-      rits.forEach(function (x) { x = obj(x); h += '<div class="merit-row"><span>' + esc(x.name) + '</span><span class="pts">Level ' + int(x.level, 1, 1, 10) + "</span></div>"; });
-      h += "</div></div>";
-    }
-    var mf = Array.isArray(d.meritsFlaws) ? d.meritsFlaws : [];
     var rr = int(d.roadRating, 0, 0, 10), wp = int(d.willpower, 0, 0, 10), blood = int(p.blood, 0, 0, 60);
-    h += '<h3>Road, Willpower, Blood and Health</h3><div class="lower"><div><div class="block"><h4>Merits &amp; Flaws</h4>';
-    if (!mf.length) h += '<p class="empty-line">None.</p>';
-    mf.forEach(function (x) { x = obj(x); h += '<div class="merit-row"><span>' + rulesLink("concepts/merits-and-flaws", str(x.name, 80)) + '</span><span class="pts">' + esc(x.kind) + " " + int(x.points, 0, 0, 10) + "</span></div>"; });
+    // Other Traits: the areas of expertise, where the printed sheet keeps them.
+    h += '<div class="lower"><div><div class="block"><h4>Other Traits</h4>';
+    var exRows = ex.filter(function (x) { return x && x.name; });
+    if (!exRows.length) h += '<p class="empty-line">None.</p>';
+    exRows.forEach(function (x) { h += '<div class="merit-row"><span>' + esc(ABILITY_NAME[x.ability] || x.ability) + '</span><span class="pts">' + esc(str(x.name, 80)) + "</span></div>"; });
     h += "</div></div>";
-    h += '<div><div class="block"><h4>' + (road ? rulesLink(road.page, road.name) : "Road") + "</h4>" + rdots(rr, 10) + '<span class="tracker-note">' + auraNote(rr) + "</span></div>";
+    h += '<div><div class="block"><h4>' + (road ? rulesLink(road.page, road.name) : "Road") + "</h4>" + rdots(rr, 10) + '<span class="tracker-note">' + (road && road.aura ? auraNote(rr).replace("Aura:", "Aura of " + esc(road.aura) + ":") : auraNote(rr)) + "</span></div>";
     h += '<div class="block"><h4>Willpower</h4>' + rdots(wp, 10) + "</div>";
     h += '<div class="block"><h4>Blood Pool</h4>' + bloodBoxes(g.pool || 10, blood) + "</div></div>";
     var hrows = [];
@@ -1411,11 +1399,40 @@
   }
   function sheetPage2(d, p) {
     d = obj(d); p = obj(p);
-    function box(label, v) { return '<div class="labelled"><b>' + esc(label) + '</b><div class="prose-box">' + esc(v) + "</div></div>"; }
-    return '<section class="page" aria-label="Character sheet, page two"><div class="page2-top"><strong style="font-family:var(--sheet-head);font-size:1.3rem">' + esc(d.name) + "</strong></div>" +
-      '<div style="margin-top:1rem">' + box("Apparent age", p.apparentAge) + box("Embraced", p.embraced) + box("Appearance", p.appearance) + "</div>" +
-      '<h3>Goals</h3><div class="labelled" style="border-top:1px solid var(--paper-ink)"><div class="prose-box">' + esc(p.goals) + "</div></div>" +
-      '<h3>History</h3><div class="labelled" style="border-top:1px solid var(--paper-ink)"><div class="prose-box">' + esc(p.history) + "</div></div></section>";
+    function box(label, v, first) { return '<div class="labelled"' + (first ? ' style="border-top:1px solid var(--paper-ink)"' : "") + "><b>" + esc(label) + '</b><div class="prose-box">' + esc(v) + "</div></div>"; }
+    // What the draft fills of the printed sheet's pages two to four.
+    var h = '<section class="page" aria-label="Character sheet, pages two to four"><div class="page2-top"><strong style="font-family:var(--sheet-head);font-size:1.3rem">' + esc(d.name) + "</strong>" +
+      '<span class="page-no">Pages two to four</span></div>';
+    var mf = Array.isArray(d.meritsFlaws) ? d.meritsFlaws : [];
+    h += '<h3>Merits and Flaws</h3><div class="split">';
+    ["Merit", "Flaw"].forEach(function (kind) {
+      var rows = mf.map(obj).filter(function (x) { return x.kind === kind; });
+      h += '<table class="grid-table mf-table"><thead><tr><th>' + kind + "</th><th>Type</th><th>Cost</th></tr></thead><tbody>" +
+        (rows.length ? rows.map(function (x) {
+          var r = findByName(RULES.merits, x.name);
+          return "<tr><td>" + rulesLink("concepts/merits-and-flaws", str(x.name, 80)) + "</td><td>" + esc(r ? r.group : "") + '</td><td class="num">' + int(x.points, 0, 0, 10) + "</td></tr>";
+        }).join("") : '<tr><td colspan="3" class="empty">None.</td></tr>') + "</tbody></table>";
+    });
+    h += "</div>";
+    var paths = Array.isArray(d.paths) ? d.paths : [], rits = Array.isArray(d.rituals) ? d.rituals : [];
+    if (paths.length || rits.length) {
+      h += '<h3>Rituals and Paths</h3><div class="split"><div><h4>Rituals</h4>';
+      if (!rits.length) h += '<p class="empty-line">None.</p>';
+      rits.forEach(function (x) { x = obj(x); h += '<div class="merit-row"><span>' + esc(x.name) + '</span><span class="pts">Level ' + int(x.level, 1, 1, 10) + "</span></div>"; });
+      h += "</div><div><h4>Paths</h4>";
+      if (!paths.length) h += '<p class="empty-line">None.</p>';
+      paths.forEach(function (x) {
+        x = obj(x);
+        var rule = pathRule(x.name);
+        h += rtrait(rule ? rulesLink(rule.page, x.name) : esc(x.name), str(x.sorcery, 20) + (x.primary ? ", primary" : ""), int(x.dots, 0, 0, 10), 5);
+      });
+      h += "</div></div>";
+    }
+    h += "<h3>Haven</h3>" + box("Location", d.haven, true);
+    h += "<h3>History</h3>" + box("Prelude", p.history, true) + box("Goals", p.goals);
+    h += '<h3>Description</h3><div class="desc-grid"><div>' + box("Apparent age", p.apparentAge, true) + box("R.I.P. (the Embrace)", p.embraced) + "</div>" +
+      box("Appearance", p.appearance, true) + "</div>";
+    return h + "</section>";
   }
 
   /* ------------------------------------------------- the review view */

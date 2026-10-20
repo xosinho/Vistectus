@@ -104,11 +104,26 @@ file: change that text and the entry shows again.
 
 ## The character sheet and XP
 
-The sheet follows V20 Dark Ages: Attributes, Talents/Skills/Knowledges
-with areas of expertise, Disciplines (◆ marks clan Disciplines),
-Backgrounds, the two Virtues the Road calls for plus Courage, Paths and
-Rituals, Merits and Flaws, Road (with the Aura it gives), Willpower,
-a blood pool sized by Generation, and the seven health levels.
+The sheet follows the official four-page V20 Dark Ages sheet, the same
+for every Vampire chronicle: `vtda/assets/sheets/blank-character-sheet.pdf`,
+listed on the Resources page.
+- Page one: name, player and chronicle; Attributes; Talents/Skills/
+  Knowledges; Disciplines (◆ marks clan Disciplines), Backgrounds, the
+  two Virtues the Road calls for plus Courage; Other Traits (the areas
+  of expertise); the Road with its Aura; Willpower; a blood pool sized by
+  Generation; the seven health levels; the Weakness.
+- Page two: Merits and Flaws with their type and cost, Other Traits with
+  dots (set by the Storyteller), Rituals and Paths, Experience, the
+  Derangements, Combat and Armor.
+- Page three: notes on each Background, the Domain, Possessions and the
+  Haven.
+- Page four: the Prelude and Goals, and the Description.
+
+The player writes everything on pages three and four, the combat table
+and the armor; the Storyteller sets the traits, the Player name, the
+Domain and the Haven's location. **Download PDF** fills in the blank
+sheet with what the page shows (Notes are site-only: the printed sheet
+has no place for them).
 
 XP costs are the book's, in the `vtda_xp_costs` table (change a figure
 there and the sheets follow): Attribute ×4, Ability ×2 (new 3), clan
