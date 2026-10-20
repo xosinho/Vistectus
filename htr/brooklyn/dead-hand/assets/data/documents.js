@@ -80,6 +80,14 @@ window.HUNTER_DOCUMENTS = [
   },
 
   {
+    title: "Empty Velvet Reliquary with Three Vials",
+    type: "Relics",
+    when: "",
+    description: "A gilt case lined in red velvet holding three wax-sealed vials of dark liquid, each tagged “M. G. Ferraro-Gable VII, 14.XI.MMXXII, in custodia”.",
+    file: "assets/resources/Documents/Empty Velvet Reliquary with Three Vials.jpg"
+  },
+
+  {
     title: "Fra Matteo — Threshold Survey",
     type: "DeLuca papers",
     when: "",
