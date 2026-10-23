@@ -226,9 +226,31 @@
     }
 
     if (kind === "maps") {
-      var sec = el("section", "row");
-      var grid = el("div", "map-grid");
+      // Maps without a section first, in one grid as before; then each
+      // section under its own heading, in the order it first appears.
+      var mOrder = [""], mGroups = { "": [] };
       items.forEach(function (m, i) {
+        var s = String(m.section || "").trim();
+        if (!mGroups[s]) { mGroups[s] = []; mOrder.push(s); }
+        mGroups[s].push(i);
+      });
+      mOrder.forEach(function (s) {
+        if (!mGroups[s].length) return;
+        var sec = el("section", "row");
+        if (s) {
+          var head = el("div", "row-head");
+          head.appendChild(el("h2", null, s));
+          sec.appendChild(head);
+        }
+        sec.appendChild(mapGrid(mGroups[s]));
+        root.appendChild(sec);
+      });
+      return;
+    }
+    function mapGrid(indexes) {
+      var grid = el("div", "map-grid");
+      indexes.forEach(function (i) {
+        var m = items[i];
         var wrap = el("div", "archive-item" + (hidden[keyOf(m)] ? " is-hidden" : ""));
         var b = el("button", "map-tile");
         b.type = "button";
@@ -249,9 +271,7 @@
         if (isST) wrap.appendChild(toggleFor(m));
         grid.appendChild(wrap);
       });
-      sec.appendChild(grid);
-      root.appendChild(sec);
-      return;
+      return grid;
     }
 
     // Documents: grouped by type, in the order each type first appears.

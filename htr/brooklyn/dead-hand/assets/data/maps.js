@@ -153,6 +153,30 @@ window.HUNTER_MAPS = [
     when: "",
     description: "The ground floor layout of St. Jude's, including public reception, ambulance access and the emergency intake routing.",
     image: "assets/resources/Maps/St Judes GF.jpg"
+  },
+
+  {
+    title: "Payne's Safehouse — Front",
+    section: "Payne's safehouse",
+    when: "",
+    description: "The street front of a brick workshop signed Halleck Fabrication LLC: a roller door, a steel side door and boarded windows.",
+    image: "assets/resources/Maps/Payne safehouse front view.jpg"
+  },
+
+  {
+    title: "Payne's Safehouse — Ground Floor",
+    section: "Payne's safehouse",
+    when: "",
+    description: "The ground floor: a garage for two vehicles, a bunk room, an infirmary, a kitchen and briefing table, an office, washrooms and the stairs up.",
+    image: "assets/resources/Maps/Payne Safehouse GF.jpg"
+  },
+
+  {
+    title: "Payne's Safehouse — First Floor",
+    section: "Payne's safehouse",
+    when: "",
+    description: "The first floor, above the garage: a bank of monitors, a planning table, an armoury, a bedroom and a lounge.",
+    image: "assets/resources/Maps/Payne Safehouse GF FF.jpg"
   }
 
 ];
@@ -160,6 +184,9 @@ window.HUNTER_MAPS = [
 /* ---------------------------------------------------------------------
    FIELD REFERENCE
      title        Caption under the picture and heading of the pop-up
+     section      Optional heading the map is grouped under ("Payne's
+                  safehouse"). Maps without one come first, ungrouped;
+                  each section follows in the order it first appears.
      when         Optional: "Session 3", "Act 2"...
      description  Optional line under the caption
      image        The map file
