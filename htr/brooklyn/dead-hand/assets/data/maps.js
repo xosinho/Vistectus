@@ -177,6 +177,14 @@ window.HUNTER_MAPS = [
     when: "",
     description: "The first floor, above the garage: a bank of monitors, a planning table, an armoury, a bedroom and a lounge.",
     image: "assets/resources/Maps/Payne Safehouse GF FF.jpg"
+  },
+
+  {
+    title: "Harlan Creek, Kentucky",
+    section: "Harlan Creek",
+    when: "",
+    description: "The town by night, with its places of interest: the entrance truss bridge, Main Street, the Baptist and Holiness churches, the creekside company homes, the mine memorial and sealed portal, the hill cemetery, and the Holt farmhouse and springhouse.",
+    image: "assets/resources/Maps/Harlan Creek.jpg"
   }
 
 ];

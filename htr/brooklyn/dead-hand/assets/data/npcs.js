@@ -729,6 +729,34 @@ window.HUNTER_NPCS = [
       "Hair": "White, short; close-trimmed white beard",
       "Distinguishing marks": "Lean, ascetic frame; jeweller's loupe worn on a chain. Fine scarring and solvent-stained fingertips consistent with conservation work."
     }
+  },
+
+  {
+    name: "Cassius Elmore Holt",
+    tagline: "The mayor who does business in person or not at all",
+    role: "Mayor · Harlan Creek, Kentucky",
+    portrait: "assets/img/npcs/Cassius Elmore Holt.jpg",
+    meta: ["Public office"],
+    description:
+      "Mayor of Harlan Creek, Kentucky, since 1994, re-elected eight " +
+      "consecutive times, several of them unopposed. Former underground miner " +
+      "and officer of a United Mine Workers local. Owns the town's " +
+      "hardware-and-feed store and much of the land up the hollow. A private " +
+      "collector of regional history and of Native American and labour-movement " +
+      "documents. Under his administration the town has refused a state prison, " +
+      "gas leases and every chain retailer that applied, and its crime rate is " +
+      "far below the county's. Does not travel, has no listed email, and " +
+      "conducts business in person or not at all.",
+    file: {
+      "File status": "Unclassified / Out of Jurisdiction",
+      "Age": "74",
+      "Status": "Alive, active.",
+      "Race": "White American (Appalachian, Scots-Irish descent)",
+      "Height": "6'4\"",
+      "Weight": "~250 lbs",
+      "Hair": "Iron-grey, thick, swept back over the collar; full beard kept short",
+      "Distinguishing marks": "Very large, heavily scarred hands; the last two fingers of the left hand are missing (county records: a 1979 roof fall underground). Carries a hickory walking stick he does not appear to need. Soft, unhurried voice; lets silences run long. Dogs in his company lie down and stay down."
+    }
   }
 
 ];
