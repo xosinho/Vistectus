@@ -185,6 +185,14 @@ window.HUNTER_MAPS = [
     when: "",
     description: "The town by night, with its places of interest: the entrance truss bridge, Main Street, the Baptist and Holiness churches, the creekside company homes, the mine memorial and sealed portal, the hill cemetery, and the Holt farmhouse and springhouse.",
     image: "assets/resources/Maps/Harlan Creek.jpg"
+  },
+
+  {
+    title: "The Giovanni Estate",
+    section: "The Giovanni Estate",
+    when: "",
+    description: "Aerial view of the walled estate at dusk: the gatehouse and iron gates on the road, a drive round a fountain to the ivy-covered manor and its roof terrace, formal gardens, two glasshouses, a covered pool, and a service yard with garages behind an inner gate.",
+    image: "assets/resources/Maps/Giovanni Estate.jpg"
   }
 
 ];
